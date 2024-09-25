@@ -1,22 +1,11 @@
-
-// export default function Home() {
-//   return (
-//    <>
-//    <div>
-//     hello
-//    </div>
-   
-//    </>
-//   );
-// }
+import Allpage from "@/components/Allpage";
 
 
-import BlurIn from "@/components/magicui/blur-in";
  
 export default function Home() {
   return (
-    <div>
-      <BlurIn word={"Yogesh Pal"}></BlurIn>
+    <div className="bg-[#002626] h-[100vh] w-[100vw]">
+      <Allpage />
     </div>
   );
 }
