@@ -15,6 +15,7 @@ function Complier() {
 
   return (
     <div>
+      <div>Checking github</div>
       <h1>Welcome, {session.user?.name}</h1>
       <p>Email: {session.user?.email}</p>
       <p>User ID: {session.user?.id}</p>
