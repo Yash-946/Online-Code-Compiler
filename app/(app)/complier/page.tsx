@@ -8,7 +8,9 @@ import { Navbar2 } from '@/components/layout/compiler/Navbar2';
 function Complier() {
   const { data: session, status } = useSession();
 
-  if (status === 'loading') {
+  console.log(session);
+
+  if (status === "loading") {
     return <div>Loading...</div>; // Show loading state while session is loading
   }
 
@@ -47,13 +49,13 @@ function Complier() {
       <button
         onClick={() => signOut({ callbackUrl: '/sign-in' })}
         style={{
-          padding: '10px 20px',
-          backgroundColor: '#0070f3',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          marginTop: '20px'
+          padding: "10px 20px",
+          backgroundColor: "#0070f3",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          marginTop: "20px",
         }}
       >
         Sign Out
