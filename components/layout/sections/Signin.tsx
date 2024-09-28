@@ -88,7 +88,7 @@ const Signin = () => {
     }
 
     if (result?.url) {
-      router.replace("/complier");
+      router.replace("/compiler");
     }
     setLoading(false);
   };
