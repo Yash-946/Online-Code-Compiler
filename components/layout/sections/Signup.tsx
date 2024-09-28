@@ -3,9 +3,15 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { User, Mail, Lock, Github, ArrowRight } from "lucide-react";
 import IconCloud from "@/components/magicui/icon-cloud";
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
+import { SignUpData, signUpSchema } from "@/schemas/signUpSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -51,23 +57,61 @@ const slugs = [
 ];
 
 const SignupPage = () => {
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted:", { name, email, password });
-    const data = {
-      name,
-      email,
-      password
-    }
-    const response = await axios.post("/api/sign-up", data)
-    console.log(response.data);
-    router.push(`/sign-in`)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignUpData>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const signUpApi = async (data: SignUpData) => {
+    const respone = await axios.post("/api/sign-up", data);
+    return respone.data;
   };
+
+  const {
+    mutate,
+    isPending,
+    isError,
+    reset,
+  } = useMutation({
+    mutationFn: signUpApi,
+    retry: 3,
+    onSuccess: (data: any) => {
+      console.log("Signup successful:", data);
+      router.replace(`/verify/${data.userID}`)
+    },
+    onError: (error: any) => {
+      console.error("Error signing up:", error);
+      toast.error('Sign Up Failed');
+    },
+  });
+
+  const onSubmit: SubmitHandler<SignUpData> = (data) => {
+    console.log(data);
+    mutate(data);
+  };
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   console.log("Form submitted:", { name, email, password });
+  //   const data = {
+  //     name,
+  //     email,
+  //     password
+  //   }
+  //   const response = await axios.post("/api/sign-up", data)
+  //   console.log(response.data);
+  //   router.push(`/sign-in`)
+  // };
 
   const handleGoogleSignIn = async () => {
     const result = await signIn("google", { callbackUrl: "/complier" });
@@ -93,7 +137,7 @@ const SignupPage = () => {
                 &lt; Register /&gt;
               </h2>
             </div>
-            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-4">
                 <div>
                   <label htmlFor="name" className="sr-only">
@@ -105,15 +149,13 @@ const SignupPage = () => {
                     </IconWrapper>
                     <input
                       id="name"
-                      name="name"
                       type="text"
-                      required
                       className="w-full pl-10 pr-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
                       placeholder="Name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      {...register("name", { required: true })}
                     />
                   </div>
+                  {errors.name && <span className="text-red-600">{errors.name.message}</span>}
                 </div>
                 <div>
                   <label htmlFor="email" className="sr-only">
@@ -125,15 +167,13 @@ const SignupPage = () => {
                     </IconWrapper>
                     <input
                       id="email"
-                      name="email"
                       type="text"
-                      required
                       className="w-full pl-10 pr-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
                       placeholder="Email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      {...register("email", { required: true })}
                     />
                   </div>
+                  {errors.email && <span className="text-red-600">{errors.email.message}</span>}
                 </div>
                 <div>
                   <label htmlFor="password" className="sr-only">
@@ -145,15 +185,13 @@ const SignupPage = () => {
                     </IconWrapper>
                     <input
                       id="password"
-                      name="password"
                       type="password"
-                      required
                       className="w-full pl-10 pr-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
                       placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      {...register("password", { required: true })}
                     />
                   </div>
+                  {errors.password && <span className="text-red-600">{errors.password.message}</span>}
                 </div>
               </div>
 
@@ -163,8 +201,9 @@ const SignupPage = () => {
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  disabled={isPending}
                 >
-                  Sign up
+                  {isPending ? "Signing up..." : "Sign Up"}
                   <motion.div
                     className="ml-2"
                     initial={{ x: 0 }}
