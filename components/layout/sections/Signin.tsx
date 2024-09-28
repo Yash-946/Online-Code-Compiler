@@ -5,6 +5,10 @@ import { Mail, Lock, Github, ArrowRight } from "lucide-react";
 import IconCloud from "@/components/magicui/icon-cloud";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { SignInData, signInSchema } from "@/schemas/signInSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -50,22 +54,43 @@ const slugs = [
 ];
 
 const Signin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false)
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form submitted:", { email, password });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInData>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit: SubmitHandler<SignInData> = async (data) => {
+    console.log(data);
+    setLoading(true);
     const result = await signIn("credentials", {
       redirect: false,
-      email,
-      password,
+      email: data.email,
+      password: data.password
     });
     console.log("Sign-in Result", result);
+
+    if (result?.error) {
+      if (result.error === 'CredentialsSignin') {
+        toast.error(`Login Failed`)
+      } else {
+        toast.error(`${result?.error}`)
+      }
+    }
+
     if (result?.url) {
       router.replace("/complier");
     }
+    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
@@ -92,7 +117,7 @@ const Signin = () => {
                 &lt; Sign In /&gt;
               </h2>
             </div>
-            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-4">
                 <div>
                   <label htmlFor="email" className="sr-only">
@@ -104,13 +129,11 @@ const Signin = () => {
                     </IconWrapper>
                     <input
                       id="email"
-                      name="email"
                       type="text"
                       required
                       className="w-full pl-10 pr-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
                       placeholder="Email or Username"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      {...register("email", { required: true })}
                     />
                   </div>
                 </div>
@@ -124,13 +147,12 @@ const Signin = () => {
                     </IconWrapper>
                     <input
                       id="password"
-                      name="password"
+                      
                       type="password"
                       required
                       className="w-full pl-10 pr-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
                       placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      {...register("password", { required: true })}
                     />
                   </div>
                 </div>
@@ -168,8 +190,9 @@ const Signin = () => {
                   whileTap={{ scale: 0.95 }}
                   type="submit"
                   className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                  disabled={loading}
                 >
-                  Sign in
+                  {loading ? "Signing in..." : "Sign In"}
                   <motion.div
                     className="ml-2"
                     initial={{ x: 0 }}

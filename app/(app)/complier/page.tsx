@@ -1,11 +1,13 @@
-"use client"
-import React from 'react';
-import { useSession, signOut } from 'next-auth/react';
+"use client";
+import React from "react";
+import { useSession, signOut } from "next-auth/react";
 
 function Complier() {
   const { data: session, status } = useSession();
 
-  if (status === 'loading') {
+  console.log(session);
+
+  if (status === "loading") {
     return <div>Loading...</div>; // Show loading state while session is loading
   }
 
@@ -19,18 +21,19 @@ function Complier() {
       <h1>Welcome, {session.user?.name}</h1>
       <p>Email: {session.user?.email}</p>
       <p>User ID: {session.user?.id}</p>
+      <p>ProfileURL: {session.user?.profielURL}</p>
 
       {/* Sign Out Button */}
-      <button 
-        onClick={() => signOut({ callbackUrl: '/sign-in' })} 
+      <button
+        onClick={() => signOut({ callbackUrl: "/sign-in" })}
         style={{
-          padding: '10px 20px',
-          backgroundColor: '#0070f3',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          marginTop: '20px'
+          padding: "10px 20px",
+          backgroundColor: "#0070f3",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          marginTop: "20px",
         }}
       >
         Sign Out
