@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/layout/navbar";
-import { BenefitsSection } from "@/components/layout/sections/benefits";
+import LanguageIcons from "@/components/layout/sections/benefits";
 import { CommunitySection } from "@/components/layout/sections/community";
 import { ContactSection } from "@/components/layout/sections/contact";
 import { FAQSection } from "@/components/layout/sections/faq";
@@ -46,7 +46,7 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <SponsorsSection />
-      <BenefitsSection />
+      <LanguageIcons />
       <FeaturesSection />
       {/* <ServicesSection /> */}
       {/* <TestimonialSection /> */}

@@ -1,6 +1,9 @@
 "use client"
 import React from 'react';
 import { useSession, signOut } from 'next-auth/react';
+import { Navbar1 } from '@/components/layout/compiler/Navbar1';
+import { LeftNavbar } from '@/components/layout/compiler/LeftNavbar';
+import { Navbar2 } from '@/components/layout/compiler/Navbar2';
 
 function Complier() {
   const { data: session, status } = useSession();
@@ -15,14 +18,34 @@ function Complier() {
 
   return (
     <div>
+      <Navbar1 />
+
+
+
+<div className='flex gap-10'>
+
+
+      <div>
+
+        <LeftNavbar />
+      </div>
+
+
+      <div>
+        <Navbar2 />
+      </div>
+      <div>
+
+
       <div>Checking github</div>
       <h1>Welcome, {session.user?.name}</h1>
       <p>Email: {session.user?.email}</p>
       <p>User ID: {session.user?.id}</p>
 
+
       {/* Sign Out Button */}
-      <button 
-        onClick={() => signOut({ callbackUrl: '/sign-in' })} 
+      <button
+        onClick={() => signOut({ callbackUrl: '/sign-in' })}
         style={{
           padding: '10px 20px',
           backgroundColor: '#0070f3',
@@ -35,6 +58,9 @@ function Complier() {
       >
         Sign Out
       </button>
+      </div>
+
+      </div>
     </div>
   );
 }
