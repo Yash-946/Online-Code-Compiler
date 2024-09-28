@@ -6,7 +6,7 @@ import { LeftNavbar } from '@/components/layout/compiler/LeftNavbar';
 import { Navbar2 } from '@/components/layout/compiler/Navbar2';
 
 
-function Complier() {
+function compiler() {
   const { data: session, status } = useSession();
 
   console.log(session);
@@ -16,7 +16,9 @@ function Complier() {
   }
 
   if (!session) {
-    return <div>You are not signed in</div>;
+    return <div>You are not signed in
+      <Navbar1 />
+    </div>;
   }
 
   return (
@@ -68,4 +70,4 @@ function Complier() {
   );
 }
 
-export default Complier;
+export default compiler;

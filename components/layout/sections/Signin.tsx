@@ -94,11 +94,11 @@ const Signin = () => {
   };
 
   const handleGoogleSignIn = async () => {
-    const result = await signIn("google", { callbackUrl: "/complier" });
+    const result = await signIn("google", { callbackUrl: "/compiler" });
     console.log("googlesignin", result);
   };
   const handleGithubSignIn = async () => {
-    const result = await signIn("github", { callbackUrl: "/complier" });
+    const result = await signIn("github", { callbackUrl: "/compiler" });
     console.log("googlesignin", result);
   };
 

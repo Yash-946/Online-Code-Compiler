@@ -1,16 +1,13 @@
 import React from 'react';
 
-// Define the types for the props
-interface Navbar2Props {
-  selectedLanguage: string | null;
-}
 
-export const Navbar2: React.FC<Navbar2Props> = ({ selectedLanguage }) => {
+
+export const Navbar2: React.FC = () => {
   return (
     <div className="flex items-center justify-between  p-4 shadow-md">
       {/* Left Section - Display Selected Language */}
       <h1 className="text-lg font-semibold text-gray-800">
-        {selectedLanguage ? `${selectedLanguage} Online Compiler` : 'Select a Language'}
+      Online code compiler
       </h1>
 
       {/* Right Section - Buttons */}
