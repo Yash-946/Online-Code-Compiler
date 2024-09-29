@@ -13,7 +13,7 @@ export const Navbar2: React.FC = () => {
       {/* Right Section - Buttons */}
       <div className="flex space-x-4">
         {/* Share Button */}
-        <button className="flex items-center space-x-1 border border-gray-300 px-3 py-1 rounded-md hover:bg-gray-100 transition">
+        <button className="flex items-center space-x-1 border border-gray-400 px-3 py-1 rounded-md hover:bg-gray-100 transition">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5 text-gray-500"
