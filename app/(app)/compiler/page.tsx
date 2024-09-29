@@ -4,6 +4,7 @@ import { useSession, signOut } from 'next-auth/react';
 import { Navbar1 } from '@/components/layout/compiler/Navbar1';
 import { LeftNavbar } from '@/components/layout/compiler/LeftNavbar';
 import { Navbar2 } from '@/components/layout/compiler/Navbar2';
+import {CodeEditorWindow} from '@/components/layout/code-editor/CodeEditorWindow';
 
 
 function compiler() {
@@ -38,6 +39,10 @@ function compiler() {
 
       <div>
         <Navbar2 />
+      
+
+        <CodeEditorWindow />
+      
       </div>
       <div>
 
