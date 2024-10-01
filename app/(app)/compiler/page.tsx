@@ -134,7 +134,15 @@ function Compiler() {
       </div>
     );
   }
-
+  const downloadCode = () => {
+    const element = document.createElement("a");
+    const file = new Blob([code], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = `${language.value}_code.${language.fileExtension}`;
+    document.body.appendChild(element);
+    element.click();
+  };
+  
   return (
     <div>
       <Navbar1 />
@@ -158,6 +166,11 @@ function Compiler() {
               )}
             >
               {processing ? "Processing..." : "Compile and Execute"}
+            </button>
+          </div>
+          <div className="bg-red-600">
+            <button onClick={downloadCode}>
+              download
             </button>
           </div>
           {outputDetails && <OutputDetails outputDetails={outputDetails} />}
