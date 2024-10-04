@@ -220,12 +220,6 @@ export const languageOptions = [
       value: "prolog",
     },
     {
-      id: 70,
-      name: "Python (2.7.17)",
-      label: "Python (2.7.17)",
-      value: "python",
-    },
-    {
       id: 71,
       name: "Python (3.8.1)",
       label: "Python (3.8.1)",
@@ -280,4 +274,9 @@ export const languageOptions = [
       value: "vbnet",
     },
   ];
+
+  export function languageData(language: string) {
+    const selectedLanguage = languageOptions.find(option => option.value === language);
+    return selectedLanguage; // return null if the language is not found
+  }
   

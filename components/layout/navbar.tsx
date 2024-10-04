@@ -1,6 +1,6 @@
 "use client";
+import { useSession, signOut } from "next-auth/react";
 import { ChevronsDown, Github, Menu } from "lucide-react";
-import React from "react";
 import {
   Sheet,
   SheetContent,
@@ -22,6 +22,13 @@ import { Button } from "../ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { ToggleTheme } from "./toogle-theme";
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+} from "../ui/dropdown-menu";
+import { useState } from "react";
 
 interface RouteProps {
   href: string;
@@ -34,10 +41,6 @@ interface FeatureProps {
 }
 
 const routeList: RouteProps[] = [
-  // {
-  //   href: "#testimonials",
-  //   label: "Testimonials",
-  // },
   {
     href: "#team",
     label: "Team",
@@ -46,40 +49,41 @@ const routeList: RouteProps[] = [
     href: "#contact",
     label: "Contact",
   },
-  // {
-  //   href: "#faq",
-  //   label: "FAQ",
-  // },
+  {
+    href: "#faq",
+    label: "FAQ",
+  },
 ];
 
 const featureList: FeatureProps[] = [
   {
-    title: "AI-powered assistance",
-    description: "Ask AI for coding doubts and guidance while you code.",
+    title: "Showcase Your Value ",
+    description: "Highlight how your product solves user problems.",
   },
   {
-    title: "Export with ease",
+    title: "Build Trust",
     description:
-      "Download your code files seamlessly for offline use.",
+      "Leverages social proof elements to establish trust and credibility.",
   },
   {
-    title: "Real-time collaboration",
+    title: "Capture Leads",
     description:
-      "Save code to your dashboard and share it across platforms.",
+      "Make your lead capture form visually appealing and strategically.",
   },
 ];
 
 export const Navbar = () => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const { data: session } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <header className="shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card">
       <Link href="/" className="font-bold text-lg flex items-center">
-        {/* <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
-        Shadcn */}
-      <Image src="/logo.png" width={1000} height={1000} alt="logo" className="w-14 h-12"/>
+        <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
+        Shadcn
       </Link>
 
-      {/* <!-- Mobile --> */}
+      {/* Mobile Menu */}
       <div className="flex items-center lg:hidden">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
@@ -120,14 +124,13 @@ export const Navbar = () => {
 
             <SheetFooter className="flex-col sm:flex-col justify-start items-start">
               <Separator className="mb-2" />
-
               <ToggleTheme />
             </SheetFooter>
           </SheetContent>
         </Sheet>
       </div>
 
-      {/* <!-- Desktop --> */}
+      {/* Desktop Menu */}
       <NavigationMenu className="hidden lg:block mx-auto">
         <NavigationMenuList>
           <NavigationMenuItem>
@@ -163,6 +166,15 @@ export const Navbar = () => {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
+          <NavigationMenuLink  asChild>
+                <Link href="/compiler/javascript" className="text-base px-2">
+                  Compiler
+                </Link>
+              </NavigationMenuLink>
+          </NavigationMenuItem>
+
+
+          <NavigationMenuItem>
             {routeList.map(({ href, label }) => (
               <NavigationMenuLink key={href} asChild>
                 <Link href={href} className="text-base px-2">
@@ -171,21 +183,50 @@ export const Navbar = () => {
               </NavigationMenuLink>
             ))}
           </NavigationMenuItem>
+
         </NavigationMenuList>
       </NavigationMenu>
 
-      <div className="hidden lg:flex">
+      <div className="hidden lg:flex items-center gap-2">
         <ToggleTheme />
 
-        <Button asChild size="sm" variant="ghost" aria-label="View on GitHub">
-          <Link
-            aria-label="View on GitHub"
-            href="https://github.com/nobruf/shadcn-landing-page.git"
-            target="_blank"
-          >
-            <Github className="size-5" />
-          </Link>
-        </Button>
+        {/* Conditionally render GitHub logo or User Dropdown */}
+        {!session ? (
+          <Button asChild size="sm" variant="ghost" aria-label="View on GitHub">
+            <Link
+              aria-label="View on GitHub"
+              href="https://github.com/nobruf/shadcn-landing-page.git"
+              target="_blank"
+            >
+              <Github className="size-5" />
+            </Link>
+          </Button>
+        ) : (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2 cursor-pointer">
+              <div className="h-9 w-9 rounded-full overflow-hidden">
+                <Image
+                  src={session.user?.profielURL || "/boyavatar.jpg"}
+                  alt={session.user?.name || "User"}
+                  className="object-cover"
+                  width={1000}
+                  height={1000}
+                />
+              </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <div className="p-2">
+                <p className="font-bold">{session.user?.name}</p>
+                <p className="text-sm">{session.user?.email}</p>
+              </div>
+              <DropdownMenuItem
+                onClick={() => signOut({ callbackUrl: "/sign-in" })}
+              >
+                Sign Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
     </header>
   );

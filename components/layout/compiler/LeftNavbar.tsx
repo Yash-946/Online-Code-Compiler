@@ -19,31 +19,33 @@ const languages: Language[] = [
     name: 'JavaScript',
     svgPath: '/javascript.svg',
   },
-  {
-    name: 'HTML',
-    svgPath: '/html-logo.svg',
-  },
 ];
 
 export const LeftNavbar: React.FC = () => {
   const [hoveredLang, setHoveredLang] = useState<string | null>(null);
+
+  const handleLanguageClick = (languageName: string) => {
+    const url = `/compiler/${languageName.toLowerCase()}`;
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="flex flex-col items-center bg-background h-screen w-20 p-4 space-y-10 border-4 ">
       {languages.map((language, index) => (
         <div
           key={index}
-          className="relative group flex flex-col items-center"
+          className="relative group flex flex-col items-center cursor-pointer"
           onMouseEnter={() => setHoveredLang(language.name)}
           onMouseLeave={() => setHoveredLang(null)}
+          onClick={() => handleLanguageClick(language.name)}
         >
           {/* Language Icon */}
           <Image
-          height={1000}
-          width={1000}
+            height={1000}
+            width={1000}
             src={language.svgPath}
             alt={`${language.name} logo`}
-            className="h-10 w-10 cursor-pointer transition-transform transform hover:scale-110"
+            className="h-10 w-10 transition-transform transform hover:scale-110"
           />
 
           {/* Language name on hover */}
