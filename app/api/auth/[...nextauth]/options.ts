@@ -4,15 +4,18 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import prisma from "@/lib/dbConnect";
 import bcrypt from "bcryptjs";
-import { use } from "react";
 
 
 // Function to create or find a user
-async function findOrCreateUser(email: string, name: string, profileURL:string) {
+async function findOrCreateUser(email: string, name: string) {
   // console.log("oAuth", email,name, profileURL);
   let user = await prisma.user.findUnique({
     where: { email },
   });
+
+  if (user && user.password) {
+    throw new Error("Invalid user");
+  }
 
   if (!user) {
     user = await prisma.user.create({
@@ -20,7 +23,6 @@ async function findOrCreateUser(email: string, name: string, profileURL:string) 
         email,
         name,
         isVerified:true,
-        profileURL:profileURL
       },
     });
   }
@@ -98,9 +100,8 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider !== "credentials" && profile && typeof profile === 'object') {
         const email = user.email || "";
         const name = user.name || "";
-        const image = user.image || "";
         
-        const dbUser = await findOrCreateUser(email, name, image);
+        const dbUser = await findOrCreateUser(email, name);
         if (dbUser) {
           user.id = dbUser.id;
         }
@@ -134,5 +135,6 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/sign-in",
+    error: "/sign-in"
   },
 };

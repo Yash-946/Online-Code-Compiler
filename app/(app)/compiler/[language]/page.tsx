@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
@@ -6,38 +5,66 @@ import { useSession, signOut } from "next-auth/react";
 import { Navbar1 } from "@/components/layout/compiler/Navbar1";
 import { LeftNavbar } from "@/components/layout/compiler/LeftNavbar";
 import { Navbar2 } from "@/components/layout/compiler/Navbar2";
-import { CodeEditorWindow } from "@/components/layout/code-editor/CodeEditorWindow";
 import { OutputWindow } from "@/components/layout/code-editor/OutputWindow";
 import { OutputDetails } from "@/components/layout/code-editor/OutputDetails";
 import { CustomInput } from "@/components/layout/code-editor/CustomInput";
-import { languageOptions } from "@/components/layout/compiler/Languages";
-import { classnames } from "../../../utils/general";
-
+import { languageData, languageOptions } from "@/components/layout/compiler/Languages";
 import axios from "axios";
 import LanguagesDropdown from "@/components/layout/code-editor/LanguagesDropdown";
 import useKeyPress from "@/hooks/useKeyPress";
 import toast from "react-hot-toast";
+import { useParams, useRouter } from "next/navigation";
+import { CodeEditorWindow } from "@/components/layout/code-editor/CodeEditorWindow";
 
-const javascriptDefault = `
-console.log("hello");
-`;
+const javascriptDefault = `console.log("hello");`;
+const pythonDefault = `print("Hello, World!")`;
+const javaDefault = `public class Main {
+  public static void main(String[] args) {
+      System.out.println("hello, world");
+  }
+}`;
 
 function Compiler() {
+  const router = useRouter();
+  // const [language, setLanguage] = useState("");
+  const pramas = useParams<{ language: string }>();
+  console.log(pramas.language);
+  const language  =pramas.language;
+
   const { data: session } = useSession();
-  const [code, setCode] = useState(javascriptDefault);
+  const [code, setCode] = useState("");
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(false);
-  const [language, setLanguage] = useState(languageOptions[0]);
+  
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
 
-  const onSelectChange = useCallback((sl) => {
-    setLanguage(sl);
-  }, []);
+  // const onSelectChange = useCallback((sl) => {
+  //   setLanguage(sl);
+  // }, []);
 
-  const onChange = useCallback((action, data) => {
+  useEffect(() => {
+    console.log("Language changed:", language);
+
+    if(language == "javascript"){
+      console.log("javascriptDefault");
+      setCode(javascriptDefault)
+      console.log("DefautCode", code);
+    }
+    else if(language === "python"){
+      setCode(pythonDefault)
+    }
+    else{
+      setCode(javaDefault);
+    }
+
+  }, [])
+  
+
+  const onChange = useCallback((action:any, data:any) => {
+    console.log("action",action,"data", data);
     if (action === "code") setCode(data);
   }, []);
 
@@ -48,13 +75,17 @@ function Compiler() {
   }, [ctrlPress, enterPress]);
 
   const handleCompile = () => {
+    const currentLanguage = languageData(language);
+    console.log("currentlanguageData", currentLanguage);
+    console.log("source Code", code);
     setProcessing(true);
     const formData = {
-      language_id: language.id,
+      language_id: currentLanguage!!.id,
       // encode source code in base64
       source_code: btoa(code),
       stdin: btoa(customInput),
     };
+    console.log(formData);
     const options = {
       method: "POST",
       url: process.env.NEXT_PUBLIC_RAPID_API_URL,
@@ -90,9 +121,8 @@ function Compiler() {
       });
   };
   
-  
 
-  const checkStatus = useCallback(async (token) => {
+  const checkStatus = useCallback(async (token:any) => {
     const options = {
       method: "GET",
       url: `${process.env.NEXT_PUBLIC_RAPID_API_URL}/${token}`,
@@ -117,7 +147,7 @@ function Compiler() {
     }
   }, []);
 
-  const handleError = (error) => {
+  const handleError = (error:any) => {
     const status = error.response?.status;
     if (status === 429) {
       toast.error("Too many requests! Please try again later.");
@@ -126,19 +156,19 @@ function Compiler() {
     }
   };
 
-  if (!session) {
+  if (!code) {
     return (
       <div>
-        You are not signed in
-        <Navbar1 />
+        Compiler is loading, Please wait...
       </div>
     );
   }
+
   const downloadCode = () => {
     const element = document.createElement("a");
     const file = new Blob([code], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
-    element.download = `${language.value}_code.${language.fileExtension}`;
+    element.download = `${language}_code.code`;
     document.body.appendChild(element);
     element.click();
   };
@@ -149,15 +179,15 @@ function Compiler() {
       <div className="flex gap-10">
         <LeftNavbar />
         <div>
-          <Navbar2 />
-          <LanguagesDropdown onSelectChange={onSelectChange} />
-          <CodeEditorWindow code={code} onChange={onChange} language={language?.value} />
+          <Navbar2 Runcode={handleCompile} processing={processing} downloadCode={downloadCode} />
+          {/* <LanguagesDropdown onSelectChange={onSelectChange} /> */}
+          <CodeEditorWindow code={code} onChange={onChange} language={language}  theme="Monokai" />
         </div>
         <div className="right-container flex flex-col">
           <OutputWindow outputDetails={outputDetails} />
           <div className="flex flex-col items-end">
             <CustomInput customInput={customInput} setCustomInput={setCustomInput} />
-            <button
+            {/* <button
               onClick={handleCompile}
               disabled={!code}
               className={classnames(
@@ -166,22 +196,22 @@ function Compiler() {
               )}
             >
               {processing ? "Processing..." : "Compile and Execute"}
-            </button>
+            </button> */}
           </div>
-          <div className="bg-red-600">
+          {/* <div className="bg-red-600">
             <button onClick={downloadCode}>
               download
             </button>
-          </div>
+          </div> */}
           {outputDetails && <OutputDetails outputDetails={outputDetails} />}
         </div>
-        <div>
+        {/* <div>
           <h1>Welcome, {session.user?.name}</h1>
           <p>Email: {session.user?.email}</p>
           <button onClick={() => signOut({ callbackUrl: '/sign-in' })} className="sign-out-btn">
             Sign Out
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

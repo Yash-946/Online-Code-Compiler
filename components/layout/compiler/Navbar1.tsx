@@ -41,7 +41,7 @@ export const Navbar1: React.FC = () => {
         {session ? (
           <div className="relative">
             <motion.img
-              src={session?.user?.image || "/default-avatar.png"}
+              src={session?.user?.profielURL || "/default-avatar.png"}
               alt="User Avatar"
               className="h-16 w-16 rounded-full cursor-pointer border-2 border-color-3 ml-48 mb-2"
               whileHover={{ scale: 1.1 }}

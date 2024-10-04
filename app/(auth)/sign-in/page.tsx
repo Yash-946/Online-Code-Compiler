@@ -1,11 +1,16 @@
-import Signin from "@/components/layout/sections/Signin";
+"use client"
+import Signin from "@/components/layout/auth/signin";
+import { Suspense } from "react";
 
-const page = () => {
+
+const Page = () => {
   return (
-    <>
-      <Signin />
-    </>
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Signin />
+      </Suspense>
+    </div>
   );
 };
 
-export default page;
+export default Page;
