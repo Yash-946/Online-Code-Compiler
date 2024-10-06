@@ -10,7 +10,7 @@ function OauthTemplate() {
 
   const handleOAuthSignIn = async (provider: "google" | "github") => {
     try {
-      const result = await signIn(provider, { callbackUrl: "/dashboard", redirect: false });
+      const result = await signIn(provider, { callbackUrl: "/compiler/javascript", redirect: false });
     } catch (error) {
       console.error(`${provider} sign-in error:`, error);
       toast.error(`An error occurred during ${provider} sign-in`);

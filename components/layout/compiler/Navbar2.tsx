@@ -1,49 +1,46 @@
-
 import { DownloadIcon, Share2Icon, UploadIcon } from 'lucide-react';
 import React from 'react';
+import LanguagesDropdown from '../code-editor/LanguagesDropdown';
 
-interface Navbar2Props{
-  Runcode: any, 
-  processing: any, 
-  downloadCode: any
+interface Navbar2Props {
+  Runcode: () => void;
+  processing: boolean;
+  downloadCode: () => void;
+  onSelectChange: (value: string) => void;
 }
 
-export const Navbar2 = ({Runcode, processing, downloadCode}:Navbar2Props) => {
-  
+export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange }: Navbar2Props) => {
   return (
-    <div className="flex items-center justify-between  p-4 shadow-md">
-      {/* Left Section - Display Selected Language */}
-      <h1 className="text-lg font-semibold text-gray-800">
-      Online code compiler
-      </h1>
+    <div className="flex items-center justify-between shadow-md pb-4">
+      <LanguagesDropdown onSelectChange={onSelectChange} />
 
-      {/* Right Section - Buttons */}
       <div className="flex space-x-4">
-        {/* Share Button */}
-        <button className="flex items-center space-x-1 border border-gray-400 px-3 py-1 rounded-md">
-          <Share2Icon />
+        <button className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95">
+          <Share2Icon className="w-5 h-5" />
           <span>Share</span>
         </button>
 
-        {/* Save Button */}
-        <button className="flex items-center space-x-1 border border-gray-300 px-3 py-1 rounded-md">
-          <UploadIcon />
+        <button className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95">
+          <UploadIcon className="w-5 h-5" />
           <span>Save</span>
         </button>
 
-        {/* download button */}
-        <button 
-          className="flex items-center space-x-1 border border-gray-300 px-3 py-1 rounded-md"
+        <button
+          className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
           onClick={downloadCode}
         >
-          <DownloadIcon/>
-          <span className="text-white">Download</span>
+          <DownloadIcon className="w-5 h-5" />
+          <span>Download</span>
         </button>
 
-        {/* Run Button */}
         <button 
-          className="flex items-center space-x-1 bg-blue-600 text-white px-4 py-1 rounded-md hover:bg-blue-700 transition"
+          className={`flex items-center space-x-1 px-4 py-1 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
+            processing 
+              ? 'bg-muted text-muted-foreground cursor-not-allowed' 
+              : 'bg-accent text-accent-foreground hover:bg-accent/90'
+          }`}
           onClick={Runcode}
+          disabled={processing}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -59,10 +56,9 @@ export const Navbar2 = ({Runcode, processing, downloadCode}:Navbar2Props) => {
               d="M5 3v18l15-9L5 3z"
             />
           </svg>
-          <span>{processing ? "Runing" : "Run"}</span>
+          <span>{processing ? "Running" : "Run"}</span>
         </button>
       </div>
     </div>
   );
 };
-

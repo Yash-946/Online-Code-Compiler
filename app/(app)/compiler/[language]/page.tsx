@@ -10,11 +10,12 @@ import { OutputDetails } from "@/components/layout/code-editor/OutputDetails";
 import { CustomInput } from "@/components/layout/code-editor/CustomInput";
 import { languageData, languageOptions } from "@/components/layout/compiler/Languages";
 import axios from "axios";
-import LanguagesDropdown from "@/components/layout/code-editor/LanguagesDropdown";
+// import LanguagesDropdown from "@/components/layout/code-editor/LanguagesDropdown";
 import useKeyPress from "@/hooks/useKeyPress";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { CodeEditorWindow } from "@/components/layout/code-editor/CodeEditorWindow";
+import Loading from "@/app/loading";
 
 const javascriptDefault = `console.log("hello");`;
 const pythonDefault = `print("Hello, World!")`;
@@ -26,7 +27,7 @@ const javaDefault = `public class Main {
 
 function Compiler() {
   const router = useRouter();
-  // const [language, setLanguage] = useState("");
+  const [language1, setLanguage] = useState("");
   const pramas = useParams<{ language: string }>();
   console.log(pramas.language);
   const language  =pramas.language;
@@ -41,9 +42,9 @@ function Compiler() {
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
 
-  // const onSelectChange = useCallback((sl) => {
-  //   setLanguage(sl);
-  // }, []);
+  const onSelectChange = useCallback((sl:any) => {
+    setLanguage(sl);
+  }, []);
 
   useEffect(() => {
     console.log("Language changed:", language);
@@ -158,9 +159,9 @@ function Compiler() {
 
   if (!code) {
     return (
-      <div>
-        Compiler is loading, Please wait...
-      </div>
+      <>
+      <Loading />
+      </>
     );
   }
 
@@ -174,19 +175,19 @@ function Compiler() {
   };
   
   return (
-    <div>
+    <div className="bg-background">
       <Navbar1 />
-      <div className="flex gap-10">
+      <div className="flex gap-8">
         <LeftNavbar />
         <div>
-          <Navbar2 Runcode={handleCompile} processing={processing} downloadCode={downloadCode} />
+          <Navbar2 Runcode={handleCompile} processing={processing} downloadCode={downloadCode} onSelectChange={onSelectChange} />
           {/* <LanguagesDropdown onSelectChange={onSelectChange} /> */}
           <CodeEditorWindow code={code} onChange={onChange} language={language}  theme="Monokai" />
         </div>
-        <div className="right-container flex flex-col">
+        <div className=" flex flex-col">
           <OutputWindow outputDetails={outputDetails} />
-          <div className="flex flex-col items-end">
             <CustomInput customInput={customInput} setCustomInput={setCustomInput} />
+          {/* <div className="flex"> */}
             {/* <button
               onClick={handleCompile}
               disabled={!code}
@@ -203,8 +204,8 @@ function Compiler() {
               download
             </button>
           </div> */}
-          {outputDetails && <OutputDetails outputDetails={outputDetails} />}
-        </div>
+          {/* {outputDetails && <OutputDetails outputDetails={outputDetails} />} */}
+        {/* </div> */}
         {/* <div>
           <h1>Welcome, {session.user?.name}</h1>
           <p>Email: {session.user?.email}</p>
