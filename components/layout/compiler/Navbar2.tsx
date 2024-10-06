@@ -1,6 +1,7 @@
 import { DownloadIcon, Share2Icon, UploadIcon } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import LanguagesDropdown from '../code-editor/LanguagesDropdown';
+import SignInPopup from '../auth/signin-popup';
 
 interface Navbar2Props {
   Runcode: () => void;
@@ -10,12 +11,17 @@ interface Navbar2Props {
 }
 
 export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange }: Navbar2Props) => {
+
+  const [issigninPopupOpen, setsigninPopupOpen] = useState(false);
+
+
   return (
     <div className="flex items-center justify-between shadow-md pb-4">
+
       <LanguagesDropdown onSelectChange={onSelectChange} />
 
       <div className="flex space-x-4">
-        <button className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95">
+        <button onClick={() => setsigninPopupOpen(true)} className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95">
           <Share2Icon className="w-5 h-5" />
           <span>Share</span>
         </button>
@@ -59,6 +65,7 @@ export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange }: N
           <span>{processing ? "Running" : "Run"}</span>
         </button>
       </div>
+      <SignInPopup isOpen={issigninPopupOpen} onClose={() => setsigninPopupOpen(false)} />
     </div>
   );
 };
