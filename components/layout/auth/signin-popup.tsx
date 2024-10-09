@@ -25,7 +25,7 @@ interface SignInPopupProps {
     onClose: () => void;
 }
 
-const SignInPopup: React.FC<SignInPopupProps> = ({ isOpen,onClose }) => {
+const SignInPopup: React.FC<SignInPopupProps> = ({ isOpen, onClose }) => {
    
     const [loading, setLoading] = useState(false)
     const router = useRouter();
@@ -76,6 +76,7 @@ const SignInPopup: React.FC<SignInPopupProps> = ({ isOpen,onClose }) => {
         }
 
         if (result?.url) {
+            onClose();
             router.replace("/compiler/javascript");
         }
         setLoading(false);
@@ -187,6 +188,7 @@ const SignInPopup: React.FC<SignInPopupProps> = ({ isOpen,onClose }) => {
                                             className="font-medium text-primary hover:text-primary/80"
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
+                                            
                                         >
                                             &lt; Sign Up /&gt;
                                         </motion.a>

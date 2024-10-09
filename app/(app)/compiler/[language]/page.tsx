@@ -8,7 +8,10 @@ import { Navbar2 } from "@/components/layout/compiler/Navbar2";
 import { OutputWindow } from "@/components/layout/code-editor/OutputWindow";
 import { OutputDetails } from "@/components/layout/code-editor/OutputDetails";
 import { CustomInput } from "@/components/layout/code-editor/CustomInput";
-import { languageData, languageOptions } from "@/components/layout/compiler/Languages";
+import {
+  languageData,
+  languageOptions,
+} from "@/components/layout/compiler/Languages";
 import axios from "axios";
 // import LanguagesDropdown from "@/components/layout/code-editor/LanguagesDropdown";
 import useKeyPress from "@/hooks/useKeyPress";
@@ -29,43 +32,38 @@ function Compiler() {
   const router = useRouter();
   const [language1, setLanguage] = useState("");
   const pramas = useParams<{ language: string }>();
-  console.log(pramas.language);
-  const language  =pramas.language;
+  // console.log(pramas.language);
+  const language = pramas.language;
 
   const { data: session } = useSession();
   const [code, setCode] = useState("");
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(false);
-  
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
 
-  const onSelectChange = useCallback((sl:any) => {
+  const onSelectChange = useCallback((sl: any) => {
     setLanguage(sl);
   }, []);
 
   useEffect(() => {
     console.log("Language changed:", language);
 
-    if(language == "javascript"){
-      console.log("javascriptDefault");
-      setCode(javascriptDefault)
-      console.log("DefautCode", code);
-    }
-    else if(language === "python"){
-      setCode(pythonDefault)
-    }
-    else{
+    if (language == "javascript") {
+      // console.log("javascriptDefault");
+      setCode(javascriptDefault);
+      // console.log("DefautCode", code);
+    } else if (language === "python") {
+      setCode(pythonDefault);
+    } else {
       setCode(javaDefault);
     }
+  }, []);
 
-  }, [])
-  
-
-  const onChange = useCallback((action:any, data:any) => {
-    console.log("action",action,"data", data);
+  const onChange = useCallback((action: any, data: any) => {
+    // console.log("action", action, "data", data);
     if (action === "code") setCode(data);
   }, []);
 
@@ -111,9 +109,11 @@ function Compiler() {
         let error = err.response ? err.response.data : err;
         // get error status
         let status = err.response?.status;
-  
+
         if (status === 429) {
-          toast.error("Quota of 100 requests exceeded for the day. Please try again later.");
+          toast.error(
+            "Quota of 100 requests exceeded for the day. Please try again later."
+          );
         } else {
           toast.error("An error occurred. Please try again.");
         }
@@ -121,9 +121,8 @@ function Compiler() {
         console.log("Error in catch block:", error);
       });
   };
-  
 
-  const checkStatus = useCallback(async (token:any) => {
+  const checkStatus = useCallback(async (token: any) => {
     const options = {
       method: "GET",
       url: `${process.env.NEXT_PUBLIC_RAPID_API_URL}/${token}`,
@@ -148,7 +147,7 @@ function Compiler() {
     }
   }, []);
 
-  const handleError = (error:any) => {
+  const handleError = (error: any) => {
     const status = error.response?.status;
     if (status === 429) {
       toast.error("Too many requests! Please try again later.");
@@ -157,10 +156,30 @@ function Compiler() {
     }
   };
 
+  const handleSaveCode = async() => {
+    if(!session){
+      alert("You are not login")
+    }
+    else{
+      let filename = prompt("Enter the file Name")
+      console.log(filename, code, session, language);
+      const data = {
+        filename,
+        code: btoa(code),
+        userID: session.user.id,
+        language
+      }
+      const response = await axios.post("/api/save-code", data);
+      console.log(response.data);
+      const codeid = response.data.codeID;
+      router.replace(`/${codeid}`)
+    }
+  }
+
   if (!code) {
     return (
       <>
-      <Loading />
+        <Loading />
       </>
     );
   }
@@ -173,22 +192,36 @@ function Compiler() {
     document.body.appendChild(element);
     element.click();
   };
-  
+
   return (
     <div className="bg-background">
       <Navbar1 />
       <div className="flex gap-8">
         <LeftNavbar />
         <div>
-          <Navbar2 Runcode={handleCompile} processing={processing} downloadCode={downloadCode} onSelectChange={onSelectChange} />
+          <Navbar2
+            Runcode={handleCompile}
+            processing={processing}
+            downloadCode={downloadCode}
+            onSelectChange={onSelectChange}
+            onhandlesavecode = {handleSaveCode}
+          />
           {/* <LanguagesDropdown onSelectChange={onSelectChange} /> */}
-          <CodeEditorWindow code={code} onChange={onChange} language={language}  theme="Monokai" />
+          <CodeEditorWindow
+            code={code}
+            onChange={onChange}
+            language={language}
+            theme="Monokai"
+          />
         </div>
         <div className=" flex flex-col">
           <OutputWindow outputDetails={outputDetails} />
-            <CustomInput customInput={customInput} setCustomInput={setCustomInput} />
+          <CustomInput
+            customInput={customInput}
+            setCustomInput={setCustomInput}
+          />
           {/* <div className="flex"> */}
-            {/* <button
+          {/* <button
               onClick={handleCompile}
               disabled={!code}
               className={classnames(
@@ -198,13 +231,13 @@ function Compiler() {
             >
               {processing ? "Processing..." : "Compile and Execute"}
             </button> */}
-          </div>
-          {/* <div className="bg-red-600">
+        </div>
+        {/* <div className="bg-red-600">
             <button onClick={downloadCode}>
               download
             </button>
           </div> */}
-          {/* {outputDetails && <OutputDetails outputDetails={outputDetails} />} */}
+        {/* {outputDetails && <OutputDetails outputDetails={outputDetails} />} */}
         {/* </div> */}
         {/* <div>
           <h1>Welcome, {session.user?.name}</h1>
