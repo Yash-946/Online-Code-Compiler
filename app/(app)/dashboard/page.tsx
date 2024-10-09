@@ -300,6 +300,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Trash2, Edit, Share2, Download, Search, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react';
 import { Navbar1 } from '@/components/layout/compiler/Navbar1';
+import { DeleteModal } from '@/components/layout/dashboard/DeleteModal';
 
 type Code = {
   id: string;
@@ -317,9 +318,18 @@ const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [codesPerPage] = useState(10);
+
+  //for delete
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [codeToDelete, setCodeToDelete] = useState<string | null>(null);
+
+
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'ascending' | 'descending' } | null>(null);
   const { data: session } = useSession();
   const userID = session?.user.id;
+
+
+
 
   useEffect(() => {
     const fetchCodes = async () => {
@@ -346,10 +356,24 @@ const Dashboard = () => {
     setCurrentPage(1);
   }, [searchTerm, codes]);
 
-  const handleDelete = async (id: string) => {
-    // Implement delete functionality
-    console.log("Delete code with id:", id);
+
+
+  const handleDeleteClick = (id: string) => {
+    setCodeToDelete(id);
+    setIsDeleteModalOpen(true);
   };
+  const handleDeleteConfirm = async () => {
+    if (codeToDelete) {
+      // Implement delete functionality
+      console.log("Deleting code with id:", codeToDelete);
+      // After successful deletion, update the codes list
+      // setCodes(codes.filter(code => code.id !== codeToDelete));
+      setIsDeleteModalOpen(false);
+      setCodeToDelete(null);
+    }
+  };
+
+  
 
   const handleEdit = (id: string) => {
     // Implement edit functionality
@@ -489,7 +513,7 @@ const Dashboard = () => {
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDelete(code.id)}
+                          onClick={() => handleDeleteClick(code.id)}
                           className="text-red-500 hover:text-red-700"
                         >
                           <Trash2 size={18} />
@@ -550,6 +574,14 @@ const Dashboard = () => {
             </button>
           </div>
         </div>
+
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          title="Confirm Deletion"
+          message="Are you sure you want to delete this file? This action cannot be undone."
+        />
       </div>
     </div>
   );
