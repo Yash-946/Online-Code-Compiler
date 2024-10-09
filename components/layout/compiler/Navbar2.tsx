@@ -8,12 +8,12 @@ interface Navbar2Props {
   processing: boolean;
   downloadCode: () => void;
   onSelectChange: (value: string) => void;
+  onhandlesavecode: () => void
 }
 
-export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange }: Navbar2Props) => {
+export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange, onhandlesavecode }: Navbar2Props) => {
 
   const [issigninPopupOpen, setsigninPopupOpen] = useState(false);
-
 
   return (
     <div className="flex items-center justify-between shadow-md pb-4">
@@ -26,7 +26,10 @@ export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange }: N
           <span>Share</span>
         </button>
 
-        <button className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95">
+        <button 
+          className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+          onClick={onhandlesavecode}
+        >
           <UploadIcon className="w-5 h-5" />
           <span>Save</span>
         </button>

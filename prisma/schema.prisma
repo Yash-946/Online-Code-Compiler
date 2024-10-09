@@ -22,4 +22,19 @@ model User {
   verifyCode       String?
   verifyCodeExpiry DateTime?
   isVerified       Boolean  @default(false)
+
+  codes            Code[]
 }
+
+model Code {
+  id          String   @id @default(uuid())
+  fileName    String
+  code        String
+  language    String
+  createdAt   DateTime @default(now())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
