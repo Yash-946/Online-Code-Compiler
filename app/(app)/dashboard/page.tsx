@@ -334,7 +334,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchCodes = async () => {
       try {
-        const response = await axios.get(`/api/save-code?userID=${userID}`);
+        const response = await axios.get(`/api/save-code/all?userID=${userID}`);
         setCodes(response.data.codes);
         setFilteredCodes(response.data.codes);
       } catch (error) {

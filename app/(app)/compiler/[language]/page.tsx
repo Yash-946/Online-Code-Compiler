@@ -169,6 +169,7 @@ function Compiler() {
         userID: session.user.id,
         language
       }
+      console.log(data);
       const response = await axios.post("/api/save-code", data);
       console.log(response.data);
       const codeid = response.data.codeID;
