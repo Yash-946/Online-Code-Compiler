@@ -301,6 +301,7 @@ import { motion } from 'framer-motion';
 import { Trash2, Edit, Share2, Download, Search, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react';
 import { Navbar1 } from '@/components/layout/compiler/Navbar1';
 import { DeleteModal } from '@/components/layout/dashboard/DeleteModal';
+import { useRouter } from 'next/navigation';
 
 type Code = {
   id: string;
@@ -313,6 +314,7 @@ type Code = {
 type SortKey = 'fileName' | 'language' | 'createdAt';
 
 const Dashboard = () => {
+  const router = useRouter();
   const [codes, setCodes] = useState<Code[]>([]);
   const [filteredCodes, setFilteredCodes] = useState<Code[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -368,8 +370,13 @@ const Dashboard = () => {
       console.log("Deleting code with id:", codeToDelete);
       // After successful deletion, update the codes list
       // setCodes(codes.filter(code => code.id !== codeToDelete));
+      const response = await axios.delete(`/api/save-code?codeID=${codeToDelete}`);
+      console.log(response.data)
+      setCodes((prevCodes) => prevCodes.filter(code => code.id !== codeToDelete));
       setIsDeleteModalOpen(false);
       setCodeToDelete(null);
+
+
     }
   };
 
@@ -497,7 +504,12 @@ const Dashboard = () => {
                     className="hover:bg-muted/50"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">{indexOfFirstCode + index + 1}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{code.fileName}</td>
+                    <td
+                      className="px-6 py-4 whitespace-nowrap cursor-pointer"
+                      onClick={() => router.replace(`/${code.id}`)}
+                    >
+                      {code.fileName}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">{code.language}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{new Date(code.createdAt).toLocaleString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
