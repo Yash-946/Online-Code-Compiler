@@ -34,7 +34,7 @@ const LanguagesDropdown: React.FC<LanguagesDropdownProps> = ({
             {option.label}
           </SelectItem>
         ))}
-      </SelectContent>
+      </SelectContent> 
     </Select>
   );
 };
