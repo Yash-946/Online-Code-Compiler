@@ -9,6 +9,7 @@ import { OutputWindow } from "@/components/layout/code-editor/OutputWindow";
 import { OutputDetails } from "@/components/layout/code-editor/OutputDetails";
 import { CustomInput } from "@/components/layout/code-editor/CustomInput";
 import {
+  DefaultCode,
   languageData,
   languageOptions,
 } from "@/components/layout/compiler/Languages";
@@ -19,14 +20,6 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { CodeEditorWindow } from "@/components/layout/code-editor/CodeEditorWindow";
 import Loading from "@/app/loading";
-
-const javascriptDefault = `console.log("hello");`;
-const pythonDefault = `print("Hello, World!")`;
-const javaDefault = `public class Main {
-  public static void main(String[] args) {
-      System.out.println("hello, world");
-  }
-}`;
 
 function Compiler() {
   const router = useRouter();
@@ -51,15 +44,18 @@ function Compiler() {
   useEffect(() => {
     console.log("Language changed:", language);
 
-    if (language == "javascript") {
-      // console.log("javascriptDefault");
-      setCode(javascriptDefault);
-      // console.log("DefautCode", code);
-    } else if (language === "python") {
-      setCode(pythonDefault);
-    } else {
-      setCode(javaDefault);
-    }
+    // if (language == "javascript") {
+    //   // console.log("javascriptDefault");
+    //   setCode(javascriptDefault);
+    //   // console.log("DefautCode", code);
+    // } else if (language === "python") {
+    //   setCode(pythonDefault);
+    // } else {
+    //   setCode(javaDefault);
+    // }
+    const dc = DefaultCode(language);
+    console.log(dc);
+    setCode(dc);
   }, []);
 
   const onChange = useCallback((action: any, data: any) => {
@@ -156,26 +152,27 @@ function Compiler() {
     }
   };
 
-  const handleSaveCode = async() => {
-    if(!session){
-      alert("You are not login")
-    }
-    else{
-      let filename = prompt("Enter the file Name")
+  const handleSaveCode = async () => {
+    if (!session) {
+      alert("You are not login");
+    } else {
+      let filename = prompt("Enter the file Name");
       console.log(filename, code, session, language);
-      const data = {
-        filename,
-        code: btoa(code),
-        userID: session.user.id,
-        language
+      if (filename) {
+        const data = {
+          filename,
+          code: btoa(code),
+          userID: session.user.id,
+          language,
+        };
+        console.log(data);
+        const response = await axios.post("/api/save-code", data);
+        console.log(response.data);
+        const codeid = response.data.codeID;
+        router.replace(`/${codeid}`);
       }
-      console.log(data);
-      const response = await axios.post("/api/save-code", data);
-      console.log(response.data);
-      const codeid = response.data.codeID;
-      router.replace(`/${codeid}`)
     }
-  }
+  };
 
   if (!code) {
     return (
@@ -205,7 +202,7 @@ function Compiler() {
             processing={processing}
             downloadCode={downloadCode}
             onSelectChange={onSelectChange}
-            onhandlesavecode = {handleSaveCode}
+            onhandlesavecode={handleSaveCode}
           />
           {/* <LanguagesDropdown onSelectChange={onSelectChange} /> */}
           <CodeEditorWindow
@@ -251,5 +248,7 @@ function Compiler() {
     </div>
   );
 }
+
+function SetDefaultCode(language: string) {}
 
 export default Compiler;

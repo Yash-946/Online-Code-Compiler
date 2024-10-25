@@ -16,7 +16,7 @@ const languages: Language[] = [
     svgPath: '/svg/python.svg',
   },
   {
-    name: 'C++',
+    name: 'Cpp',
     svgPath: '/svg/c++.svg',
   },
   {
