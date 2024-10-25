@@ -1,10 +1,11 @@
+
 "use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 
 export const SaveFile = ({ isOpen, onClose, onSave }) => {
-    const [filenames, setFilenames] = useState("");
+    const [filename, setFilename] = useState("");
 
     const handleSubmit = (e: any) => {
         e.preventDefault();
@@ -18,9 +19,9 @@ export const SaveFile = ({ isOpen, onClose, onSave }) => {
 
 
     // To open the popup:
-    {/* <button onClick={() => setIsPopupOpen(true)}>
+{/* <button onClick={() => setIsPopupOpen(true)}>
   Open Popup
-</button> */}
+</button>  */}
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -48,8 +49,8 @@ export const SaveFile = ({ isOpen, onClose, onSave }) => {
                     <div>
                         <input
                             type="text"
-                            value={filenames}
-                            onChange={(e) => setFilenames(e.target.value)}
+                            value={filename}
+                            onChange={(e) => setFilename(e.target.value)}
                             className="w-full px-3 py-2 border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background text-foreground"
                             placeholder="Enter file name"
                             autoFocus
@@ -71,7 +72,7 @@ export const SaveFile = ({ isOpen, onClose, onSave }) => {
                             type="submit"
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            disabled={!filenames.trim()}
+                            disabled={!filename.trim()}
                             className="px-4 py-2 rounded-md text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Save
@@ -82,4 +83,5 @@ export const SaveFile = ({ isOpen, onClose, onSave }) => {
         </div>
     );
 };
+
 

@@ -20,7 +20,7 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { CodeEditorWindow } from "@/components/layout/code-editor/CodeEditorWindow";
 import Loading from "@/app/loading";
-// import { SaveFile } from "@/components/layout/save-code/SaveFile";
+import { SaveFile } from "@/components/layout/save-code/SaveFile";
 
 function Compiler() {
   const router = useRouter();
@@ -160,29 +160,35 @@ function Compiler() {
     if (!session) {
       alert("You are not login");
     } else {
-      // return (<>
-      //   <SaveFile
-      //     isOpen={isOpenSaveFile}
-      //     onClose={() => setisOpenSaveFile(false)}
-      //     onSave={handleSaveCode}
-      //   />
-      // </>);
-      let filename = prompt("Enter the file Name");
-      console.log(filename, code, session, language);
-      if (filename) {
-        const data = {
-          filename,
-          code: btoa(code),
-          userID: session.user.id,
-          language,
-        };
-        console.log(data);
-        const response = await axios.post("/api/save-code", data);
-        console.log(response.data);
-        const codeid = response.data.codeID;
-        router.replace(`/${codeid}`);
-      }
-      console.log('File name:', filename);
+
+
+      // return (
+      //   <>
+
+
+      //     <SaveFile isOpen={isOpenSaveFile} onClose={() => setisOpenSaveFile(false)} onSave={handleSaveCode} />
+      //   </>
+      // );
+
+      
+
+
+      // let filename = prompt("Enter the file Name");
+      // console.log(filename, code, session, language);
+      // if (filename) {
+      //   const data = {
+      //     filename,
+      //     code: btoa(code),
+      //     userID: session.user.id,
+      //     language,
+      //   };
+      //   console.log(data);
+      //   const response = await axios.post("/api/save-code", data);
+      //   console.log(response.data);
+      //   const codeid = response.data.codeID;
+      //   router.replace(`/${codeid}`);
+      // }
+      // console.log('File name:', filename);
     }
   };
 
@@ -209,6 +215,7 @@ function Compiler() {
       <Navbar1 />
       <div className="flex gap-7">
         <LeftNavbar />
+        
         <div className="flex justify-center items-center gap-6">
           <div>
             <Navbar2
@@ -217,6 +224,7 @@ function Compiler() {
               downloadCode={downloadCode}
               onSelectChange={onSelectChange}
               onhandlesavecode={handleSaveCode}
+              setisOpenSaveFile={setisOpenSaveFile}
             />
             {/* <LanguagesDropdown onSelectChange={onSelectChange} /> */}
             <CodeEditorWindow

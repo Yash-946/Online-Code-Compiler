@@ -1,19 +1,30 @@
+"use client"
 import { DownloadIcon, Share2Icon, UploadIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import LanguagesDropdown from '../code-editor/LanguagesDropdown';
 import SignInPopup from '../auth/signin-popup';
+import { SaveFile } from '../save-code/SaveFile';
+
 
 interface Navbar2Props {
   Runcode: () => void;
   processing: boolean;
   downloadCode: () => void;
   onSelectChange: (value: string) => void;
-  onhandlesavecode: () => void
+  onhandlesavecode: () => void;
+  setisOpenSaveFile: () => boolean;
+
 }
 
-export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange, onhandlesavecode }: Navbar2Props) => {
+export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange, onhandlesavecode, setisOpenSaveFile }: Navbar2Props) => {
 
   const [issigninPopupOpen, setsigninPopupOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const handleSave = () => {
+    console.log('File name:',);
+  };
+
 
   return (
     <div className="flex items-center justify-between shadow-md pb-3">
@@ -26,10 +37,20 @@ export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange, onh
           <span>Share</span>
         </button>
 
-        <button 
+        <SaveFile
+          isOpen={isPopupOpen}
+          onClose={() => setIsPopupOpen(false)}
+          onSave={handleSave}
+        />
+
+      
+        <button
           className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
-          onClick={onhandlesavecode}
+          // onClick={onhandlesavecode}
+          onClick={() => setIsPopupOpen(true)}
+
         >
+
           <UploadIcon className="w-5 h-5" />
           <span>Save</span>
         </button>
@@ -42,12 +63,11 @@ export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange, onh
           <span>Download</span>
         </button>
 
-        <button 
-          className={`flex items-center space-x-1 px-4 py-1 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
-            processing 
-              ? 'bg-muted text-muted-foreground cursor-not-allowed' 
+        <button
+          className={`flex items-center space-x-1 px-4 py-1 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${processing
+              ? 'bg-muted text-muted-foreground cursor-not-allowed'
               : 'bg-accent text-accent-foreground hover:bg-accent/90'
-          }`}
+            }`}
           onClick={Runcode}
           disabled={processing}
         >
