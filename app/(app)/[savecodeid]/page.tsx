@@ -58,14 +58,14 @@ function SaveCode() {
   }, [codeid]);
 
   const handleSaveCode = async () => {
-    console.log("handlesavecode",flag);
+    console.log("handlesavecode", flag);
   };
 
   if (loading) {
     return <Loading />;
   }
 
-  
+
 
   return (
     // <div>
@@ -83,7 +83,7 @@ function SaveCode() {
     // </div>
 
     <>
-      <div>
+      <div className="h-[100vh] overflow-hidden">
         <div>
           <Navbar1 />
         </div>
@@ -91,27 +91,33 @@ function SaveCode() {
         <div className="flex gap-8">
           <LeftNavbar />
 
-          {code ? (
-            <div>
-              <div className="flex gap-12">
-                <h2>{filename}</h2>
+          <div className="flex justify-center items-center gap-10">
 
-                <Navbar2 flag={flag} onhandlesavecode={handleSaveCode}/>
+
+
+
+            {code ? (
+              <div>
+                <div className="flex gap-12">
+                  <h2>{filename}</h2>
+
+                  <Navbar2 flag={flag} onhandlesavecode={handleSaveCode} />
+                </div>
+                <CodeEditorWindow
+                  code={code}
+                  onChange={onChange}
+                  language={launguage}
+                  theme="Monokai"
+                />
               </div>
-              <CodeEditorWindow
-                code={code}
-                onChange={onChange}
-                language={launguage}
-                theme="Monokai"
-              />
-            </div>
-          ) : (
-            <p>No code found for this ID.</p>
-          )}
+            ) : (
+              <p>No code found for this ID.</p>
+            )}
 
-          <div>
-            <OutputWindow />
-            <CustomInput />
+            <div>
+              <OutputWindow />
+              <CustomInput />
+            </div>
           </div>
         </div>
       </div>

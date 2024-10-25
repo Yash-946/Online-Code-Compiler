@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { CodeEditorWindow } from "@/components/layout/code-editor/CodeEditorWindow";
 import Loading from "@/app/loading";
+// import { SaveFile } from "@/components/layout/save-code/SaveFile";
 
 function Compiler() {
   const router = useRouter();
@@ -33,6 +34,7 @@ function Compiler() {
   const [customInput, setCustomInput] = useState("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [processing, setProcessing] = useState(false);
+  const [isOpenSaveFile, setisOpenSaveFile] = useState(false);
 
   const enterPress = useKeyPress("Enter");
   const ctrlPress = useKeyPress("Control");
@@ -152,10 +154,19 @@ function Compiler() {
     }
   };
 
-  const handleSaveCode = async () => {
+  const handleSaveCode = async (
+    // filenames
+  ) => {
     if (!session) {
       alert("You are not login");
     } else {
+      // return (<>
+      //   <SaveFile
+      //     isOpen={isOpenSaveFile}
+      //     onClose={() => setisOpenSaveFile(false)}
+      //     onSave={handleSaveCode}
+      //   />
+      // </>);
       let filename = prompt("Enter the file Name");
       console.log(filename, code, session, language);
       if (filename) {
@@ -171,6 +182,7 @@ function Compiler() {
         const codeid = response.data.codeID;
         router.replace(`/${codeid}`);
       }
+      console.log('File name:', filename);
     }
   };
 
@@ -192,34 +204,36 @@ function Compiler() {
   };
 
   return (
-    <div className="bg-background">
+
+    <div className="bg-background h-[100vh] overflow-hidden">
       <Navbar1 />
-      <div className="flex gap-8">
+      <div className="flex gap-7">
         <LeftNavbar />
-        <div>
-          <Navbar2
-            Runcode={handleCompile}
-            processing={processing}
-            downloadCode={downloadCode}
-            onSelectChange={onSelectChange}
-            onhandlesavecode={handleSaveCode}
-          />
-          {/* <LanguagesDropdown onSelectChange={onSelectChange} /> */}
-          <CodeEditorWindow
-            code={code}
-            onChange={onChange}
-            language={language}
-            theme="Monokai"
-          />
-        </div>
-        <div className=" flex flex-col">
-          <OutputWindow outputDetails={outputDetails} />
-          <CustomInput
-            customInput={customInput}
-            setCustomInput={setCustomInput}
-          />
-          {/* <div className="flex"> */}
-          {/* <button
+        <div className="flex justify-center items-center gap-6">
+          <div>
+            <Navbar2
+              Runcode={handleCompile}
+              processing={processing}
+              downloadCode={downloadCode}
+              onSelectChange={onSelectChange}
+              onhandlesavecode={handleSaveCode}
+            />
+            {/* <LanguagesDropdown onSelectChange={onSelectChange} /> */}
+            <CodeEditorWindow
+              code={code}
+              onChange={onChange}
+              language={language}
+              theme="Monokai"
+            />
+          </div>
+          <div className=" flex flex-col ">
+            <OutputWindow outputDetails={outputDetails} />
+            <CustomInput
+              customInput={customInput}
+              setCustomInput={setCustomInput}
+            />
+            {/* <div className="flex"> */}
+            {/* <button
               onClick={handleCompile}
               disabled={!code}
               className={classnames(
@@ -229,26 +243,27 @@ function Compiler() {
             >
               {processing ? "Processing..." : "Compile and Execute"}
             </button> */}
-        </div>
-        {/* <div className="bg-red-600">
+          </div>
+          {/* <div className="bg-red-600">
             <button onClick={downloadCode}>
               download
             </button>
           </div> */}
-        {/* {outputDetails && <OutputDetails outputDetails={outputDetails} />} */}
-        {/* </div> */}
-        {/* <div>
+          {/* {outputDetails && <OutputDetails outputDetails={outputDetails} />} */}
+          {/* </div> */}
+          {/* <div>
           <h1>Welcome, {session.user?.name}</h1>
           <p>Email: {session.user?.email}</p>
           <button onClick={() => signOut({ callbackUrl: '/sign-in' })} className="sign-out-btn">
             Sign Out
           </button>
         </div> */}
+        </div>
       </div>
     </div>
   );
 }
 
-function SetDefaultCode(language: string) {}
+function SetDefaultCode(language: string) { }
 
 export default Compiler;

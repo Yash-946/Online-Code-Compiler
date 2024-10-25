@@ -58,7 +58,7 @@ export const LeftNavbar: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center bg-muted/50 dark:bg-card rounded-2xl h-[90vh] overflow-y-scroll overflow-hidden scrollbar-hide w-[4.25rem] p-4 space-y-6 border border-secondary ">
+    <div className="flex flex-col items-center bg-muted/50 dark:bg-card rounded-2xl min-h-[85vh] h-[85vh] overflow-y-scroll overflow-hidden scrollbar-hide w-[4.25rem] p-4 space-y-6 border border-secondary ">
       {languages.map((language, index) => (
         <div
           key={index}

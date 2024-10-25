@@ -16,7 +16,7 @@ export const Navbar2 = ({ Runcode, processing, downloadCode, onSelectChange, onh
   const [issigninPopupOpen, setsigninPopupOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between shadow-md pb-4">
+    <div className="flex items-center justify-between shadow-md pb-3">
 
       <LanguagesDropdown onSelectChange={onSelectChange} />
 

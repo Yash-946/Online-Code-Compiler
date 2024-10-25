@@ -43,7 +43,7 @@ export const CodeEditorWindow = ({
   };
 
   return (
-    <div className="overlay rounded-md overflow-hidden w-full h-full shadow-4xl">
+    <div className="overlay rounded-md overflow-hidden w-full min-h-[77vh] h-[75vh] shadow-4xl">
       <Editor
         height="85vh"
         width={`100%`}
