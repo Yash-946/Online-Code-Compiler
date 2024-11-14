@@ -37,7 +37,7 @@ export const CodeEditorWindow = ({
   }, [theme]); // Re-run the effect whenever the theme changes
 
   const handleEditorChange = (value: any) => {
-    console.log("value", value);
+    // console.log("value", value);
     setValue(value);
     onChange("code", value);
   };

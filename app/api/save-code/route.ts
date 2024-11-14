@@ -19,7 +19,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: "Code saved successfully",
       codeID: savecode.id,
-    });
+    },{ status: 200 });
+
   } catch (error: any) {
     console.error("Error saving code:", error);
     return NextResponse.json({
@@ -43,22 +44,20 @@ export async function GET(request: Request) {
       );
     }
 
-    // Fetch all codes for the given codeID
+    // Fetch code for the given codeID
     const codeData = await prisma.code.findUnique({
       where: {
         id: codeID as string,
       },
     });
-    console.log(codeData)
+    // console.log(codeData)
     if (!codeData) {
-      // return request.status(404).json({ message: 'Code not found' });
       return NextResponse.json(
         { message: "Code not found" },
         { status: 404 }
       );
     }
 
-    // return request.status(200).json(codeData);
     return NextResponse.json(
       { codeData: codeData },
       { status: 200 }
@@ -75,6 +74,7 @@ export async function GET(request: Request) {
     );
   }
 }
+
 export async function DELETE(request: Request) {
   try {
     // Extract userID from query parameters
@@ -109,6 +109,53 @@ export async function DELETE(request: Request) {
       {
         message: "Code is Deleted",
         codeData: codeData
+      },
+      { status: 200 }
+    );
+
+  } catch (error: any) {
+    console.error("Error retrieving codes:", error);
+    return NextResponse.json(
+      {
+        message: "Failed to delete codes",
+        error: error.message,
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const { codeID, code, } = await request.json();
+    console.log(codeID,code);
+
+    if (!codeID) {
+      return NextResponse.json(
+        { message: "codeID is required" },
+        { status: 400 }
+      );
+    }
+
+    const codeData = await prisma.code.update({
+      where: {
+        id: codeID as string,
+      },
+      data:{
+        code:code
+      }
+    });
+    console.log("Put",codeData)
+    if (!codeData) {
+      return NextResponse.json(
+        { message: "Code not update" },
+        { status: 404 }
+      );
+    }
+    
+    return NextResponse.json(
+      {
+        message: "Code is updated",
       },
       { status: 200 }
     );

@@ -74,8 +74,8 @@ const Signup = () => {
   });
 
   const signUpApi = async (data: SignUpData) => {
-    const respone = await axios.post("/api/sign-up", data);
-    return respone.data;
+    const response = await axios.post("/api/sign-up", data);
+    return response.data;
   };
 
   const { mutate, isPending, isError, reset } = useMutation({

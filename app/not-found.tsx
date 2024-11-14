@@ -10,7 +10,7 @@ export default function NotFound() {
   // Animation variants for code lines
   const codeLineVariants = {
     initial: { opacity: 0, x: -20 },
-    animate: (i) => ({
+    animate: (i: number) => ({
       opacity: 1,
       x: 0,
       transition: {
