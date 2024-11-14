@@ -43,7 +43,7 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <Navbar />
+      <Navbar homepage={true}/>
       <HeroSection />
       <SponsorsSection />
       <LanguageIcons />

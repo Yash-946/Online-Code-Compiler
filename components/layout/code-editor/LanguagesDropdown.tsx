@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { languageOptions } from "../compiler/Languages";
+import { languageOptions } from "../../../lib/Languages";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 interface LanguageOption {
   value: string;
