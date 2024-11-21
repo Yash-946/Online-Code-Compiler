@@ -11,6 +11,7 @@ import { useParams, useRouter } from "next/navigation";
 import { CodeEditorWindow } from "@/components/layout/code-editor/CodeEditorWindow";
 import Loading from "@/app/loading";
 import { Navbar } from "@/components/layout/navbar";
+import { Geminichat } from "@/components/aiintegration/geminichat";
 
 function Compiler() {
   const router = useRouter();
@@ -91,6 +92,9 @@ function Compiler() {
                 customInput={customInput}
                 setCustomInput={setCustomInput}
               />
+            </div>
+            <div>
+              <Geminichat />
             </div>
           </div>
         </div>
