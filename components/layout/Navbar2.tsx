@@ -9,6 +9,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
+import { Sharelink } from "./Sharelink";
 
 interface Navbar2Props {
   code: string;
@@ -39,6 +40,11 @@ export const Navbar2 = ({
   const [isSigninPopupOpen, setSigninPopupOpen] = useState(false);
   const [isSaveFilePopupOpen, setSaveFilePopupOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
+
+  const [isSharePopupOpen, setSharePopupOpen] = useState(false); 
+
+
+
 
   const handleSave = () => {
     if (!session) {
@@ -187,10 +193,20 @@ export const Navbar2 = ({
     UpdateCodeMutaion.mutate(data);
   };
 
+  const handleShareClick = () => {
+    setSharePopupOpen(true); // Open the Share popup
+  };
+
+  const handleCloseSharePopup = () => {
+    setSharePopupOpen(false); // Close the Share popup
+  };
+
   return (
     <div className="flex items-center justify-between shadow-md pb-3">
       <div className="flex space-x-4">
-        <button className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95">
+        <button 
+        onClick={handleShareClick}
+        className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95">
           <Share2Icon className="w-5 h-5" />
           <span>Share</span>
         </button>
@@ -255,7 +271,9 @@ export const Navbar2 = ({
         isOpen={isSigninPopupOpen}
         onClose={() => setSigninPopupOpen(false)}
       />
-    </div>
+
+{isSharePopupOpen && <Sharelink onClose={handleCloseSharePopup} />}
+</div>
   );
 };
 
