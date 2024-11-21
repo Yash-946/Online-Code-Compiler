@@ -41,9 +41,8 @@ export function Geminichat() {
 
     try {
       const response = await axios({
-        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${
-          import.meta.env.NEXT_PUBLIC_GENERATIVE_LANGUAGE_CLIENT
-        }`,
+        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${import.meta.env.NEXT_PUBLIC_GENERATIVE_LANGUAGE_CLIENT
+          }`,
         method: "post",
         data: {
           contents: [{ parts: [{ text: question }] }],
@@ -65,7 +64,7 @@ export function Geminichat() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-bl from-[#1a1a1a] to-[#000000] flex items-center justify-center">
+    <div className="min-h-screen  flex items-center justify-center">
       {!isChatOpen && (
         <Image
           src="/ai.jpg"
@@ -79,25 +78,23 @@ export function Geminichat() {
 
       {isChatOpen && (
         <div
-          className={`fixed flex flex-col rounded-2xl shadow-lg bg-black w-full max-w-lg ${
-            isMinimized ? "bottom-7 right-10 h-16" : "bottom-7 right-10 h-[85%]"
-          } transition-all duration-500`}
+          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${isMinimized ? "bottom-7 right-10 h-16" : "bottom-7 right-10 h-[85%]"
+            } transition-all duration-500`}
         >
           <header
-            className={`flex justify-between items-center bg-orange-900 text-white rounded-t-lg px-4 py-2 ${
-              isMinimized ? "hidden" : ""
-            }`}
+            className={`flex justify-between text-primary-foreground items-center bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary text-white rounded-t-lg px-4 py-2 ${isMinimized ? "hidden" : ""
+              }`}
           >
             <span>Online Code Compiler</span>
-            <div className="flex space-x-2">
+            <div className="flex space-x-5 text-primary-foreground">
               <button
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-800 hover:text-gray-600 text-xl"
                 onClick={() => setIsMinimized(!isMinimized)}
               >
                 _
               </button>
               <button
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-800 hover:text-gray-600 text-xl"
                 onClick={() => setIsChatOpen(false)}
               >
                 ✖
@@ -122,16 +119,14 @@ export function Geminichat() {
                 chatHistory.map((chat, index) => (
                   <div
                     key={index}
-                    className={`mb-4 ${
-                      chat.type === "question" ? "text-right" : "text-left"
-                    }`}
+                    className={`mb-4 ${chat.type === "question" ? "text-right" : "text-left"
+                      }`}
                   >
                     <div
-                      className={`inline-block w-fit max-w-[80%] p-3 rounded-lg break-words overflow-auto ${
-                        chat.type === "question"
+                      className={`inline-block w-fit max-w-[80%] p-3 rounded-lg break-words overflow-auto ${chat.type === "question"
                           ? "bg-neutral-800 text-white rounded-br-none"
                           : "bg-neutral-800 text-white rounded-bl-none"
-                      }`}
+                        }`}
                     >
                       <ReactMarkdown>{chat.content}</ReactMarkdown>
                     </div>
@@ -144,12 +139,12 @@ export function Geminichat() {
           {!isMinimized && (
             <form
               onSubmit={generateAnswer}
-              className="w-full bg-[#1a1a1a] bg-transparent border-t border-gray-700 p-4"
+              className="w-full bg-[#1a1a1a] bg-transparent border-t  p-4"
             >
               <div className="flex gap-2 items-center">
                 <textarea
                   required
-                  className="flex-1 w-full p-[14px] border border-gray-600 rounded-md resize-none overflow-auto scrollbar-hide focus:outline-none focus:ring-2 focus:ring-gray-500 text-black"
+                  className="flex-1 w-full p-[14px] border border-secondary rounded-md resize-none overflow-auto scrollbar-hide focus:outline-none focus:ring-1 focus:ring-neutral-800 text-white"
                   value={question}
                   onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                     setQuestion(e.target.value)
@@ -165,9 +160,8 @@ export function Geminichat() {
                 ></textarea>
                 <button
                   type="submit"
-                  className={`px-6 py-3 bg-neutral-800 hover:bg-neutral-900 rounded-lg text-white font-medium transition-colors ${
-                    generatingAnswer ? "cursor-not-allowed" : ""
-                  }`}
+                  className={`px-6 py-[14px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${generatingAnswer ? "cursor-not-allowed" : ""
+                    }`}
                   disabled={generatingAnswer}
                 >
                   {generatingAnswer ? "Generating..." : "Send"}
