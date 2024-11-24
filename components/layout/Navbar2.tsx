@@ -10,41 +10,35 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Sharelink } from "./Sharelink";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { codeatom, flagatom, languageatom } from "@/store/atom";
 
 interface Navbar2Props {
-  code: string;
-  language: string;
   customInput: string;
   setOutputDetails: (value: React.SetStateAction<null>) => void;
   flag: boolean;
   savecodepage: boolean;
   filename?: string;
-  setFlag?: (value: boolean) => void;
 }
 
 export const Navbar2 = ({
-  code,
-  language,
-  customInput,
-  setOutputDetails,
   flag,
-  savecodepage,
   filename,
-  setFlag
+  customInput,
+  savecodepage,
+  setOutputDetails,
 }: Navbar2Props) => {
   const { data: session } = useSession();
   const router = useRouter();
   const params = useParams<{ savecodeid: string }>();
   const codeid = params.savecodeid;
-
   const [isSigninPopupOpen, setSigninPopupOpen] = useState(false);
   const [isSaveFilePopupOpen, setSaveFilePopupOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
-
-  const [isSharePopupOpen, setSharePopupOpen] = useState(false); 
-
-
-
+  const [isSharePopupOpen, setSharePopupOpen] = useState(false);
+  const language = useRecoilValue(languageatom).language!!!;
+  const code = useRecoilValue(codeatom).code!!!;
+  const setFlag = useSetRecoilState(flagatom);
 
   const handleSave = () => {
     if (!session) {
@@ -55,7 +49,7 @@ export const Navbar2 = ({
   };
 
   const handledownloadCode = () => {
-    downloadCode({filename, code, language});
+    downloadCode({ filename, code, language });
   };
 
   const handleCompile = () => {
@@ -175,8 +169,8 @@ export const Navbar2 = ({
     mutationFn: UpdateCodeApi,
     retry: 3,
     onSuccess: (data: any) => {
-      toast.success("Your Code is Updated")
-        setFlag!!!(false)
+      toast.success("Your Code is Updated");
+      setFlag({ flag: false });
     },
     onError: (error: any) => {
       console.error("Error saving code:", error);
@@ -204,9 +198,10 @@ export const Navbar2 = ({
   return (
     <div className="flex items-center justify-between shadow-md pb-3">
       <div className="flex space-x-4">
-        <button 
-        onClick={handleShareClick}
-        className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95">
+        <button
+          onClick={handleShareClick}
+          className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+        >
           <Share2Icon className="w-5 h-5" />
           <span>Share</span>
         </button>
@@ -272,14 +267,20 @@ export const Navbar2 = ({
         onClose={() => setSigninPopupOpen(false)}
       />
 
-{isSharePopupOpen && <Sharelink onClose={handleCloseSharePopup} />}
-</div>
+      {isSharePopupOpen && (
+        <Sharelink
+          onClose={handleCloseSharePopup}
+          code={code}
+          language={language}
+        />
+      )}
+    </div>
   );
 };
 
 interface downloadCodeprops {
-  filename?: string,
-  code: string,
+  filename?: string;
+  code: string;
   language: string;
 }
 export const downloadCode = ({
@@ -298,12 +299,11 @@ export const downloadCode = ({
   document.body.removeChild(element);
 };
 
-
 // const handleError = (error: any) => {
-  //   const status = error.response?.status;
-  //   if (status === 429) {
-  //     toast.error("Too many requests! Please try again later.");
-  //   } else {
-  //     toast.error("An error occurred. Please try again.");
-  //   }
-  // }
+//   const status = error.response?.status;
+//   if (status === 429) {
+//     toast.error("Too many requests! Please try again later.");
+//   } else {
+//     toast.error("An error occurred. Please try again.");
+//   }
+// }
