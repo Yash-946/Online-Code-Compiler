@@ -32,9 +32,8 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    // Extract userID from query parameters
     const { searchParams } = new URL(request.url);
-    console.log(searchParams);
+    // console.log(searchParams);
     const codeID = searchParams.get("codeID");
     console.log(codeID);
     if (!codeID) {
@@ -43,8 +42,7 @@ export async function GET(request: Request) {
         { status: 400 }
       );
     }
-
-    // Fetch code for the given codeID
+    
     const codeData = await prisma.code.findUnique({
       where: {
         id: codeID as string,

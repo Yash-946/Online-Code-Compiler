@@ -1,45 +1,46 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Editor, { loader } from "@monaco-editor/react";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { codeatom, flagatom, languageatom } from "@/store/atom";
 
 interface CodeEditorWindowProps {
-  onChange: any;
-  language: any;
-  code: any;
   theme: any;
+  savecodepage: boolean;
 }
 
 export const CodeEditorWindow = ({
-  onChange,
-  language,
-  code,
-  theme, 
+  savecodepage,
+  theme,
 }: CodeEditorWindowProps) => {
-  const [value, setValue] = useState(code || "");
   const [isThemeLoaded, setIsThemeLoaded] = useState(false);
-  
-  
-  // console.log(theme);
-  
+  const language = useRecoilValue(languageatom).language!!!;
+  const [value, setvalue1] = useRecoilState(codeatom);
+  const setFlag = useSetRecoilState(flagatom);
+
   useEffect(() => {
     loader
       .init()
-      .then((monaco:any) => {
+      .then((monaco: any) => {
         // Load and define the theme
         import(`monaco-themes/themes/${theme}.json`).then((data) => {
           monaco.editor.defineTheme(theme, data);
           setIsThemeLoaded(true);
         });
       })
-      .catch((error:any) =>
-        console.error("An error occurred during initialization of Monaco: ", error)
+      .catch((error: any) =>
+        console.error(
+          "An error occurred during initialization of Monaco: ",
+          error
+        )
       );
-  }, [theme]); // Re-run the effect whenever the theme changes
+  }, [theme]);
 
   const handleEditorChange = (value: any) => {
-    // console.log("value", value);
-    setValue(value);
-    onChange("code", value);
+    setvalue1({ code: value });
+    if (savecodepage) {
+      setFlag({ flag: true });
+    }
   };
 
   return (
@@ -48,8 +49,8 @@ export const CodeEditorWindow = ({
         height="85vh"
         width={`100%`}
         language={language || "javascript"}
-        value={value}
-        theme={isThemeLoaded ? theme : "vs-light"}  // Use the loaded theme
+        value={value.code}
+        theme={isThemeLoaded ? theme : "vs-light"} // Use the loaded theme
         defaultValue="// some comment"
         onChange={handleEditorChange}
       />

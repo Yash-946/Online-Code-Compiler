@@ -1,24 +1,32 @@
 import React, { useState } from "react";
 import { Copy, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import axios from "axios";
 
 interface SharelinkProps {
   onClose: () => void;
+  code: string;
+  language: string;
 }
 
-export const Sharelink = ({ onClose }: SharelinkProps) => {
+export const Sharelink = ({ onClose,code,language }: SharelinkProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedLink, setGeneratedLink] = useState("");
 
   const handleShareClick = async () => {
+    // console.log(code, language);
     setIsGenerating(true);
 
-    // Simulate link generation (replace with actual logic)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-
-    // Example generated link (replace with your logic)
+    // await new Promise((resolve) => setTimeout(resolve, 2000));
+    const response = await axios.post('/api/share',{
+      code,
+      language
+    })
+    const data = response.data;
+    // console.log(data);
+    const baseUrl = `${window.location.protocol}//${window.location.host}`;
     setGeneratedLink(
-      `https://example.com/share/${Math.random().toString(36).substring(7)}`
+      `${baseUrl}/share/${data.ShareID}`
     );
     setIsGenerating(false);
   };
