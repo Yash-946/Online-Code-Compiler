@@ -9,6 +9,7 @@ import { flagatom } from "@/store/atom";
 
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
+import { Geminichat } from "../aiintegration/geminichat";
 
 interface MainBoilerPlateProps {
   filename?: string;
@@ -55,6 +56,7 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                   customInput={customInput}
                   setCustomInput={setCustomInput}
                 />
+                <Geminichat />
               </div>
             </div>
           </div>

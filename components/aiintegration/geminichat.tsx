@@ -41,8 +41,7 @@ export function Geminichat() {
 
     try {
       const response = await axios({
-        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${import.meta.env.NEXT_PUBLIC_GENERATIVE_LANGUAGE_CLIENT
-          }`,
+        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.NEXT_PUBLIC_GENERATIVE_LANGUAGE_CLIENT}`,
         method: "post",
         data: {
           contents: [{ parts: [{ text: question }] }],
