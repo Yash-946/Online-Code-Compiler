@@ -1,39 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Copy, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { useRecoilValue } from "recoil";
+import { codeatom, languageatom } from "@/store/atom";
+import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 interface SharelinkProps {
   onClose: () => void;
-  code: string;
-  language: string;
 }
 
-export const Sharelink = ({ onClose,code,language }: SharelinkProps) => {
-  const [isGenerating, setIsGenerating] = useState(false);
+export const Sharelink = ({ onClose }: SharelinkProps) => {
   const [generatedLink, setGeneratedLink] = useState("");
 
-  const handleShareClick = async () => {
-    // console.log(code, language);
-    setIsGenerating(true);
+  const language = useRecoilValue(languageatom).language!!!;
+  const code = useRecoilValue(codeatom).code!!!;
 
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
-    const response = await axios.post('/api/share',{
+  const ShareCodeApi = async () => {
+    const response = await axios.post("/api/share", {
       code,
-      language
-    })
-    const data = response.data;
-    // console.log(data);
-    const baseUrl = `${window.location.protocol}//${window.location.host}`;
-    setGeneratedLink(
-      `${baseUrl}/share/${data.ShareID}`
-    );
-    setIsGenerating(false);
+      language,
+    });
+    return response.data;
   };
+
+  const ShareCodeMutaion = useMutation({
+    mutationFn: ShareCodeApi,
+    retry: 3,
+    onSuccess: (data: any) => {
+      const baseUrl = `${window.location.protocol}//${window.location.host}`;
+      setGeneratedLink(`${baseUrl}/share/${data.ShareID}`);
+    },
+    onError: (error: any) => {
+      toast.error("Error while saving the code");
+    },
+  });
+
+  useEffect(() => {
+    ShareCodeMutaion.mutate();
+  }, []);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(generatedLink);
-    alert("Link copied to clipboard!");
+    toast.success("Link copied to clipboard!");
   };
 
   return (
@@ -59,14 +69,18 @@ export const Sharelink = ({ onClose,code,language }: SharelinkProps) => {
               <X className="w-6 h-6" />
             </button>
 
-            {isGenerating ? (
+            {ShareCodeMutaion.isPending ? (
               <div className="flex flex-col items-center space-y-4">
                 <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-                <p className="text-muted-foreground">Generating share link...</p>
+                <p className="text-muted-foreground">
+                  Generating share link...
+                </p>
               </div>
             ) : (
               <div className="space-y-4">
-                <h1 className="text-2xl font-bold text-center">Share Your Code</h1>
+                <h1 className="text-2xl font-bold text-center">
+                  Share Your Code
+                </h1>
 
                 {generatedLink ? (
                   <div className="flex items-center bg-muted rounded-lg p-3">
@@ -85,10 +99,10 @@ export const Sharelink = ({ onClose,code,language }: SharelinkProps) => {
                   </div>
                 ) : (
                   <button
-                    onClick={handleShareClick}
+                    onClick={() => ShareCodeMutaion.mutate()}
                     className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors w-full"
                   >
-                    Generate Link
+                    Try again
                   </button>
                 )}
               </div>

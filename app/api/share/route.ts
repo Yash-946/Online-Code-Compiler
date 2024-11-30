@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(request:Request) {
   const {code, language} = await request.json();
-  console.log(code, language);
+
   const shareID = await prisma.shareCode.create({
     data:{
       code:btoa(code),
@@ -20,9 +20,8 @@ export async function POST(request:Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    // console.log(searchParams);
     const codeID = searchParams.get("codeID");
-    console.log(codeID);
+    
     if (!codeID) {
       return NextResponse.json(
         { message: "codeID is required" },
@@ -35,7 +34,7 @@ export async function GET(request: Request) {
         id: codeID as string,
       },
     });
-    // console.log(codeData)
+    
     if (!codeData) {
       return NextResponse.json(
         { message: "Code not found" },

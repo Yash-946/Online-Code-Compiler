@@ -144,7 +144,6 @@ export const Navbar2 = ({
   });
 
   const handleSaveCode = async (filename: String) => {
-    // console.log(filename);
     try {
       if (filename) {
         const data = {
@@ -174,7 +173,7 @@ export const Navbar2 = ({
     },
     onError: (error: any) => {
       console.error("Error saving code:", error);
-      toast.error("Error while saving the code");
+      toast.error("Error while updating the code");
     },
   });
 
@@ -188,11 +187,11 @@ export const Navbar2 = ({
   };
 
   const handleShareClick = () => {
-    setSharePopupOpen(true); // Open the Share popup
+    setSharePopupOpen(true);
   };
 
   const handleCloseSharePopup = () => {
-    setSharePopupOpen(false); // Close the Share popup
+    setSharePopupOpen(false);
   };
 
   return (
@@ -270,8 +269,6 @@ export const Navbar2 = ({
       {isSharePopupOpen && (
         <Sharelink
           onClose={handleCloseSharePopup}
-          code={code}
-          language={language}
         />
       )}
     </div>
