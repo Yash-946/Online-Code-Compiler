@@ -12,7 +12,7 @@ function OauthTemplate() {
     try {
       const result = await signIn(provider, { callbackUrl: "/compiler/javascript", redirect: false });
     } catch (error) {
-      console.error(`${provider} sign-in error:`, error);
+      // console.error(`${provider} sign-in error:`, error);
       toast.error(`An error occurred during ${provider} sign-in`);
     }
   };

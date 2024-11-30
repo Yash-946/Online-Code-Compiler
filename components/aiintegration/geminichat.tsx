@@ -1,7 +1,17 @@
-import { useState, useRef, useEffect, FormEvent, ChangeEvent, KeyboardEvent } from "react";
+import {
+  useState,
+  useRef,
+  useEffect,
+  FormEvent,
+  ChangeEvent,
+  KeyboardEvent,
+} from "react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import Image from "next/image";
+import { useRecoilValue } from "recoil";
+import { codeatom } from "@/store/atom";
+import { useMutation } from "@tanstack/react-query";
 
 interface ChatMessage {
   type: "question" | "answer";
@@ -12,54 +22,80 @@ export function Geminichat() {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
-  const [generatingAnswer, setGeneratingAnswer] = useState<boolean>(false);
+  // const [generatingAnswer, setGeneratingAnswer] = useState<boolean>(false);
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-
+  
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const code = useRecoilValue(codeatom).code!!!;
+
+  const aiapi = async () => {
+    const response = await axios.post("/api/ai",{
+      code,
+      question
+    })
+    return response.data;
+  };
+
+  const aiMutaion = useMutation({
+    mutationFn: aiapi,
+    retry: 3,
+    onSuccess: (data: any) => {
+      setChatHistory((prev) => [
+        ...prev,
+        { type: "answer", content: data.message },
+      ]);
+      setAnswer(data);
+    },
+    onError: (error: any) => {
+      // console.error(error);
+      setAnswer("Sorry - Something went wrong. Please try again!");
+    },
+  });
 
   useEffect(() => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
-  }, [chatHistory, generatingAnswer]);
+  }, [chatHistory, aiMutaion.isPending]);
 
   async function generateAnswer(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!question.trim()) return;
 
-    setGeneratingAnswer(true);
+    // setGeneratingAnswer(true);
 
     const currentQuestion = question;
-    setQuestion(""); // Clear input immediately after sending
+    setQuestion("");
 
     setChatHistory((prev) => [
       ...prev,
       { type: "question", content: currentQuestion },
     ]);
+    aiMutaion.mutate();
 
-    try {
-      const response = await axios({
-        url: `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${process.env.NEXT_PUBLIC_GENERATIVE_LANGUAGE_CLIENT}`,
-        method: "post",
-        data: {
-          contents: [{ parts: [{ text: question }] }],
-        },
-      });
-      const aiResponse =
-        response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-      setChatHistory((prev) => [
-        ...prev,
-        { type: "answer", content: aiResponse },
-      ]);
-      setAnswer(aiResponse);
-    } catch (error) {
-      console.error(error);
-      setAnswer("Sorry - Something went wrong. Please try again!");
-    }
+    // try {
+    //   const response2 = await axios.post("/api/ai",{
+    //     code,
+    //     question
+    //   })
 
-    setGeneratingAnswer(false);
+    //   const aiResponse2 = response2.data;
+    //   console.log("aiResponse", aiResponse2);
+
+    //   setChatHistory((prev) => [
+    //     ...prev,
+    //     { type: "answer", content: aiResponse2.message },
+    //   ]);
+    //   setAnswer(aiResponse2);
+    // } catch (error) {
+    //   console.error(error);
+    //   setAnswer("Sorry - Something went wrong. Please try again!");
+    // }
+
+    // setGeneratingAnswer(false);
   }
 
   return (
@@ -77,12 +113,14 @@ export function Geminichat() {
 
       {isChatOpen && (
         <div
-          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${isMinimized ? "bottom-7 right-10 h-16" : "bottom-7 right-10 h-[85%]"
-            } transition-all duration-500`}
+          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${
+            isMinimized ? "bottom-7 right-10 h-16" : "bottom-7 right-10 h-[85%]"
+          } transition-all duration-500`}
         >
           <header
-            className={`flex justify-between text-primary-foreground items-center bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary text-white rounded-t-lg px-4 py-2 ${isMinimized ? "hidden" : ""
-              }`}
+            className={`flex justify-between text-primary-foreground items-center bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary text-white rounded-t-lg px-4 py-2 ${
+              isMinimized ? "hidden" : ""
+            }`}
           >
             <span>Online Code Compiler</span>
             <div className="flex space-x-5 text-primary-foreground">
@@ -118,14 +156,16 @@ export function Geminichat() {
                 chatHistory.map((chat, index) => (
                   <div
                     key={index}
-                    className={`mb-4 ${chat.type === "question" ? "text-right" : "text-left"
-                      }`}
+                    className={`mb-4 ${
+                      chat.type === "question" ? "text-right" : "text-left"
+                    }`}
                   >
                     <div
-                      className={`inline-block w-fit max-w-[80%] p-3 rounded-lg break-words overflow-auto ${chat.type === "question"
+                      className={`inline-block w-fit max-w-[80%] p-3 rounded-lg break-words overflow-auto ${
+                        chat.type === "question"
                           ? "bg-neutral-800 text-white rounded-br-none"
                           : "bg-neutral-800 text-white rounded-bl-none"
-                        }`}
+                      }`}
                     >
                       <ReactMarkdown>{chat.content}</ReactMarkdown>
                     </div>
@@ -153,17 +193,20 @@ export function Geminichat() {
                   onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
                     if (e.key === "Enter" && !e.shiftKey) {
                       e.preventDefault();
-                      generateAnswer(e as unknown as FormEvent<HTMLFormElement>);
+                      generateAnswer(
+                        e as unknown as FormEvent<HTMLFormElement>
+                      );
                     }
                   }}
                 ></textarea>
                 <button
                   type="submit"
-                  className={`px-6 py-[14px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${generatingAnswer ? "cursor-not-allowed" : ""
-                    }`}
-                  disabled={generatingAnswer}
+                  className={`px-6 py-[14px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${
+                    aiMutaion.isPending ? "cursor-not-allowed" : ""
+                  }`}
+                  disabled={aiMutaion.isPending}
                 >
-                  {generatingAnswer ? "Generating..." : "Send"}
+                  {aiMutaion.isPending ? "Generating..." : "Send"}
                 </button>
               </div>
             </form>
@@ -182,4 +225,3 @@ export function Geminichat() {
     </div>
   );
 }
-

@@ -82,17 +82,17 @@ const Signup = () => {
     mutationFn: signUpApi,
     retry: 3,
     onSuccess: (data: any) => {
-      console.log("Signup successful:", data);
+      // console.log("Signup successful:", data);
       router.replace(`/verify/${data.userID}`);
     },
     onError: (error: any) => {
-      console.error("Error signing up:", error);
+      // console.error("Error signing up:", error);
       toast.error("Sign Up Failed");
     },
   });
 
   const onSubmit: SubmitHandler<SignUpData> = (data) => {
-    console.log(data);
+    // console.log(data);
     mutate(data);
   };
 

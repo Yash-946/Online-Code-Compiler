@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const { userID, code } = await request.json();
-    console.log(userID, code);
     const decodeUserID = decodeURIComponent(userID);
 
     const user = await prisma.user.findUnique({

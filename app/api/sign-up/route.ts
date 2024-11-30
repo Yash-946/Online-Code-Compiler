@@ -8,7 +8,6 @@ import { sendVerificationEmail } from '@/helpers/sendVerificationEmail';
 export async function POST(request: Request) {
   try {
     const { email, name, password } = await request.json();
-    console.log(email, name, password);
 
     const existingUserByEmail = await prisma.user.findUnique({
       where: {
@@ -57,7 +56,6 @@ export async function POST(request: Request) {
     }
 
     const emailResponse = await sendVerificationEmail(email, name, verifyCode)
-    console.log("EmailResponse", emailResponse);
 
     if (!emailResponse.success) {
       return NextResponse.json({
