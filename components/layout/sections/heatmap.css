@@ -1,49 +1,26 @@
-.react-calendar-heatmap text {
-    font-size: 10px;
-    fill: #767676;
+/* styles.css or global.css or any other stylesheet imported globally */
+.color-empty {
+    background-color: #1a1a1a; /* Use your desired color */
   }
   
-  .color-empty {
-    fill: #ebedf0;
+  .color-scale-0 {
+    background-color: #f3f4f6; /* Very light gray */
   }
   
   .color-scale-1 {
-    fill: #c6e48b;
+    background-color: #d1fae5; /* Tailwind green-200 */
   }
   
   .color-scale-2 {
-    fill: #7bc96f;
+    background-color: #86efac; /* Tailwind green-400 */
   }
   
   .color-scale-3 {
-    fill: #239a3b;
+    background-color: #4ade80; /* Tailwind green-600 */
   }
   
   .color-scale-4 {
-    fill: #196127;
+    background-color: #22c55e; /* Tailwind green-800 */
   }
   
-  .react-calendar-heatmap .rect {
-    rx: 2; /* Rounded corners for grid cells */
-    width: 12px;
-    height: 12px;
-    margin: 2px;
-  }
-  
-  .react-calendar-heatmap .week {
-    justify-content: space-between;
-  }
-  
-  .react-calendar-heatmap .legend {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
-  
-  .react-calendar-heatmap .legend rect {
-    margin-right: 4px;
-    width: 12px;
-    height: 12px;
-  }
   
