@@ -88,7 +88,6 @@ export const Navbar = ({homepage}:NavBarProps) => {
     const result = await signIn("google", {
       callbackUrl: "/compiler/javascript",
     });
-    console.log("googlesignin", result);
   };
 
   return (

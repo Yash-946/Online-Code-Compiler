@@ -55,14 +55,13 @@ const SignInPopup: React.FC<SignInPopupProps> = ({ isOpen, onClose }) => {
   });
 
   const onSubmit: SubmitHandler<SignInData> = async (data) => {
-    console.log(data);
     setLoading(true);
     const result = await signIn("credentials", {
       redirect: false,
       email: data.email,
       password: data.password,
     });
-    console.log("Sign-in Result", result);
+    // console.log("Sign-in Result", result);
 
     if (result?.error) {
       if (result.error === "CredentialsSignin") {

@@ -54,19 +54,19 @@ const VerificationCodeComponent = () => {
     mutationFn: verifyApi,
     retry: 3,
     onSuccess: (data: any) => {
-      console.log("Signup successful:", data);
+      // console.log("Signup successful:", data);
       toast.success(`${data.message}`)
       router.replace(`/sign-in`)
     },
     onError: (error: any) => {
-      console.error("Error signing up:", error);
+      // console.error("Error signing up:", error);
       toast.error(`Verifacation failed, Please try again`)
     },
   });
 
   const onSubmit: SubmitHandler<VerifyData> = (data) => {
-    console.log(data);
-    console.log(pramas);
+    // console.log(data);
+    // console.log(pramas);
     mutate(data);
   };
 

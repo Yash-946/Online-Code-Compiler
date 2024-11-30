@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     },{ status: 200 });
 
   } catch (error: any) {
-    console.error("Error saving code:", error);
+    // console.error("Error saving code:", error);
     return NextResponse.json({
       message: "Failed to save code",
       error: error.message,
@@ -33,9 +33,8 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    // console.log(searchParams);
     const codeID = searchParams.get("codeID");
-    console.log(codeID);
+    
     if (!codeID) {
       return NextResponse.json(
         { message: "codeID is required" },
@@ -62,7 +61,7 @@ export async function GET(request: Request) {
     );
 
   } catch (error: any) {
-    console.error("Error retrieving codes:", error);
+    // console.error("Error retrieving codes:", error);
     return NextResponse.json(
       {
         message: "Failed to retrieve codes",
@@ -77,9 +76,8 @@ export async function DELETE(request: Request) {
   try {
     // Extract userID from query parameters
     const { searchParams } = new URL(request.url);
-    console.log(searchParams);
     const codeID = searchParams.get("codeID");
-    console.log(codeID);
+    
     if (!codeID) {
       return NextResponse.json(
         { message: "codeID is required" },
@@ -93,7 +91,7 @@ export async function DELETE(request: Request) {
         id: codeID as string,
       },
     });
-    console.log(codeData)
+    // console.log(codeData)
     if (!codeData) {
       // return request.status(404).json({ message: 'Code not found' });
       return NextResponse.json(
@@ -112,7 +110,7 @@ export async function DELETE(request: Request) {
     );
 
   } catch (error: any) {
-    console.error("Error retrieving codes:", error);
+    // console.error("Error retrieving codes:", error);
     return NextResponse.json(
       {
         message: "Failed to delete codes",
@@ -126,7 +124,6 @@ export async function DELETE(request: Request) {
 export async function PUT(request: Request) {
   try {
     const { codeID, code, } = await request.json();
-    console.log(codeID,code);
 
     if (!codeID) {
       return NextResponse.json(
@@ -143,7 +140,7 @@ export async function PUT(request: Request) {
         code:code
       }
     });
-    console.log("Put",codeData)
+
     if (!codeData) {
       return NextResponse.json(
         { message: "Code not update" },
@@ -159,7 +156,7 @@ export async function PUT(request: Request) {
     );
 
   } catch (error: any) {
-    console.error("Error retrieving codes:", error);
+    // console.error("Error retrieving codes:", error);
     return NextResponse.json(
       {
         message: "Failed to delete codes",

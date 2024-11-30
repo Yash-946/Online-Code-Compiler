@@ -1,15 +1,26 @@
-"use client"
-import React, { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
-import axios from 'axios';
-import { motion } from 'framer-motion';
-import { Trash2, Edit, Share2, Download, Search, ChevronLeft, ChevronRight, ArrowUpDown } from 'lucide-react';
-import { DeleteModal } from '@/components/layout/dashboard/DeleteModal';
-import { useRouter } from 'next/navigation';
-import { downloadCode } from '@/components/layout/Navbar2';
-import { useMutation } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
-import { Navbar } from '@/components/layout/navbar';
+"use client";
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import {
+  Trash2,
+  Edit,
+  Share2,
+  Download,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  ArrowUpDown,
+} from "lucide-react";
+import { DeleteModal } from "@/components/layout/dashboard/DeleteModal";
+import { downloadCode } from "@/components/layout/Navbar2";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { Navbar } from "@/components/layout/navbar";
+import { Sharelink } from "@/components/layout/Sharelink";
+import { useSetRecoilState } from "recoil";
+import { codeatom, languageatom } from "@/store/atom";
 
 type Code = {
   id: string;
@@ -19,13 +30,15 @@ type Code = {
   createdAt: Date;
 };
 
-type SortKey = 'fileName' | 'language' | 'createdAt';
+type SortKey = "fileName" | "language" | "createdAt";
 
 const Dashboard = () => {
-  const router = useRouter();
+  const { data: session } = useSession();
+  const userID = session?.user.id;
+
   const [codes, setCodes] = useState<Code[]>([]);
   const [filteredCodes, setFilteredCodes] = useState<Code[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [codesPerPage] = useState(10);
 
@@ -33,9 +46,34 @@ const Dashboard = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [codeToDelete, setCodeToDelete] = useState<string | null>(null);
 
-  const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: 'ascending' | 'descending' } | null>(null);
-  const { data: session } = useSession();
-  const userID = session?.user.id;
+  //for sorting
+  const [sortConfig, setSortConfig] = useState<{
+    key: SortKey;
+    direction: "ascending" | "descending";
+  } | null>(null);
+
+  //for share
+  const [isSharePopupOpen, setSharePopupOpen] = useState(false);
+  const setCode = useSetRecoilState(codeatom);
+  const setLanguage = useSetRecoilState(languageatom);
+
+  
+
+  // const totalpagesApi = async () => {
+  //   const response = await axios.get(`/api/dashboard/count?userID=${userID}`);
+  //   return response.data;
+  // };
+
+  // const totalpageMutaion = useMutation({
+  //   mutationFn: totalpagesApi,
+  //   retry: 3,
+  //   onSuccess: (data: any) => {
+  //     setTotalCodeCount(data.Data);
+  //   },
+  //   onError: (error: any) => {
+  //     toast.error("Error fetching codes:", error);
+  //   },
+  // })
 
   const fetchallCodeApi = async () => {
     const response = await axios.get(`/api/save-code/all?userID=${userID}`);
@@ -49,8 +87,9 @@ const Dashboard = () => {
       setCodes(data.codes);
       setFilteredCodes(data.codes);
     },
+    
     onError: (error: any) => {
-      console.error("Error fetching codes:", error);
+      // console.error("Error fetching codes:", error);
       toast.error("Error fetching codes:", error);
     },
   });
@@ -66,14 +105,42 @@ const Dashboard = () => {
   }, [userID]);
 
   useEffect(() => {
-    const results = codes.filter(code =>
-      code.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      code.language.toLowerCase().includes(searchTerm.toLowerCase())
+    const results = codes.filter(
+      (code) =>
+        code.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        code.language.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredCodes(results);
     setCurrentPage(1);
-  }, [searchTerm, codes]);
+  }, [searchTerm]);
 
+  const deleteCodeApi = async () => {
+    const response = await axios.delete(
+      `/api/save-code?codeID=${codeToDelete}`
+    );
+    return response.data.codeData;
+  };
+
+  const deleteCodeMutaion = useMutation({
+    mutationFn: deleteCodeApi,
+    retry: 3,
+    onSuccess: (data: Code) => {
+      // console.log("delete data", data);
+      setCodes((prevCodes) =>
+        prevCodes.filter((code) => code.id !== codeToDelete)
+      );
+      setFilteredCodes((prevCodes) =>
+        prevCodes.filter((code) => code.id !== codeToDelete)
+      );
+      setIsDeleteModalOpen(false);
+      setCodeToDelete(null);
+      toast.success(`${data.fileName} is deleted successfully`)
+    },
+    onError: (error: any) => {
+      // console.error("Error fetching codes:", error);
+      toast.error("Error while deleting code:", error);
+    },
+  })
 
   const handleDeleteClick = (id: string) => {
     setCodeToDelete(id);
@@ -82,32 +149,33 @@ const Dashboard = () => {
 
   const handleDeleteConfirm = async () => {
     if (codeToDelete) {
-      // Implement delete functionality
-      console.log("Deleting code with id:", codeToDelete);
-      // After successful deletion, update the codes list
-      // setCodes(codes.filter(code => code.id !== codeToDelete));
-      const response = await axios.delete(`/api/save-code?codeID=${codeToDelete}`);
-      console.log(response.data)
-      setCodes((prevCodes) => prevCodes.filter(code => code.id !== codeToDelete));
-      setIsDeleteModalOpen(false);
-      setCodeToDelete(null);
+      deleteCodeMutaion.mutate();
     }
   };
 
-  const handleShare = (id: string) => {
-    // Implement share functionality
-    console.log("Share code with id:", id);
+  const handleShare = (code: string, language: string) => {
+    setLanguage({language});
+    setCode({code:atob(code)});
+    setSharePopupOpen(true);
   };
 
-  const handleDownload = (id: string, filename: string, code :string, language:string) => {
+  const handleCloseSharePopup = () => {
+    setSharePopupOpen(false);
+  };
+
+  const handleDownload = (filename: string, code: string, language: string) => {
     code = atob(code);
-    downloadCode({filename,code,language})
+    downloadCode({ filename, code, language });
   };
 
   const handleSort = (key: SortKey) => {
-    let direction: 'ascending' | 'descending' = 'ascending';
-    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
+    let direction: "ascending" | "descending" = "ascending";
+    if (
+      sortConfig &&
+      sortConfig.key === key &&
+      sortConfig.direction === "ascending"
+    ) {
+      direction = "descending";
     }
     setSortConfig({ key, direction });
   };
@@ -116,10 +184,10 @@ const Dashboard = () => {
     if (sortConfig !== null) {
       const sortedCodes = [...filteredCodes].sort((a, b) => {
         if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? -1 : 1;
+          return sortConfig.direction === "ascending" ? -1 : 1;
         }
         if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === 'ascending' ? 1 : -1;
+          return sortConfig.direction === "ascending" ? 1 : -1;
         }
         return 0;
       });
@@ -127,14 +195,16 @@ const Dashboard = () => {
     }
   }, [sortConfig]);
 
+  const paginate = (pageNumber: number) =>{
+    setCurrentPage(pageNumber);
+  }
   // Pagination
+  const totalpages = Math.ceil(codes.length/10);
   const indexOfLastCode = currentPage * codesPerPage;
   const indexOfFirstCode = indexOfLastCode - codesPerPage;
   const currentCodes = filteredCodes.slice(indexOfFirstCode, indexOfLastCode);
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  
   if (!session) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -152,16 +222,16 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Navbar homepage={false}/>
+      <Navbar homepage={false} />
       <div className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="text-4xl font-bold text-color-1"
           >
-            Hello {session.user?.name}
+            Hello, {session.user?.name}
           </motion.h1>
           <div className="relative w-1/3">
             <input
@@ -171,61 +241,76 @@ const Dashboard = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-color-1"
             />
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+            <Search
+              className="absolute left-3 top-2.5 text-gray-400"
+              size={20}
+            />
           </div>
         </div>
-        
+
         <div className="bg-card rounded-lg shadow-lg overflow-hidden">
           <table className="w-full">
             <thead className="bg-muted">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Serial No</th>
-                <th 
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Serial No
+                </th>
+                <th
                   className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
-                  onClick={() => handleSort('fileName')}
+                  onClick={() => handleSort("fileName")}
                 >
                   File Name <ArrowUpDown size={14} className="inline ml-1" />
                 </th>
-                <th 
+                <th
                   className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
-                  onClick={() => handleSort('language')}
+                  onClick={() => handleSort("language")}
                 >
                   Language <ArrowUpDown size={14} className="inline ml-1" />
                 </th>
-                <th 
+                <th
                   className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider cursor-pointer"
-                  onClick={() => handleSort('createdAt')}
+                  onClick={() => handleSort("createdAt")}
                 >
                   Created At <ArrowUpDown size={14} className="inline ml-1" />
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Action</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-muted">
               {currentCodes.length > 0 ? (
                 currentCodes.map((code, index) => (
-                  <motion.tr 
+                  <motion.tr
                     key={code.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                     className="hover:bg-muted/50"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">{indexOfFirstCode + index + 1}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {indexOfFirstCode + index + 1}
+                    </td>
                     <td
                       className="px-6 py-4 whitespace-nowrap cursor-pointer"
-                      onClick={() => window.open(`/code/${code.id}`, '_blank')}
+                      onClick={() => window.open(`/code/${code.id}`, "_blank")}
                     >
                       {code.fileName}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">{code.language}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{new Date(code.createdAt).toLocaleString()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {code.language}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {new Date(code.createdAt).toLocaleString()}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex space-x-2">
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => window.open(`/code/${code.id}`, '_blank')}
+                          onClick={() =>
+                            window.open(`/code/${code.id}`, "_blank")
+                          }
                           className="text-blue-500 hover:text-blue-700"
                         >
                           <Edit size={18} />
@@ -241,7 +326,7 @@ const Dashboard = () => {
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => handleShare(code.id)}
+                          onClick={() => handleShare(code.code, code.language)}
                           className="text-green-500 hover:text-green-700"
                         >
                           <Share2 size={18} />
@@ -249,7 +334,13 @@ const Dashboard = () => {
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => handleDownload(code.id, code.fileName, code.code, code.language)}
+                          onClick={() =>
+                            handleDownload(
+                              code.fileName,
+                              code.code,
+                              code.language
+                            )
+                          }
                           className="text-purple-500 hover:text-purple-700"
                         >
                           <Download size={18} />
@@ -264,8 +355,13 @@ const Dashboard = () => {
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <td colSpan={5} className="px-6 py-4 text-center text-muted-foreground">
-                    No data available in table
+                  <td
+                    colSpan={5}
+                    className="px-6 py-4 text-center text-muted-foreground"
+                  >
+                    {fetchallCodeMutaion.isPending
+                      ? "Loading"
+                      : "No data available in table"}
                   </td>
                 </motion.tr>
               )}
@@ -274,9 +370,11 @@ const Dashboard = () => {
         </div>
 
         <div className="mt-4 flex justify-between items-center text-sm text-muted-foreground">
-          <div>
-            Showing {indexOfFirstCode + 1} to {Math.min(indexOfLastCode, filteredCodes.length)} of {filteredCodes.length} entries
-          </div>
+           <div>
+            Showing {indexOfFirstCode + 1} to{" "}
+            {Math.min(indexOfLastCode, filteredCodes.length)} of{" "}
+            {filteredCodes.length} entries
+          </div>  
           <div className="flex space-x-2">
             <button
               onClick={() => paginate(currentPage - 1)}
@@ -285,9 +383,12 @@ const Dashboard = () => {
             >
               <ChevronLeft size={18} />
             </button>
+            <div className="px-3 py-1">
+              {currentPage} of {totalpages}
+            </div>
             <button
               onClick={() => paginate(currentPage + 1)}
-              disabled={indexOfLastCode >= filteredCodes.length}
+              disabled={totalpages <=currentPage}
               className="px-3 py-1 border rounded-md disabled:opacity-50"
             >
               <ChevronRight size={18} />
@@ -302,301 +403,15 @@ const Dashboard = () => {
           title="Confirm Deletion"
           message="Are you sure you want to delete this file? This action cannot be undone."
         />
+
+        {isSharePopupOpen && (
+          <Sharelink
+            onClose={handleCloseSharePopup}
+          />
+        )}
       </div>
     </div>
   );
 };
 
 export default Dashboard;
-
-// "use client";
-// import { Navbar1 } from '@/components/layout/compiler/Navbar1';
-// import axios from 'axios';
-// import { useSession } from 'next-auth/react';
-// import React, { useEffect, useState } from 'react';
-
-// type Code = {
-//   id: string;
-//   fileName: string;
-//   language: string;
-//   code: string;
-//   createdAt: Date; // Use Date if you plan to parse it as a date
-// };
-
-
-// function Dashboard() {
-//   const [codes, setCodes] = useState([]);
-//   const { data: session } = useSession();
-//   const userID = session?.user.id;
-
-//   useEffect(() => {
-//     // Function to fetch saved codes for the user
-//     const fetchCodes = async () => {
-//       try {
-//         const response = await axios.get(`/api/save-code?userID=${userID}`); // Replace "your-endpoint" with your actual API route
-//         const data = await response.data
-//         setCodes(data.codes);
-//       } catch (error) {
-//         console.error("Error fetching codes:", error);
-//       }
-//     };
-
-//     fetchCodes();
-//   }, [userID]);
-
-//   if(!session){
-//     return(
-//       <>
-//       Loading...
-//       </>
-//     )
-//   }
-
-//   return (
-//     <div>
-//       <Navbar1 />
-//       <h1>Dashboard</h1>
-//       <div className="code-list">
-//         {codes.length > 0 ? (
-//           codes.map((code:Code) => (
-//             <div key={code.id} className="code-item">
-//               <h2>{code.fileName}</h2>
-//               <p>Language: {code.language}</p>
-//               {/* <pre>{atob(code.code)}</pre> */}
-//               <p>Created at: {new Date(code.createdAt).toLocaleString()}</p>
-//             </div>
-//           ))
-//         ) : (
-//           <p>No saved codes found.</p>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Dashboard;
-
-
-///////////////////////////////////////
-// import React, { useEffect, useState } from 'react';
-// import { useSession } from 'next-auth/react';
-// import axios from 'axios';
-// import { motion } from 'framer-motion';
-// import { Trash2, Edit, Share2, Download, Search, ChevronLeft, ChevronRight } from 'lucide-react';
-// import { Navbar1 } from '@/components/layout/compiler/Navbar1';
-
-// type Code = {
-//   id: string;
-//   fileName: string;
-//   language: string;
-//   code: string;
-//   createdAt: Date;
-// };
-
-// const Dashboard = () => {
-//   const [codes, setCodes] = useState<Code[]>([]);
-//   const [filteredCodes, setFilteredCodes] = useState<Code[]>([]);
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [currentPage, setCurrentPage] = useState(1);
-//   const [codesPerPage] = useState(10);
-//   const { data: session } = useSession();
-//   const userID = session?.user.id;
-
-//   useEffect(() => {
-//     const fetchCodes = async () => {
-//       try {
-//         const response = await axios.get(`/api/save-code?userID=${userID}`);
-//         setCodes(response.data.codes);
-//         setFilteredCodes(response.data.codes);
-//       } catch (error) {
-//         console.error("Error fetching codes:", error);
-//       }
-//     };
-
-//     if (userID) {
-//       fetchCodes();
-//     }
-//   }, [userID]);
-
-//   useEffect(() => {
-//     const results = codes.filter(code =>
-//       code.fileName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-//       code.language.toLowerCase().includes(searchTerm.toLowerCase())
-//     );
-//     setFilteredCodes(results);
-//     setCurrentPage(1);
-//   }, [searchTerm, codes]);
-
-//   const handleDelete = async (id: string) => {
-//     // Implement delete functionality
-//     console.log("Delete code with id:", id);
-//   };
-
-//   const handleEdit = (id: string) => {
-//     // Implement edit functionality
-//     console.log("Edit code with id:", id);
-//   };
-
-//   const handleShare = (id: string) => {
-//     // Implement share functionality
-//     console.log("Share code with id:", id);
-//   };
-
-//   const handleDownload = (id: string) => {
-//     // Implement download functionality
-//     console.log("Download code with id:", id);
-//   };
-
-//   // Pagination
-//   const indexOfLastCode = currentPage * codesPerPage;
-//   const indexOfFirstCode = indexOfLastCode - codesPerPage;
-//   const currentCodes = filteredCodes.slice(indexOfFirstCode, indexOfLastCode);
-
-//   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-//   if (!session) {
-//     return (
-//       <div className="flex justify-center items-center h-screen">
-//         <motion.div
-//           initial={{ opacity: 0, scale: 0.8 }}
-//           animate={{ opacity: 1, scale: 1 }}
-//           transition={{ duration: 0.5 }}
-//           className="text-2xl font-semibold text-color-1"
-//         >
-//           Loading...
-//         </motion.div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-background text-foreground">
-//       <Navbar1 />
-//       <div className="container mx-auto px-4 py-8">
-//         <motion.h1 
-//           initial={{ opacity: 0, y: -20 }}
-//           animate={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.5 }}
-//           className="text-4xl font-bold mb-8 text-color-1"
-//         >
-//           Hello {session.user?.name}
-//         </motion.h1>
-        
-//         <div className="mb-4">
-//           <div className="relative">
-//             <input
-//               type="text"
-//               placeholder="Search by file name or language..."
-//               value={searchTerm}
-//               onChange={(e) => setSearchTerm(e.target.value)}
-//               className="w-full pl-10 pr-4 py-2 border border-secondary rounded-md focus:outline-none focus:ring-2 focus:ring-color-1"
-//             />
-//             <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
-//           </div>
-//         </div>
-
-//         <div className="bg-card rounded-lg shadow-lg overflow-hidden">
-//           <table className="w-full">
-//             <thead className="bg-muted">
-//               <tr>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Serial No</th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">File Name</th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Language</th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Created At</th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Action</th>
-//               </tr>
-//             </thead>
-//             <tbody className="divide-y divide-muted">
-//               {currentCodes.length > 0 ? (
-//                 currentCodes.map((code, index) => (
-//                   <motion.tr 
-//                     key={code.id}
-//                     initial={{ opacity: 0, y: 20 }}
-//                     animate={{ opacity: 1, y: 0 }}
-//                     transition={{ duration: 0.3, delay: index * 0.1 }}
-//                     className="hover:bg-muted/50"
-//                   >
-//                     <td className="px-6 py-4 whitespace-nowrap">{indexOfFirstCode + index + 1}</td>
-//                     <td className="px-6 py-4 whitespace-nowrap">{code.fileName}</td>
-//                     <td className="px-6 py-4 whitespace-nowrap">{code.language}</td>
-//                     <td className="px-6 py-4 whitespace-nowrap">{new Date(code.createdAt).toLocaleString()}</td>
-//                     <td className="px-6 py-4 whitespace-nowrap">
-//                       <div className="flex space-x-2">
-//                         <motion.button
-//                           whileHover={{ scale: 1.1 }}
-//                           whileTap={{ scale: 0.9 }}
-//                           onClick={() => handleEdit(code.id)}
-//                           className="text-blue-500 hover:text-blue-700"
-//                         >
-//                           <Edit size={18} />
-//                         </motion.button>
-//                         <motion.button
-//                           whileHover={{ scale: 1.1 }}
-//                           whileTap={{ scale: 0.9 }}
-//                           onClick={() => handleDelete(code.id)}
-//                           className="text-red-500 hover:text-red-700"
-//                         >
-//                           <Trash2 size={18} />
-//                         </motion.button>
-//                         <motion.button
-//                           whileHover={{ scale: 1.1 }}
-//                           whileTap={{ scale: 0.9 }}
-//                           onClick={() => handleShare(code.id)}
-//                           className="text-green-500 hover:text-green-700"
-//                         >
-//                           <Share2 size={18} />
-//                         </motion.button>
-//                         <motion.button
-//                           whileHover={{ scale: 1.1 }}
-//                           whileTap={{ scale: 0.9 }}
-//                           onClick={() => handleDownload(code.id)}
-//                           className="text-purple-500 hover:text-purple-700"
-//                         >
-//                           <Download size={18} />
-//                         </motion.button>
-//                       </div>
-//                     </td>
-//                   </motion.tr>
-//                 ))
-//               ) : (
-//                 <motion.tr
-//                   initial={{ opacity: 0 }}
-//                   animate={{ opacity: 1 }}
-//                   transition={{ duration: 0.5 }}
-//                 >
-//                   <td colSpan={5} className="px-6 py-4 text-center text-muted-foreground">
-//                     No data available in table
-//                   </td>
-//                 </motion.tr>
-//               )}
-//             </tbody>
-//           </table>
-//         </div>
-
-//         <div className="mt-4 flex justify-between items-center text-sm text-muted-foreground">
-//           <div>
-//             Showing {indexOfFirstCode + 1} to {Math.min(indexOfLastCode, filteredCodes.length)} of {filteredCodes.length} entries
-//           </div>
-//           <div className="flex space-x-2">
-//             <button
-//               onClick={() => paginate(currentPage - 1)}
-//               disabled={currentPage === 1}
-//               className="px-3 py-1 border rounded-md disabled:opacity-50"
-//             >
-//               <ChevronLeft size={18} />
-//             </button>
-//             <button
-//               onClick={() => paginate(currentPage + 1)}
-//               disabled={indexOfLastCode >= filteredCodes.length}
-//               className="px-3 py-1 border rounded-md disabled:opacity-50"
-//             >
-//               <ChevronRight size={18} />
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
