@@ -1,28 +1,24 @@
 import { Navbar } from "@/components/layout/navbar";
-import LanguageIcons from "@/components/layout/sections/benefits";
-import { CommunitySection } from "@/components/layout/sections/community";
+import {LanguageIcons} from "@/components/layout/sections/languageicons";
 import { ContactSection } from "@/components/layout/sections/contact";
 import { FAQSection } from "@/components/layout/sections/faq";
 import { FeaturesSection } from "@/components/layout/sections/features";
 import { FooterSection } from "@/components/layout/sections/footer";
 import { HeroSection } from "@/components/layout/sections/hero";
-import { PricingSection } from "@/components/layout/sections/pricing";
-import { ServicesSection } from "@/components/layout/sections/services";
-import { SponsorsSection } from "@/components/layout/sections/sponsors";
 import { TeamSection } from "@/components/layout/sections/team";
-import { TestimonialSection } from "@/components/layout/sections/testimonial";
+import HeatmapComponent from "@/components/layout/sections/heatmap";
 
 export const metadata = {
   title: "Online Code Compiler",
-  description: "Free Shadcn landing page for developers",
+  description: "Online Code Compiler",
   openGraph: {
     type: "website",
-    url: "https://github.com/nobruf/shadcn-landing-page.git",
+    url: "https://github.com/Pal-Yogesh/onlinecodecompiler",
     title: "Online Code Compiler",
-    description: "Free Shadcn landing page for developers",
+    description: "Online Code Compiler",
     images: [
       {
-        url: "https://res.cloudinary.com/dbzv9xfjp/image/upload/v1723499276/og-images/shadcn-vue.jpg",
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "Online Code Compiler",
@@ -31,11 +27,11 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    site: "https://github.com/nobruf/shadcn-landing-page.git",
+    site: "https://github.com/Pal-Yogesh/onlinecodecompiler",
     title: "Online Code Compiler",
-    description: "Free Shadcn landing page for developers",
+    description: "Online Code Compiler",
     images: [
-      "https://res.cloudinary.com/dbzv9xfjp/image/upload/v1723499276/og-images/shadcn-vue.jpg",
+      "/logo.png",
     ],
   },
 };
@@ -43,20 +39,18 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <Navbar homepage={true}/>
+      <Navbar homepage={true} />
       <HeroSection />
-      <SponsorsSection />
       <LanguageIcons />
       <FeaturesSection />
-      {/* <ServicesSection /> */}
-      {/* <TestimonialSection /> */}
+
       <TeamSection />
-      {/* <CommunitySection /> */}
-      {/* <PricingSection /> */}
+
       <ContactSection />
       <FAQSection />
       <FooterSection />
-      
+      <HeatmapComponent />
+
     </>
   );
 }
