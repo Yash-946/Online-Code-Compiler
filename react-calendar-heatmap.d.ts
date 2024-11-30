@@ -6,6 +6,8 @@ declare module 'react-calendar-heatmap' {
       count: number;
     }
   
+
+
     export interface ReactCalendarHeatmapProps {
       startDate: string | Date;
       endDate: string | Date;
