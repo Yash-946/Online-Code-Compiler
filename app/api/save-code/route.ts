@@ -123,7 +123,33 @@ export async function DELETE(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const { codeID, code, } = await request.json();
+    const { codeID, code, filename } = await request.json();
+
+    if(filename){
+      console.log(filename);
+      const codeData = await prisma.code.update({
+        where: {
+          id: codeID as string,
+        },
+        data:{
+          fileName:filename
+        }
+      });
+
+      if (!codeData) {
+        return NextResponse.json(
+          { message: "filename not update" },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(
+        {
+          message: "filename is updated",
+        },
+        { status: 200 }
+      );
+    }
 
     if (!codeID) {
       return NextResponse.json(
@@ -140,6 +166,7 @@ export async function PUT(request: Request) {
         code:code
       }
     });
+
 
     if (!codeData) {
       return NextResponse.json(

@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     const response = result.response;
     const text = response.text();
 
+    console.log("Ai Response",text);
 
     return Response.json({
       success: true,

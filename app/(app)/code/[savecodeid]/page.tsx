@@ -1,13 +1,13 @@
 "use client";
 import Loading from "@/app/loading";
 import MainBoilerPlate from "@/components/layout/MainBoilerPlate";
-import { codeatom, languageatom } from "@/store/atom";
+import { codeatom, flagatom, languageatom } from "@/store/atom";
 import { useMutation } from "@tanstack/react-query";
 
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 interface CodeData {
   id: string;
@@ -24,6 +24,7 @@ function SaveCode() {
   const [filename, setFilename] = useState<string>("");
   const setLanguage = useSetRecoilState(languageatom);
   const setCode = useSetRecoilState(codeatom);
+  const flag = useRecoilValue(flagatom).flag!!!;
 
   const fetchsaveCodeApi = async () => {
     const response = await axios.get(`/api/save-code?codeID=${codeid}`);
@@ -53,6 +54,20 @@ function SaveCode() {
     }
   }, [codeid]);
 
+  useEffect(() => {
+    function confirmExit(event: BeforeUnloadEvent) {
+      if (flag) {
+        event.preventDefault();
+      }
+    }
+  
+    window.addEventListener("beforeunload", confirmExit);
+  
+    return () => {
+      window.removeEventListener("beforeunload", confirmExit);
+    };
+  }, [flag]);
+  
   if (fetchsaveCodeMutaion.isPending) {
     return <Loading />;
   }

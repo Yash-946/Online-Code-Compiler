@@ -34,12 +34,11 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
             <div className="flex gap-6">
               <div className="">
                 <div className="flex gap-12">
-                  {filename && <h2>{filename}</h2>}
+                  {/* {filename && <h2>{filename}</h2>} */}
                   <Navbar2
                     customInput={customInput}
                     setOutputDetails={setOutputDetails}
                     flag={filename ? flag : true}
-                    savecodepage={filename ? true : false}
                     filename={filename}
                   />
                 </div>

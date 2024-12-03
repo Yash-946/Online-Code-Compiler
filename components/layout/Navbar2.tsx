@@ -1,6 +1,6 @@
 "use client";
 import { DownloadIcon, Share2Icon, UploadIcon } from "lucide-react";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import SignInPopup from "./auth/signin-popup";
 import { SaveFile } from "./save-code/SaveFile";
 import { useSession } from "next-auth/react";
@@ -12,12 +12,12 @@ import { useMutation } from "@tanstack/react-query";
 import { Sharelink } from "./Sharelink";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { codeatom, flagatom, languageatom } from "@/store/atom";
+import { useDebounceCallback } from "usehooks-ts";
 
 interface Navbar2Props {
   customInput: string;
   setOutputDetails: (value: React.SetStateAction<null>) => void;
   flag: boolean;
-  savecodepage: boolean;
   filename?: string;
 }
 
@@ -25,7 +25,6 @@ export const Navbar2 = ({
   flag,
   filename,
   customInput,
-  savecodepage,
   setOutputDetails,
 }: Navbar2Props) => {
   const { data: session } = useSession();
@@ -36,9 +35,11 @@ export const Navbar2 = ({
   const [isSaveFilePopupOpen, setSaveFilePopupOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [isSharePopupOpen, setSharePopupOpen] = useState(false);
+  const setFlag = useSetRecoilState(flagatom);
   const language = useRecoilValue(languageatom).language!!!;
   const code = useRecoilValue(codeatom).code!!!;
-  const setFlag = useSetRecoilState(flagatom);
+  const [updatefilename, setUpdateFilename] = useState<string>(filename || "");
+  const debounced = useDebounceCallback(setUpdateFilename, 1000);
 
   const handleSave = () => {
     if (!session) {
@@ -49,7 +50,7 @@ export const Navbar2 = ({
   };
 
   const handledownloadCode = () => {
-    downloadCode({ filename, code, language });
+    downloadCode({ filename: updatefilename, code, language });
   };
 
   const handleCompile = () => {
@@ -138,7 +139,7 @@ export const Navbar2 = ({
       router.replace(`/code/${codeid}`);
     },
     onError: (error: any) => {
-      console.error("Error saving code:", error);
+      // console.error("Error saving code:", error);
       toast.error("Error while saving the code");
     },
   });
@@ -168,23 +169,37 @@ export const Navbar2 = ({
     mutationFn: UpdateCodeApi,
     retry: 3,
     onSuccess: (data: any) => {
-      toast.success("Your Code is Updated");
-      setFlag({ flag: false });
+      toast.success(`${data.message}`);
+      if (flag) {
+        setFlag({ flag: false });
+      }
     },
     onError: (error: any) => {
-      console.error("Error saving code:", error);
+      // console.error("Error saving code:", error);
       toast.error("Error while updating the code");
     },
   });
 
   const handleUpdateCode = async () => {
-    // console.log("Update api call",codeid, code);
     const data = {
       codeID: codeid,
       code: btoa(code),
     };
     UpdateCodeMutaion.mutate(data);
   };
+
+  useEffect(() => {
+    async function updatefilenamefn() {
+      if (updatefilename != filename) {
+        const data = {
+          codeID: codeid,
+          filename: updatefilename,
+        };
+        UpdateCodeMutaion.mutate(data);
+      }
+    }
+    updatefilenamefn();
+  }, [updatefilename]);
 
   const handleShareClick = () => {
     setSharePopupOpen(true);
@@ -197,6 +212,15 @@ export const Navbar2 = ({
   return (
     <div className="flex items-center justify-between shadow-md pb-3">
       <div className="flex space-x-4">
+        {filename && (
+          <input
+            className="border-2 border-white border-solid"
+            type="text"
+            defaultValue={updatefilename}
+            onChange={(event) => debounced(event.target.value)}
+          />
+        )}
+
         <button
           onClick={handleShareClick}
           className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
@@ -209,7 +233,7 @@ export const Navbar2 = ({
           className={`flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95  ${
             flag ? "cursor-pointer" : "cursor-not-allowed"
           }`}
-          onClick={savecodepage ? handleUpdateCode : handleSave}
+          onClick={filename ? handleUpdateCode : handleSave}
           disabled={!flag}
         >
           <UploadIcon className="w-5 h-5" />
@@ -266,11 +290,7 @@ export const Navbar2 = ({
         onClose={() => setSigninPopupOpen(false)}
       />
 
-      {isSharePopupOpen && (
-        <Sharelink
-          onClose={handleCloseSharePopup}
-        />
-      )}
+      {isSharePopupOpen && <Sharelink onClose={handleCloseSharePopup} />}
     </div>
   );
 };

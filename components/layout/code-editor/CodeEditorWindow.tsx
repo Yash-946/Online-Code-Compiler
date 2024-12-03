@@ -14,10 +14,10 @@ export const CodeEditorWindow = ({
   theme,
 }: CodeEditorWindowProps) => {
   const [isThemeLoaded, setIsThemeLoaded] = useState(false);
-  const language = useRecoilValue(languageatom).language!!!;
-  const [value, setvalue1] = useRecoilState(codeatom);
+  const [value, setvalue] = useRecoilState(codeatom);
   const setFlag = useSetRecoilState(flagatom);
-
+  const language = useRecoilValue(languageatom).language!!!;
+  
   useEffect(() => {
     loader
       .init()
@@ -37,7 +37,7 @@ export const CodeEditorWindow = ({
   }, [theme]);
 
   const handleEditorChange = (value: any) => {
-    setvalue1({ code: value });
+    setvalue({ code: value });
     if (savecodepage) {
       setFlag({ flag: true });
     }
