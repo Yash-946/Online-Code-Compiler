@@ -8,33 +8,33 @@ import { HeroSection } from "@/components/layout/sections/hero";
 import { TeamSection } from "@/components/layout/sections/team";
 import HeatmapComponent from "@/components/layout/sections/heatmap";
 
-export const metadata = {
-  title: "Online Code Compiler",
-  description: "Online Code Compiler",
-  openGraph: {
-    type: "website",
-    url: "https://github.com/Pal-Yogesh/onlinecodecompiler",
-    title: "Online Code Compiler",
-    description: "Online Code Compiler",
-    images: [
-      {
-        url: "/logo.png",
-        width: 1200,
-        height: 630,
-        alt: "Online Code Compiler",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "https://github.com/Pal-Yogesh/onlinecodecompiler",
-    title: "Online Code Compiler",
-    description: "Online Code Compiler",
-    images: [
-      "/logo.png",
-    ],
-  },
-};
+// export const metadata = {
+//   title: "Online Code Compiler",
+//   description: "Online Code Compiler",
+//   openGraph: {
+//     type: "website",
+//     url: "https://github.com/Pal-Yogesh/onlinecodecompiler",
+//     title: "Online Code Compiler",
+//     description: "Online Code Compiler",
+//     images: [
+//       {
+//         url: "/logo.png",
+//         width: 1200,
+//         height: 630,
+//         alt: "Online Code Compiler",
+//       },
+//     ],
+//   },
+//   twitter: {
+//     card: "summary_large_image",
+//     site: "https://github.com/Pal-Yogesh/onlinecodecompiler",
+//     title: "Online Code Compiler",
+//     description: "Online Code Compiler",
+//     images: [
+//       "/logo.png",
+//     ],
+//   },
+// };
 
 export default function Home() {
   return (

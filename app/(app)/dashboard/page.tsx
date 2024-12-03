@@ -57,24 +57,6 @@ const Dashboard = () => {
   const setCode = useSetRecoilState(codeatom);
   const setLanguage = useSetRecoilState(languageatom);
 
-  
-
-  // const totalpagesApi = async () => {
-  //   const response = await axios.get(`/api/dashboard/count?userID=${userID}`);
-  //   return response.data;
-  // };
-
-  // const totalpageMutaion = useMutation({
-  //   mutationFn: totalpagesApi,
-  //   retry: 3,
-  //   onSuccess: (data: any) => {
-  //     setTotalCodeCount(data.Data);
-  //   },
-  //   onError: (error: any) => {
-  //     toast.error("Error fetching codes:", error);
-  //   },
-  // })
-
   const fetchallCodeApi = async () => {
     const response = await axios.get(`/api/save-code/all?userID=${userID}`);
     return response.data;
@@ -87,7 +69,7 @@ const Dashboard = () => {
       setCodes(data.codes);
       setFilteredCodes(data.codes);
     },
-    
+
     onError: (error: any) => {
       // console.error("Error fetching codes:", error);
       toast.error("Error fetching codes:", error);
@@ -134,13 +116,13 @@ const Dashboard = () => {
       );
       setIsDeleteModalOpen(false);
       setCodeToDelete(null);
-      toast.success(`${data.fileName} is deleted successfully`)
+      toast.success(`${data.fileName} is deleted successfully`);
     },
     onError: (error: any) => {
       // console.error("Error fetching codes:", error);
       toast.error("Error while deleting code:", error);
     },
-  })
+  });
 
   const handleDeleteClick = (id: string) => {
     setCodeToDelete(id);
@@ -154,8 +136,8 @@ const Dashboard = () => {
   };
 
   const handleShare = (code: string, language: string) => {
-    setLanguage({language});
-    setCode({code:atob(code)});
+    setLanguage({ language });
+    setCode({ code: atob(code) });
     setSharePopupOpen(true);
   };
 
@@ -195,15 +177,20 @@ const Dashboard = () => {
     }
   }, [sortConfig]);
 
-  const paginate = (pageNumber: number) =>{
+  const paginate = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-  }
+  };
   // Pagination
-  const totalpages = Math.ceil(codes.length/10);
+  const totalpages = Math.ceil(codes.length / 10);
   const indexOfLastCode = currentPage * codesPerPage;
   const indexOfFirstCode = indexOfLastCode - codesPerPage;
   const currentCodes = filteredCodes.slice(indexOfFirstCode, indexOfLastCode);
 
+  function RefreshButton() {
+    setCodes([]);
+    setFilteredCodes([]);
+    fetchallCodeMutaion.mutate();
+  }
 
   if (!session) {
     return (
@@ -233,6 +220,7 @@ const Dashboard = () => {
           >
             Hello, {session.user?.name}
           </motion.h1>
+          <button onClick={RefreshButton}>Refresh data</button>
           <div className="relative w-1/3">
             <input
               type="text"
@@ -370,11 +358,11 @@ const Dashboard = () => {
         </div>
 
         <div className="mt-4 flex justify-between items-center text-sm text-muted-foreground">
-           <div>
+          <div>
             Showing {indexOfFirstCode + 1} to{" "}
             {Math.min(indexOfLastCode, filteredCodes.length)} of{" "}
             {filteredCodes.length} entries
-          </div>  
+          </div>
           <div className="flex space-x-2">
             <button
               onClick={() => paginate(currentPage - 1)}
@@ -388,7 +376,7 @@ const Dashboard = () => {
             </div>
             <button
               onClick={() => paginate(currentPage + 1)}
-              disabled={totalpages <=currentPage}
+              disabled={totalpages <= currentPage}
               className="px-3 py-1 border rounded-md disabled:opacity-50"
             >
               <ChevronRight size={18} />
@@ -404,11 +392,7 @@ const Dashboard = () => {
           message="Are you sure you want to delete this file? This action cannot be undone."
         />
 
-        {isSharePopupOpen && (
-          <Sharelink
-            onClose={handleCloseSharePopup}
-          />
-        )}
+        {isSharePopupOpen && <Sharelink onClose={handleCloseSharePopup} />}
       </div>
     </div>
   );
