@@ -21,6 +21,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Sharelink } from "@/components/layout/Sharelink";
 import { useSetRecoilState } from "recoil";
 import { codeatom, languageatom } from "@/store/atom";
+import HeatmapComponent from "@/components/layout/dashboard/heatmap";
 
 type Code = {
   id: string;
@@ -394,6 +395,7 @@ const Dashboard = () => {
 
         {isSharePopupOpen && <Sharelink onClose={handleCloseSharePopup} />}
       </div>
+      <HeatmapComponent />
     </div>
   );
 };

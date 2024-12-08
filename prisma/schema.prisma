@@ -24,6 +24,7 @@ model User {
   isVerified       Boolean   @default(false)
 
   codes Code[]
+  dailyActivities  DailyActivity[]
 }
 
 model Code {
@@ -42,4 +43,14 @@ model ShareCode {
   id       String @id @default(uuid())
   code     String
   language String
+}
+
+model DailyActivity {
+  id        String   @id @default(uuid())
+  date      DateTime @default(now()) @db.Date 
+  isActive  Boolean  @default(false) 
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, date]) // Ensure one entry per user per day
 }

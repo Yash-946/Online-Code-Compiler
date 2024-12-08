@@ -53,6 +53,25 @@ export const Navbar2 = ({
     downloadCode({ filename: updatefilename, code, language });
   };
 
+  const DailyStatusApi = async () => {
+    const response = await axios.post("/api/dashboard/dailyupdate", {
+      userID: session?.user.id,
+    });
+    return response.data;
+  };
+
+  const DailyStatusMutaion = useMutation({
+    mutationFn: DailyStatusApi,
+    retry: 3,
+    onSuccess: (data: any) => {
+      // console.log("daily status", data);
+    },
+    onError: (error: any) => {
+      // console.error("Error dailystatus:", error);
+      toast.error("Error while updating daily status")
+    },
+  });
+
   const handleCompile = () => {
     const currentLanguage = languageData(language);
     // console.log("currentlanguageData", currentLanguage);
@@ -75,7 +94,6 @@ export const Navbar2 = ({
       },
       data: formData,
     };
-    // console.log(options);
 
     axios
       .request(options)
@@ -99,6 +117,27 @@ export const Navbar2 = ({
         setProcessing(false);
         console.log("Error in catch block:", error);
       });
+
+    const count = localStorage.getItem("dailyUpdateTimer");
+    if (session) {
+      const today = new Date();
+      console.log(formatDateIntl(today));
+      const todayDate = formatDateIntl(today);
+      if (!count) {
+        DailyStatusMutaion.mutate();
+        localStorage.setItem("dailyUpdateTimer", todayDate);
+      } else {
+        if (new Date(todayDate) > new Date(count)) {
+          DailyStatusMutaion.mutate();
+          localStorage.setItem("dailyUpdateTimer", todayDate);
+        } 
+        // else {
+        //   console.log(
+        //     "No update needed. The stored date is today or in the future."
+        //   );
+        // }
+      }
+    }
   };
 
   const checkStatus = useCallback(async (token: any) => {
@@ -198,7 +237,9 @@ export const Navbar2 = ({
         UpdateCodeMutaion.mutate(data);
       }
     }
-    updatefilenamefn();
+    if (filename) {
+      updatefilenamefn();
+    }
   }, [updatefilename]);
 
   const handleShareClick = () => {
@@ -315,6 +356,10 @@ export const downloadCode = ({
   element.click();
   document.body.removeChild(element);
 };
+
+function formatDateIntl(date: Date) {
+  return new Intl.DateTimeFormat("en-CA").format(date);
+}
 
 // const handleError = (error: any) => {
 //   const status = error.response?.status;

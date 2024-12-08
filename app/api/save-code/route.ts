@@ -125,8 +125,15 @@ export async function PUT(request: Request) {
   try {
     const { codeID, code, filename } = await request.json();
 
+    if (!codeID) {
+      return NextResponse.json(
+        { message: "codeID is required" },
+        { status: 400 }
+      );
+    }
+
     if(filename){
-      console.log(filename);
+      
       const codeData = await prisma.code.update({
         where: {
           id: codeID as string,
@@ -151,12 +158,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    if (!codeID) {
-      return NextResponse.json(
-        { message: "codeID is required" },
-        { status: 400 }
-      );
-    }
+    
 
     const codeData = await prisma.code.update({
       where: {
