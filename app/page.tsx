@@ -1,12 +1,11 @@
 import { Navbar } from "@/components/layout/navbar";
-import {LanguageIcons} from "@/components/layout/sections/languageicons";
+import { LanguageIcons } from "@/components/layout/sections/languageicons";
 import { ContactSection } from "@/components/layout/sections/contact";
 import { FAQSection } from "@/components/layout/sections/faq";
 import { FeaturesSection } from "@/components/layout/sections/features";
 import { FooterSection } from "@/components/layout/sections/footer";
 import { HeroSection } from "@/components/layout/sections/hero";
 import { TeamSection } from "@/components/layout/sections/team";
-import HeatmapComponent from "@/components/layout/sections/heatmap";
 
 // export const metadata = {
 //   title: "Online Code Compiler",
@@ -43,14 +42,10 @@ export default function Home() {
       <HeroSection />
       <LanguageIcons />
       <FeaturesSection />
-
       <TeamSection />
-
       <ContactSection />
       <FAQSection />
       <FooterSection />
-      <HeatmapComponent />
-
     </>
   );
 }

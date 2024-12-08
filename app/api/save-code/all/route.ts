@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
-    // Extract userID from query parameters
     const { searchParams } = new URL(request.url);
     const userID = searchParams.get("userID");
 
@@ -29,7 +28,6 @@ export async function GET(request: Request) {
     });
 
   } catch (error: any) {
-    console.error("Error retrieving codes:", error);
     return NextResponse.json(
       {
         message: "Failed to retrieve codes",
