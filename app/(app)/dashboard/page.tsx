@@ -22,6 +22,7 @@ import { Sharelink } from "@/components/layout/Sharelink";
 import { useSetRecoilState } from "recoil";
 import { codeatom, languageatom } from "@/store/atom";
 import HeatmapComponent from "@/components/layout/dashboard/heatmap";
+import { FiRefreshCcw } from "react-icons/fi";
 
 type Code = {
   id: string;
@@ -221,7 +222,7 @@ const Dashboard = () => {
           >
             Hello, {session.user?.name}
           </motion.h1>
-          <button onClick={RefreshButton}>Refresh data</button>
+
           <div className="relative w-1/3">
             <input
               type="text"
@@ -265,6 +266,7 @@ const Dashboard = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Action
                 </th>
+
               </tr>
             </thead>
             <tbody className="divide-y divide-muted">
@@ -359,10 +361,16 @@ const Dashboard = () => {
         </div>
 
         <div className="mt-4 flex justify-between items-center text-sm text-muted-foreground">
+          <div className="flex gap-5">
+
           <div>
             Showing {indexOfFirstCode + 1} to{" "}
             {Math.min(indexOfLastCode, filteredCodes.length)} of{" "}
             {filteredCodes.length} entries
+          </div>
+          <div onClick={RefreshButton} className="cursor-pointer  text-lg text-muted-foreground ">
+            <FiRefreshCcw />
+          </div>
           </div>
           <div className="flex space-x-2">
             <button

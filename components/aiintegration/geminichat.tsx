@@ -118,7 +118,7 @@ export function Geminichat() {
           } transition-all duration-500`}
         >
           <header
-            className={`flex justify-between text-primary-foreground items-center bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary text-white rounded-t-lg px-4 py-2 ${
+            className={`flex justify-between text-primary-foreground items-center bg-primary text-white rounded-t-lg px-4 py-2 ${
               isMinimized ? "hidden" : ""
             }`}
           >
@@ -146,7 +146,7 @@ export function Geminichat() {
             >
               {chatHistory.length === 0 ? (
                 <div className="h-full flex items-center justify-center text-center">
-                  <div className="bg-[#1a1a1a] rounded-2xl p-5 max-w-2xl">
+                  <div className="bg-[#1a1a1a]  border border-secondary rounded-2xl shadow-inner bg-opacity-15 p-5 max-w-2xl">
                     <h2 className="text-2xl font-bold text-white">
                       Welcome to Chat
                     </h2>
@@ -214,10 +214,10 @@ export function Geminichat() {
 
           {isMinimized && (
             <div
-              className="text-center p-5 text-2xl font-bold cursor-pointer"
+              className="text-center p-4 text-2xl font-bold cursor-pointer"
               onClick={() => setIsMinimized(false)}
             >
-              <span className="text-gray-500 font-semibold">Chat AI</span>
+              <span className="text-white text-muted-foreground font-semibold">Chat AI</span>
             </div>
           )}
         </div>

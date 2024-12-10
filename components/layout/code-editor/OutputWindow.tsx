@@ -39,10 +39,10 @@ export const OutputWindow = ({ outputDetails }) => {
   };
   return (
     <>
-    <h1 className="font-bold text-xl bg-clip-text text-transparent text-white pb-6">
+    <h1 className="font-bold text-xl bg-clip-text text-transparent text-white pb-4">
       Output
     </h1>
-    <div className="w-[38vw] min-h-[40vh] h-[38vh] bg-card shadow-inner bg-opacity-15 rounded-md text-white font-normal text-sm overflow-y-auto p-2">
+    <div className="w-[38vw] min-h-[40vh] h-[38vh] bg-card border border-secondary rounded-2xl shadow-inner bg-opacity-15  text-white font-normal text-sm overflow-y-auto p-2">
       {outputDetails ? (
         <>
         {getOutput()}
