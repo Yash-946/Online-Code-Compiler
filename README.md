@@ -1,8 +1,8 @@
-# Shadcn Landing Page Template
+# Online Code Compiler
 
 ## <a href="https://github.com/Pal-Yogesh/onlinecodecompiler" target="_blank">Shadcn</a> + <a href="https://nextjs.org/" target="_blank">Next.js</a> + <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a> + <a href="https://tailwindcss.com/" target="_blank">Tailwind</a>.
 
-### Compiler built <a href="https://github.com/Pal-Yogesh/onlinecodecompiler" target="_blank">In</a> NextJS and Typescript
+### Compiler built in Latest Techs <a href="https://github.com/Pal-Yogesh/onlinecodecompiler" target="_blank">Check Here</a> NextJS and Typescript
 
 ![Alt text](./public/compiler.png)
 
@@ -34,7 +34,7 @@ git clone https://github.com/Pal-Yogesh/onlinecodecompiler
 2. Go into project
 
 ```bash
-cd shadcn-landing-page
+cd onlinecodecompiler
 ```
 
 3. Install dependencies

@@ -106,7 +106,7 @@ export function Geminichat() {
           alt="AI"
           width={1000}
           height={1000}
-          className="absolute w-[60px] h-[60px] right-10 bottom-10 cursor-pointer transition-transform duration-300 transform hover:scale-110"
+          className="absolute w-[60px] h-[60px] right-6 bottom-4 cursor-pointer transition-transform duration-300 transform hover:scale-110"
           onClick={() => setIsChatOpen(true)}
         />
       )}
@@ -114,7 +114,7 @@ export function Geminichat() {
       {isChatOpen && (
         <div
           className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${
-            isMinimized ? "bottom-7 right-10 h-16" : "bottom-7 right-10 h-[85%]"
+            isMinimized ? "bottom-7 right-10 h-16" : "bottom-4 right-6 h-[85%]"
           } transition-all duration-500`}
         >
           <header
@@ -124,14 +124,14 @@ export function Geminichat() {
           >
             <span>Online Code Compiler</span>
             <div className="flex space-x-5 text-primary-foreground">
-              <button
+              {/* <button
                 className="text-gray-800 hover:text-gray-600 text-xl"
                 onClick={() => setIsMinimized(!isMinimized)}
               >
                 _
-              </button>
+              </button> */}
               <button
-                className="text-gray-800 hover:text-gray-600 text-xl"
+                className="text-card hover:text-gray-600 text-xl font-bold"
                 onClick={() => setIsChatOpen(false)}
               >
                 ✖

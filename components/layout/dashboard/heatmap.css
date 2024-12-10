@@ -35,3 +35,11 @@
   ry: 1.5px; 
 }
 
+.react-calendar-heatmap .react-calendar-heatmap-weekday-labels {
+  transform: translateY(12px); 
+}
+
+.react-calendar-heatmap .react-calendar-heatmap-svg {
+  margin-top: 100px;
+}
+

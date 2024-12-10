@@ -73,7 +73,7 @@ const HeatmapComponent: React.FC = () => {
         <div className="bg-muted rounded-t-lg">
 
           <h2 className="text-xl   py-2 text-center   font-medium text-muted-foreground uppercase tracking-wider">
-            Contribution Activity
+            Submissions
           </h2>
         </div>
         <div className="  bg-card rounded-b-lg shadow-md">

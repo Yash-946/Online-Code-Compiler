@@ -255,7 +255,7 @@ export const Navbar2 = ({
       <div className="flex space-x-4">
         {filename && (
           <input
-            className="border-2 border-white border-solid"
+            className="px-2 py-1 text-muted-foreground shadow-inner bg-opacity-15  border border-secondary rounded-lg outline-none"
             type="text"
             defaultValue={updatefilename}
             onChange={(event) => debounced(event.target.value)}

@@ -46,12 +46,12 @@ export async function GET(request: Request) {
 
     const today = new Date();
     // const year = today.getFullYear();
-    console.log("1")
+    // console.log("1")
     const transformedValues = UserDailyStatus.map((item: any) => ({
       date: item.date.toISOString().slice(0, 10), // Format to YYYY-MM-DD
       count: 1,
     }));
-    console.log("2")
+    // console.log("2")
 
     const startDate = new Date(today.getFullYear(), 0, 1);
     const endDate = new Date(today.getFullYear()+1, 1, 1);
