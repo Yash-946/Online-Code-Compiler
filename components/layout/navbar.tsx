@@ -36,6 +36,7 @@ import { cn } from "@/lib/utils";
 interface RouteProps {
   href: string;
   label: string;
+  route: string;
 }
 
 interface FeatureProps {
@@ -51,14 +52,17 @@ const routeList: RouteProps[] = [
   {
     href: "#team",
     label: "Team",
+    route: "/teams",
   },
   {
     href: "#contact",
     label: "Contact",
+    route: "/contact",
   },
   {
     href: "#faq",
     label: "FAQ",
+    route: "/faq",
   },
 ];
 

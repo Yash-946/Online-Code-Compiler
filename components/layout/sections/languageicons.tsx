@@ -3,23 +3,26 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import Link from "next/link";
 
 interface Language {
   name: string;
   logo: string;
 }
 
-const languages: Language[] = [
-  { name: "Java", logo: "/svg/java.svg" },
-  { name: "Python", logo: "/svg/python.svg" },
-  { name: "Cpp", logo: "/svg/c++.svg" },
-  { name: "C", logo: "/svg/c.svg" },
-  { name: "JavaScript", logo: "/svg/javascript.svg" },
-  { name: "R", logo: "/svg/r.svg" },
-  { name: "Rust", logo: "/svg/rust.svg" },
-  { name: "Go", logo: "/svg/go.svg" },
-  { name: "PHP", logo: "/svg/php.svg" },
-  { name: "Swift", logo: "/svg/swift.svg" },
+
+
+const languages = [
+  { name: "Java", logo: "/svg/java.svg", route:"/compiler/java" },
+  { name: "Python", logo: "/svg/python.svg", route: "/compiler/python" },
+  { name: "Cpp", logo: "/svg/c++.svg", route: "/compiler/cpp" },
+  { name: "C", logo: "/svg/c.svg", route: "/compiler/c" },
+  { name: "JavaScript", logo: "/svg/javascript.svg", route: "/compiler/javascript" },
+  { name: "R", logo: "/svg/r.svg", route: "/compiler/r" },
+  { name: "Rust", logo: "/svg/rust.svg", route: "/compiler/rust" },
+  { name: "Go", logo: "/svg/go.svg", route: "/compiler/go" },
+  { name: "PHP", logo: "/svg/php.svg", route: "/compiler/php" },
+  { name: "Swift", logo: "/svg/swift.svg", route: "/compiler/swift" },
 ];
 
 export const LanguageIcons: React.FC = () => (
@@ -32,8 +35,9 @@ export const LanguageIcons: React.FC = () => (
 
     <div className="w-[100%] flex flex-wrap justify-center gap-10 px-24">
       {languages.map((language, index) => (
+                <Link href={language.route} key={index}>
+
         <motion.div
-          key={index}
           whileHover={{ scale: 1.2 }}
           whileTap={{ scale: 0.9 }}
           className="flex justify-center items-center"
@@ -43,6 +47,8 @@ export const LanguageIcons: React.FC = () => (
             <span className="text-3xl">{language.name}</span>
           </Badge>
         </motion.div>
+        </Link>
+
       ))}
     </div>
   </>
