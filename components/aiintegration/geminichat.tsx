@@ -25,12 +25,15 @@ export function Geminichat() {
   // const [generatingAnswer, setGeneratingAnswer] = useState<boolean>(false);
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-  
+
+  const [showCodeBox, setShowCodeBox] = useState<boolean>(false);
+
+
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const code = useRecoilValue(codeatom).code!!!;
 
   const aiapi = async () => {
-    const response = await axios.post("/api/ai",{
+    const response = await axios.post("/api/ai", {
       code,
       question
     })
@@ -98,6 +101,17 @@ export function Geminichat() {
     // setGeneratingAnswer(false);
   }
 
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const inputValue = e.target.value;
+    setQuestion(inputValue);
+    // Show the code box when `/` is typed
+    if (inputValue.endsWith("/")) {
+      setShowCodeBox(true);
+    } else {
+      setShowCodeBox(false);
+    }
+  };
+
   return (
     <div className="min-h-screen  flex items-center justify-center">
       {!isChatOpen && (
@@ -113,14 +127,12 @@ export function Geminichat() {
 
       {isChatOpen && (
         <div
-          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${
-            isMinimized ? "bottom-7 right-10 h-16" : "bottom-4 right-6 h-[85%]"
-          } transition-all duration-500`}
+          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${isMinimized ? "bottom-7 right-10 h-16" : "bottom-4 right-6 h-[85%]"
+            } transition-all duration-500`}
         >
           <header
-            className={`flex justify-between text-primary-foreground items-center bg-primary text-white rounded-t-lg px-4 py-2 ${
-              isMinimized ? "hidden" : ""
-            }`}
+            className={`flex justify-between text-primary-foreground items-center bg-primary text-white rounded-t-lg px-4 py-2 ${isMinimized ? "hidden" : ""
+              }`}
           >
             <span>Online Code Compiler</span>
             <div className="flex space-x-5 text-primary-foreground">
@@ -156,16 +168,14 @@ export function Geminichat() {
                 chatHistory.map((chat, index) => (
                   <div
                     key={index}
-                    className={`mb-4 ${
-                      chat.type === "question" ? "text-right" : "text-left"
-                    }`}
+                    className={`mb-4 ${chat.type === "question" ? "text-right" : "text-left"
+                      }`}
                   >
                     <div
-                      className={`inline-block w-fit max-w-[80%] p-3 rounded-lg break-words overflow-auto ${
-                        chat.type === "question"
-                          ? "bg-neutral-800 text-white rounded-br-none"
-                          : "bg-neutral-800 text-white rounded-bl-none"
-                      }`}
+                      className={`inline-block w-fit max-w-[80%] p-3 rounded-lg break-words overflow-auto ${chat.type === "question"
+                        ? "bg-neutral-800 text-white rounded-br-none"
+                        : "bg-neutral-800 text-white rounded-bl-none"
+                        }`}
                     >
                       <ReactMarkdown>{chat.content}</ReactMarkdown>
                     </div>
@@ -175,20 +185,31 @@ export function Geminichat() {
             </div>
           )}
 
+          {showCodeBox && (
+            <div className=" w-[130px] p-3 m-4 border border-secondary rounded-lg text-muted-foreground  cursor-pointer  shadow-inner bg-opacity-15  ">
+              <div className="flex gap-4">
+
+                <Image src="/code-svgrepo-com.svg" width={1000} height={1000} alt="icon" className="w-8 h-8" />
+                <p className="text-white font-medium transition-colors hover:text-primary">Code</p>
+              </div>
+            </div>
+          )}
           {!isMinimized && (
             <form
               onSubmit={generateAnswer}
               className="w-full bg-[#1a1a1a] bg-transparent border-t  p-4"
             >
               <div className="flex gap-2 items-center">
+
                 <textarea
                   required
                   className="flex-1 w-full p-[14px] border border-secondary rounded-md resize-none overflow-auto scrollbar-hide focus:outline-none focus:ring-1 focus:ring-neutral-800 text-white"
                   value={question}
-                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                    setQuestion(e.target.value)
-                  }
-                  placeholder="Type your question here..."
+                  onChange={handleInputChange}
+                  // onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                  //   setQuestion(e.target.value)
+                  // }
+                  placeholder="Type / for your current code or question..."
                   rows={1}
                   onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
                     if (e.key === "Enter" && !e.shiftKey) {
@@ -201,13 +222,13 @@ export function Geminichat() {
                 ></textarea>
                 <button
                   type="submit"
-                  className={`px-6 py-[14px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${
-                    aiMutaion.isPending ? "cursor-not-allowed" : ""
-                  }`}
+                  className={`px-6 py-[14px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${aiMutaion.isPending ? "cursor-not-allowed" : ""
+                    }`}
                   disabled={aiMutaion.isPending}
                 >
                   {aiMutaion.isPending ? "Generating..." : "Send"}
                 </button>
+
               </div>
             </form>
           )}
