@@ -200,9 +200,9 @@ export const Navbar = ({homepage}:NavBarProps) => {
 
 
           <NavigationMenuItem>
-            {routeList.map(({ href, label }) => (
+            {routeList.map(({ href, label, route }) => (
               <NavigationMenuLink key={href} asChild>
-                <Link href={href} className="text-base px-2">
+                <Link href={homepage ? href : route} className="text-base px-2">
                   {label}
                 </Link>
               </NavigationMenuLink>

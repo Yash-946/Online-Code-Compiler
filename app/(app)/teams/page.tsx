@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function page() {
     return (
-        <div className='overflow-hidden h-[100vh]'>
+        <div className='h-[100vh]'>
             <Navbar homepage={false} />
             <TeamSection />
         </div>
