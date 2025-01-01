@@ -7,7 +7,8 @@
     prefix: "",
 
     content: [
-      "./components/**/*.{ts,tsx}",
+      './components/**/*.{js,ts,jsx,tsx}',
+      './pages/**/*.{js,ts,jsx,tsx}',
       "./app/**/*.{ts,tsx}",
       "./src/**/*.{ts,tsx}",
     ],
