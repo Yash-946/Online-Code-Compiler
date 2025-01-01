@@ -2,8 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "prisma/generate",
-      "use": "@prisma/cli"
+      "src": "next.config.js",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
     }
   ]
 }
