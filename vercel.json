@@ -2,11 +2,11 @@
   "version": 2,
   "builds": [
     {
-       "src": "prisma/generate",
-      "use": "@prisma/cli"
+      "src": "package.json",
+      "use": "@vercel/node"
     },
     {
-      "src": "next.config.js",
+      "src": "next.config.mjs",
       "use": "@vercel/next"
     }
   ],
