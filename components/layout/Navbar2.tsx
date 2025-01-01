@@ -13,12 +13,16 @@ import { Sharelink } from "./Sharelink";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { codeatom, flagatom, languageatom } from "@/store/atom";
 import { useDebounceCallback } from "usehooks-ts";
+import MainBoilerPlate from "@/components/layout/MainBoilerPlate";
 
 interface Navbar2Props {
   customInput: string;
   setOutputDetails: (value: React.SetStateAction<null>) => void;
   flag: boolean;
   filename?: string;
+  toggleOutputVisibility: () => void;
+  isOutputVisible: boolean;
+
 }
 
 export const Navbar2 = ({
@@ -26,6 +30,8 @@ export const Navbar2 = ({
   filename,
   customInput,
   setOutputDetails,
+  toggleOutputVisibility,
+  isOutputVisible,
 }: Navbar2Props) => {
   const { data: session } = useSession();
   const router = useRouter();
@@ -130,7 +136,7 @@ export const Navbar2 = ({
         if (new Date(todayDate) > new Date(count)) {
           DailyStatusMutaion.mutate();
           localStorage.setItem("dailyUpdateTimer", todayDate);
-        } 
+        }
         // else {
         //   console.log(
         //     "No update needed. The stored date is today or in the future."
@@ -251,8 +257,8 @@ export const Navbar2 = ({
   };
 
   return (
-    <div className="flex items-center justify-between shadow-md pb-3">
-      <div className="flex space-x-4">
+    <div className="flex items-center justify-between shadow-md pb-[5px] lg:pb-3">
+      <div className="flex px-3 space-x-3 lg:space-x-4">
         {filename && (
           <input
             className="px-2 py-1 text-muted-foreground shadow-inner bg-opacity-15  border border-secondary rounded-lg focus:outline-none focus:ring-2 focus:ring-ring "
@@ -267,21 +273,20 @@ export const Navbar2 = ({
           className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
         >
           <Share2Icon className="w-5 h-5" />
-          <span>Share</span>
+          <span className="hidden lg:block">Share</span>
         </button>
 
         <button
-          className={`flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95  ${
-            flag ? "cursor-pointer" : "cursor-not-allowed"
-          }`}
+          className={`flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95  ${flag ? "cursor-pointer" : "cursor-not-allowed"
+            }`}
           onClick={filename ? handleUpdateCode : handleSave}
           disabled={!flag}
         >
           <UploadIcon className="w-5 h-5" />
           {flag ? (
-            <span>{SaveCodeMutaion.isPending ? `saving` : `save`}</span>
+            <span className="hidden lg:block">{SaveCodeMutaion.isPending ? `saving` : `save`}</span>
           ) : (
-            <span>saved</span>
+            <span >saved</span>
           )}
         </button>
 
@@ -290,15 +295,22 @@ export const Navbar2 = ({
           onClick={handledownloadCode}
         >
           <DownloadIcon className="w-5 h-5" />
-          <span>Download</span>
+          <span className="hidden lg:block">Download</span>
         </button>
 
         <button
-          className={`flex items-center space-x-1 px-4 py-1 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
-            processing
-              ? "bg-muted text-muted-foreground cursor-not-allowed"
-              : "bg-accent text-accent-foreground hover:bg-accent/90"
-          }`}
+          className="lg:hidden flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+          onClick={toggleOutputVisibility}
+        >
+
+          <span className="">{isOutputVisible ? "Editor" : "Output"}</span>
+        </button>
+
+        <button
+          className={`flex items-center space-x-1 px-4 py-1 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${processing
+            ? "bg-muted text-muted-foreground cursor-not-allowed"
+            : "bg-accent text-accent-foreground hover:bg-accent/90"
+            }`}
           onClick={handleCompile}
           disabled={processing}
         >
@@ -318,6 +330,8 @@ export const Navbar2 = ({
           </svg>
           <span>{processing ? "Running" : "Run"}</span>
         </button>
+
+
       </div>
 
       <SaveFile

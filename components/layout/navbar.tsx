@@ -44,7 +44,7 @@ interface FeatureProps {
   description: string;
 }
 
-interface NavBarProps{
+interface NavBarProps {
   homepage: boolean
 }
 
@@ -83,7 +83,20 @@ const featureList: FeatureProps[] = [
   },
 ];
 
-export const Navbar = ({homepage}:NavBarProps) => {
+const languages = [
+  { name: "Java", logo: "/svg/java.svg", route: "/compiler/java" },
+  { name: "Python", logo: "/svg/python.svg", route: "/compiler/python" },
+  { name: "Cpp", logo: "/svg/c++.svg", route: "/compiler/cpp" },
+  { name: "C", logo: "/svg/c.svg", route: "/compiler/c" },
+  { name: "JavaScript", logo: "/svg/javascript.svg", route: "/compiler/javascript" },
+  { name: "R", logo: "/svg/r.svg", route: "/compiler/r" },
+  { name: "Rust", logo: "/svg/rust.svg", route: "/compiler/rust" },
+  { name: "Go", logo: "/svg/go.svg", route: "/compiler/go" },
+  { name: "PHP", logo: "/svg/php.svg", route: "/compiler/php" },
+  { name: "Swift", logo: "/svg/swift.svg", route: "/compiler/swift" },
+];
+
+export const Navbar = ({ homepage }: NavBarProps) => {
   const router = useRouter();
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
@@ -95,13 +108,13 @@ export const Navbar = ({homepage}:NavBarProps) => {
   };
 
   return (
-    <header 
+    <header
       className={cn(
-        !homepage && 'm-5',
+        !homepage && 'm-[18px]',
         'shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card'
       )}
     >
-      <Link href="/" className="font-bold text-lg flex items-center">
+      <Link href="/" className="font-bold text-lg lg:flex items-center hidden">
         <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
         Code Compiler
       </Link>
@@ -121,16 +134,19 @@ export const Navbar = ({homepage}:NavBarProps) => {
             className="flex flex-col justify-between rounded-tr-2xl rounded-br-2xl bg-card border-secondary"
           >
             <div>
-              <SheetHeader className="mb-4 ml-4">
+              <SheetHeader className="mb-2 ml-2">
                 <SheetTitle className="flex items-center">
-                  <Link href="/" className="flex items-center">
-                    <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" />
-                    Shadcn
+                  <Link href="/" className="flex items-center gap-3">
+                    <Image src="/logo.png" width={1000} height={1000} alt="logo" className="w-10 h-10" />
+
+                    {/* <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" /> */}
+                    Code Compiler
                   </Link>
                 </SheetTitle>
               </SheetHeader>
+              <Separator className="mb-1" />
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1">
                 {routeList.map(({ href, label }) => (
                   <Button
                     key={href}
@@ -143,6 +159,26 @@ export const Navbar = ({homepage}:NavBarProps) => {
                   </Button>
                 ))}
               </div>
+
+              <div className="">
+                {languages.map((language, index) => (
+                  <Link href={language.route} key={index}>
+                    <Button variant="ghost" className="justify-start cursor-pointer py-1 h-12 w-40 gap-4">
+
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={language.logo}
+                        alt={language.name}
+                        className="h-8 w-8"
+                      />
+
+                      <span className="text-base">{language.name}</span>
+                    </Button>
+                  </Link>
+                ))}
+              </div>
+
             </div>
 
             <SheetFooter className="flex-col sm:flex-col justify-start items-start">
@@ -157,45 +193,45 @@ export const Navbar = ({homepage}:NavBarProps) => {
       <NavigationMenu className="hidden lg:block mx-auto">
         <NavigationMenuList>
           {homepage && (
-             <NavigationMenuItem>
-             <NavigationMenuTrigger className="bg-card text-base">
-               Features
-             </NavigationMenuTrigger>
-             <NavigationMenuContent>
-               <div className="grid w-[600px] grid-cols-2 gap-5 p-4">
-                 <Image
-                   src="https://avatars.githubusercontent.com/u/75042455?v=4"
-                   alt="RadixLogo"
-                   className="h-full w-full rounded-md object-cover"
-                   width={600}
-                   height={600}
-                 />
-                 <ul className="flex flex-col gap-2">
-                   {featureList.map(({ title, description }) => (
-                     <li
-                       key={title}
-                       className="rounded-md p-3 text-sm hover:bg-muted"
-                     >
-                       <p className="mb-1 font-semibold leading-none text-foreground">
-                         {title}
-                       </p>
-                       <p className="line-clamp-2 text-muted-foreground">
-                         {description}
-                       </p>
-                     </li>
-                   ))}
-                 </ul>
-               </div>
-             </NavigationMenuContent>
-           </NavigationMenuItem>
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className="bg-card text-base">
+                Features
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <div className="grid w-[600px] grid-cols-2 gap-5 p-4">
+                  <Image
+                    src="https://avatars.githubusercontent.com/u/75042455?v=4"
+                    alt="RadixLogo"
+                    className="h-full w-full rounded-md object-cover"
+                    width={600}
+                    height={600}
+                  />
+                  <ul className="flex flex-col gap-2">
+                    {featureList.map(({ title, description }) => (
+                      <li
+                        key={title}
+                        className="rounded-md p-3 text-sm hover:bg-muted"
+                      >
+                        <p className="mb-1 font-semibold leading-none text-foreground">
+                          {title}
+                        </p>
+                        <p className="line-clamp-2 text-muted-foreground">
+                          {description}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
           )}
-         
+
           <NavigationMenuItem>
-          <NavigationMenuLink  asChild>
-                <Link href="/compiler/javascript" className="text-base px-2">
-                  Compiler
-                </Link>
-              </NavigationMenuLink>
+            <NavigationMenuLink asChild>
+              <Link href="/compiler/javascript" className="text-base px-2">
+                Compiler
+              </Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
 
 

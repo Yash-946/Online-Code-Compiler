@@ -18,7 +18,12 @@ interface MainBoilerPlateProps {
 function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
   const [customInput, setCustomInput] = useState<string>("");
   const [outputDetails, setOutputDetails] = useState(null);
+  const [isOutputVisible, setIsOutputVisible] = useState(false);
   const flag = useRecoilValue(flagatom).flag!!!;
+
+  const toggleOutputVisibility = () => {
+    setIsOutputVisible(!isOutputVisible);
+  };
 
   return (
     <>
@@ -40,23 +45,49 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                     setOutputDetails={setOutputDetails}
                     flag={filename ? flag : true}
                     filename={filename}
+                    toggleOutputVisibility={toggleOutputVisibility}
+                    isOutputVisible={isOutputVisible}
+
                   />
                 </div>
-                <div className="w-[53vw]">
-                  <CodeEditorWindow
-                    savecodepage={filename ? true : false}
-                    theme="Monokai"
-                  />
+                <div className="w-[99.5vw] p-2  lg:p-0  lg:w-[53vw]">
+                  {!isOutputVisible ? (
+                    <CodeEditorWindow
+                      savecodepage={filename ? true : false}
+                      theme="Monokai"
+                    />
+                  ) : (
+
+                    <div className=" ">
+                      <OutputWindow outputDetails={outputDetails} />
+                      <CustomInput
+                        customInput={customInput}
+                        setCustomInput={setCustomInput}
+                      />
+                      <Geminichat />
+                    </div>
+                  )}
                 </div>
               </div>
-              <div className="">
-                <OutputWindow outputDetails={outputDetails} />
-                <CustomInput
-                  customInput={customInput}
-                  setCustomInput={setCustomInput}
-                />
-                <Geminichat />
-              </div>
+              <div className="lg:block">
+                  <OutputWindow outputDetails={outputDetails} />
+                  <CustomInput
+                    customInput={customInput}
+                    setCustomInput={setCustomInput}
+                  />
+                  <Geminichat />
+                </div>
+              {isOutputVisible && (
+                <div className="">
+                  <OutputWindow outputDetails={outputDetails} />
+                  <CustomInput
+                    customInput={customInput}
+                    setCustomInput={setCustomInput}
+                  />
+                  <Geminichat />
+                </div>
+              )}
+
             </div>
           </div>
         </div>
