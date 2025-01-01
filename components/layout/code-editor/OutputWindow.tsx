@@ -42,7 +42,7 @@ export const OutputWindow = ({ outputDetails }) => {
     <h1 className="font-bold text-xl bg-clip-text text-transparent text-white pb-4">
       Output
     </h1>
-    <div className="w-full h-[40vh] lg:w-[38vw] lg:min-h-[40vh] lg:h-[38vh] bg-card border border-secondary rounded-2xl shadow-inner bg-opacity-15  text-white font-normal text-sm overflow-y-auto p-2">
+    <div className="w-full h-[37vh] lg:w-[38vw] lg:min-h-[40vh] lg:h-[38vh] bg-card border border-secondary rounded-2xl shadow-inner bg-opacity-15  text-white font-normal text-sm overflow-y-auto p-2">
       {outputDetails ? (
         <>
         {getOutput()}

@@ -127,7 +127,7 @@ export function Geminichat() {
 
       {isChatOpen && (
         <div
-          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${isMinimized ? "bottom-7 right-10 h-16" : "bottom-4 right-6 h-[85%]"
+          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${isMinimized ? "bottom-7 right-10 h-16" : "bottom-4 right-[1px] lg:right-6 h-[85%]"
             } transition-all duration-500`}
         >
           <header
