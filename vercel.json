@@ -4,10 +4,6 @@
     {
       "src": "prisma/generate",
       "use": "@prisma/cli"
-    },
-    {
-      "src": "next build",
-      "use": "@vercel/static-build"
     }
   ]
 }
