@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignInData, signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Navbar } from "@/components/layout/navbar";
 
 import OauthTemplate from "./OauthTemplate";
 import IconCloud from "@/components/magicui/icon-cloud";
@@ -110,8 +111,11 @@ const Signin = () => {
   };
 
   return (
-    <>
-      <div className="grid grid-cols-2 ">
+    <div className="h-[100vh] overflow-hidden">
+      <div>
+        <Navbar homepage={false} />
+      </div>
+      <div className="grid lg:grid-cols-2 p-6 lg:p-0 ">
         <div className="flex items-center justify-center mt-10 bg-background">
           <motion.div
             initial={{ opacity: 0, y: -50 }}
@@ -257,11 +261,11 @@ const Signin = () => {
           </motion.div>
         </div>
 
-        <div className="mt-10  ">
+        <div className="mt-10 hidden lg:block ">
           <IconCloud iconSlugs={slugs} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -28,12 +28,12 @@ const languages = [
 export const LanguageIcons: React.FC = () => (
   <>
     <section id="sponsors" className="max-w-[75%] mx-auto pb-10 sm:pb-16">
-      <h2 className="text-lg md:text-xl text-center mb-6">
+      <h2 className="text-xl text-center mb-6">
         Our Compiler Supports
       </h2>
     </section>
 
-    <div className="w-[100%] flex flex-wrap justify-center gap-10 px-24">
+    <div className="w-[100%] grid grid-cols-2 md:grid-cols-3 lg:flex lg:flex-wrap lg:justify-center gap-4 lg:gap-10 px-4 lg:px-24">
       {languages.map((language, index) => (
                 <Link href={language.route} key={index}>
 
@@ -42,9 +42,9 @@ export const LanguageIcons: React.FC = () => (
           whileTap={{ scale: 0.9 }}
           className="flex justify-center items-center"
         >
-          <Badge variant="outline" className="cursor-pointer py-2 h-20 w-56 flex justify-center items-center gap-2">
-            <Image width={1000} height={1000} src={language.logo} alt={language.name} className="h-10 w-12 " />
-            <span className="text-3xl">{language.name}</span>
+          <Badge variant="outline" className="cursor-pointer py-2 h-20 w-48 lg:w-56 flex justify-center items-center gap-2">
+            <Image width={1000} height={1000} src={language.logo} alt={language.name} className="h-8 w-8 lg:h-10 lg:w-12 " />
+            <span className="text-xl lg:text-3xl">{language.name}</span>
           </Badge>
         </motion.div>
         </Link>

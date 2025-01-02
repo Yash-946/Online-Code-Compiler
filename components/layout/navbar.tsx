@@ -147,7 +147,7 @@ export const Navbar = ({ homepage }: NavBarProps) => {
               <Separator className="mb-1" />
 
               <div className="flex flex-col gap-1">
-                {routeList.map(({ href, label }) => (
+                {routeList.map(({ href, label, route }) => (
                   <Button
                     key={href}
                     onClick={() => setIsOpen(false)}
@@ -155,7 +155,7 @@ export const Navbar = ({ homepage }: NavBarProps) => {
                     variant="ghost"
                     className="justify-start text-base"
                   >
-                    <Link href={href}>{label}</Link>
+                    <Link href={homepage ? href : route}>{label}</Link>
                   </Button>
                 ))}
               </div>

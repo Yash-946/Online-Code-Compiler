@@ -13,6 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import OauthTemplate from "./OauthTemplate";
 import IconCloud from "@/components/magicui/icon-cloud";
+import { Navbar } from "../navbar";
 
 const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -97,8 +98,11 @@ const Signup = () => {
   };
 
   return (
-    <>
-      <div className="grid grid-cols-2 ">
+    <div className="h-[100vh] overflow-hidden">
+     <div>
+            <Navbar homepage={false} />
+          </div>
+      <div className="grid lg:grid-cols-2 p-6 lg:p-0 ">
         <div className="flex items-center justify-center mt-10  bg-background">
           <motion.div
             initial={{ opacity: 0, y: -50 }}
@@ -216,11 +220,11 @@ const Signup = () => {
           </motion.div>
         </div>
 
-        <div className="mt-5">
+        <div className="mt-5 hidden lg:block">
           <IconCloud iconSlugs={slugs} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,26 +1,48 @@
 import { Separator } from "@/components/ui/separator";
-import { ChevronsDownIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+interface RouteProps {
+  href: string;
+  label: string;
+  route: string;
+}
+
+const routeList: RouteProps[] = [
+  {
+    href: "#team",
+    label: "Team",
+    route: "/teams",
+  },
+  {
+    href: "#contact",
+    label: "Contact",
+    route: "/contact",
+  },
+  {
+    href: "#faq",
+    label: "FAQ",
+    route: "/faq",
+  },
+];
+
 export const FooterSection = () => {
   return (
-    <footer id="footer" className="container py-24 sm:py-32">
+    <footer id="footer" className="container py-20 lg:py-24">
       <div className="p-10 bg-card border border-secondary rounded-2xl">
         <div className="grid grid-cols-2 md:grid-cols-4  gap-x-12 gap-y-8">
           <div className="col-span-full xl:col-span-2">
-            <Link href="#" className="flex font-bold items-center">
-              {/* <ChevronsDownIcon className="w-9 h-9 mr-2 bg-gradient-to-tr from-primary via-primary/70 to-primary rounded-lg border border-secondary" /> */}
+            <Link href="#" className="flex font-bold items-center ">
               <Image src="/logo.png" width={1000} height={1000} alt="logo" className="w-16 h-14"/>
 
-              <h3 className="text-2xl">Online Code Compiler</h3>
+              <h3 className="text-2xl text-end">Online Code Compiler</h3>
             </Link>
           </div>
 
           <div className="flex flex-col gap-2">
             <h3 className="font-bold text-lg">Contact</h3>
             <div>
-              <Link href="#" className="opacity-60 hover:opacity-100">
+              <Link href="https://github.com/Pal-Yogesh/onlinecodecompiler" className="opacity-60 hover:opacity-100">
                 Github
               </Link>
             </div>
@@ -43,22 +65,22 @@ export const FooterSection = () => {
           <div className="flex flex-col gap-2">
             <h3 className="font-bold text-lg">Queries</h3>
             <div>
-              <Link href="#" className="opacity-60 hover:opacity-100">
+              <Link href="#contact" className="opacity-60 hover:opacity-100">
                 Contact Us
               </Link>
             </div>
 
             <div>
-              <Link href="#" className="opacity-60 hover:opacity-100">
+              <Link href="#faq" className="opacity-60 hover:opacity-100">
                 FAQ
               </Link>
             </div>
 
-            <div>
+            {/* <div>
               <Link href="#" className="opacity-60 hover:opacity-100">
                 Feedback
               </Link>
-            </div>
+            </div> */}
           </div>
 
         
