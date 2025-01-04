@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useRecoilValue } from "recoil";
 import { codeatom } from "@/store/atom";
 import { useMutation } from "@tanstack/react-query";
+import { CodeXml } from "lucide-react";
 
 interface ChatMessage {
   type: "question" | "answer";
@@ -22,27 +23,30 @@ export function Geminichat() {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [question, setQuestion] = useState<string>("");
   const [answer, setAnswer] = useState<string>("");
-  // const [generatingAnswer, setGeneratingAnswer] = useState<boolean>(false);
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
-
   const [showCodeBox, setShowCodeBox] = useState<boolean>(false);
-
+  const [addCode, setAddCode] = useState<boolean>(false);
 
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const code = useRecoilValue(codeatom).code!!!;
 
   const aiapi = async () => {
-    const response = await axios.post("/api/ai", {
-      code,
+    const data = {
       question
-    })
+    }
+    if(addCode){
+      data.question = `${code} ${question}`
+    }
+
+    setQuestion("");
+    const response = await axios.post("/api/ai", data)
     return response.data;
   };
 
   const aiMutaion = useMutation({
     mutationFn: aiapi,
-    retry: 3,
+    retry: 1,
     onSuccess: (data: any) => {
       setChatHistory((prev) => [
         ...prev,
@@ -67,17 +71,12 @@ export function Geminichat() {
     e.preventDefault();
 
     if (!question.trim()) return;
-
-    // setGeneratingAnswer(true);
-
-    const currentQuestion = question;
-    setQuestion("");
-
     setChatHistory((prev) => [
       ...prev,
-      { type: "question", content: currentQuestion },
+      { type: "question", content: question },
     ]);
     aiMutaion.mutate();
+    
 
     // try {
     //   const response2 = await axios.post("/api/ai",{
@@ -97,19 +96,19 @@ export function Geminichat() {
     //   console.error(error);
     //   setAnswer("Sorry - Something went wrong. Please try again!");
     // }
-
     // setGeneratingAnswer(false);
+    
   }
 
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const inputValue = e.target.value;
     setQuestion(inputValue);
     // Show the code box when `/` is typed
-    if (inputValue.endsWith("/")) {
-      setShowCodeBox(true);
-    } else {
-      setShowCodeBox(false);
-    }
+    // if (inputValue.endsWith("/")) {
+    //   setShowCodeBox(true);
+    // } else {
+    //   setShowCodeBox(false);
+    // }
   };
 
   return (
@@ -186,7 +185,13 @@ export function Geminichat() {
           )}
 
           {showCodeBox && (
-            <div className=" w-[130px] p-3 m-4 border border-secondary rounded-lg text-muted-foreground  cursor-pointer  shadow-inner bg-opacity-15  ">
+            <div 
+              className=" w-[130px] p-3 m-4 border border-secondary rounded-lg text-muted-foreground  cursor-pointer  shadow-inner bg-opacity-15"
+              onClick={() => {
+                setQuestion("code ");
+                setShowCodeBox(false);
+              }}
+            >
               <div className="flex gap-4">
 
                 <Image src="/code-svgrepo-com.svg" width={1000} height={1000} alt="icon" className="w-8 h-8" />
@@ -194,22 +199,28 @@ export function Geminichat() {
               </div>
             </div>
           )}
+
           {!isMinimized && (
             <form
               onSubmit={generateAnswer}
               className="w-full bg-[#1a1a1a] bg-transparent border-t  p-4"
             >
               <div className="flex gap-2 items-center">
-
+                <div 
+                  className={`w-8 h-8 flex items-center justify-center ${addCode? "bg-primary": ""} rounded-lg cursor-pointer`}
+                  onClick={() => setAddCode(!addCode)}
+                >
+                  <CodeXml />
+                </div>
                 <textarea
                   required
                   className="flex-1 w-full p-[14px] border border-secondary rounded-md resize-none overflow-auto scrollbar-hide focus:outline-none focus:ring-1 focus:ring-neutral-800 text-white"
                   value={question}
-                  onChange={handleInputChange}
-                  // onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                  //   setQuestion(e.target.value)
-                  // }
-                  placeholder="Type / for your current code or question..."
+                  // onChange={handleInputChange}
+                  onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                    setQuestion(e.target.value)
+                  }
+                  placeholder="Enter question..."
                   rows={1}
                   onKeyDown={(e: KeyboardEvent<HTMLTextAreaElement>) => {
                     if (e.key === "Enter" && !e.shiftKey) {
@@ -222,7 +233,7 @@ export function Geminichat() {
                 ></textarea>
                 <button
                   type="submit"
-                  className={`px-6 py-[14px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${aiMutaion.isPending ? "cursor-not-allowed" : ""
+                  className={`px-3 py-[10px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${aiMutaion.isPending ? "cursor-not-allowed" : ""
                     }`}
                   disabled={aiMutaion.isPending}
                 >
@@ -232,6 +243,8 @@ export function Geminichat() {
               </div>
             </form>
           )}
+
+
 
           {isMinimized && (
             <div

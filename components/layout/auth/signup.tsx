@@ -13,7 +13,7 @@ import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import OauthTemplate from "./OauthTemplate";
 import IconCloud from "@/components/magicui/icon-cloud";
-import { Navbar } from "../navbar";
+import { Navbar } from "../Navbar";
 
 const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div

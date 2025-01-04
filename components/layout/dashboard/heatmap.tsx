@@ -8,6 +8,8 @@ import "react-calendar-heatmap/dist/styles.css";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import "./heatmap.css";
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 interface HeatmapValue {
   date: string;
@@ -25,21 +27,26 @@ const HeatmapComponent: React.FC = () => {
   const startDate = new Date(today.getFullYear() - 1, 11, 31);
   const endDate = new Date(today.getFullYear(), 11, 31);
 
+  const DailyStatusApi = async () => {
+    const response = await axios.get(`/api/dashboard/dailyupdate?userID=${userID}`);
+    return response.data;
+  };
+
+  const DailyStatusMutaion = useMutation({
+    mutationFn: DailyStatusApi,
+    retry: 1,
+    onSuccess: (data: any) => {
+      setDailyUpdates(data.message);
+      setLoading(false);
+    },
+    onError: (error: any) => {
+      // console.error("Error dailystatus:", error);
+      toast.error("Error while fetching daily status")
+    },
+  });
+
   useEffect(() => {
-    async function getDailyUpdates() {
-      try {
-        const response = await axios.get(
-          `/api/dashboard/dailyupdate?userID=${userID}`
-        );
-        const data = response.data.Data;
-        setDailyUpdates(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching daily updates:", error);
-        setLoading(false);
-      }
-    }
-    getDailyUpdates();
+    DailyStatusMutaion.mutate();
   }, []);
 
   const getTooltipDataAttrs = (value: HeatmapValue) => {
@@ -55,23 +62,14 @@ const HeatmapComponent: React.FC = () => {
     };
   };
 
-
-
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
-
-
     <>
-
-
       <div className="p-6 max-w-7xl mx-auto">
-
-
         <div className="bg-muted rounded-t-lg">
-
           <h2 className="text-xl   py-2 text-center   font-medium text-muted-foreground uppercase tracking-wider">
             Submissions
           </h2>
@@ -79,7 +77,6 @@ const HeatmapComponent: React.FC = () => {
         <div className="  bg-card rounded-b-lg shadow-md">
           <div className="overflow-x-auto pt-5 mx-7">
             <CalendarHeatmap
-
               startDate={startDate}
               endDate={endDate}
               values={dailyupdates}
@@ -96,17 +93,14 @@ const HeatmapComponent: React.FC = () => {
                 }
                 return "color-github-4"; // Very dark green
               }}
-              
               tooltipDataAttrs={getTooltipDataAttrs}
               showWeekdayLabels
             />
           </div>
 
-
           <Tooltip id="heatmap-tooltip" />
         </div>
       </div>
-
     </>
   );
 };

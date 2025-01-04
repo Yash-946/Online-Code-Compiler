@@ -1,5 +1,5 @@
 "use client"
-import { Navbar } from '@/components/layout/navbar'
+import { Navbar } from '@/components/layout/Navbar'
 import { ContactSection } from '@/components/layout/sections/contact'
 import React from 'react'
 
