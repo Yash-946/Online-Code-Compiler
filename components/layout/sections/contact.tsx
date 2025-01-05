@@ -21,33 +21,36 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { Textarea } from "@/components/ui/textarea";
-import { sendContactUsEmail } from "@/helpers/sendContactUsEmail";
+// import { sendContactUsEmail } from "@/helpers/sendContactUsEmail";
 import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 const formSchema = z.object({
   firstName: z.string().min(2).max(255),
   lastName: z.string().min(2).max(255),
   email: z.string().email(),
-  subject: z.string().min(2).max(255),
   message: z.string(),
 });
 
 export const ContactSection = () => {
+
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
-      subject: "Web Development",
       message: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { firstName, lastName, email, subject, message } = values;
+    const { firstName, lastName, email,  message } = values;
     // console.log(values);
-
+    setLoading(true); 
     const r = await axios.post("/api/contactUs",{
       firstName,
       lastName,
@@ -55,11 +58,19 @@ export const ContactSection = () => {
       message
     })
     const d = r.data;
+    toast.success(d.message);
+    setLoading(false);
+    defaultValues: {
+      firstName: "";
+      lastName: "";
+      email: "";
+      message: "";
+    }
     // console.log(d);
   }
 
   return (
-    <section id="contact" className="container py-24 sm:py-32">
+    <section id="contact" className="container py-24">
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <div className="mb-4">
@@ -195,7 +206,7 @@ export const ContactSection = () => {
                   />
                 </div>
 
-                <Button className="mt-4">Send message</Button>
+                <Button className={`mt-4 ${loading? "cursor-not-allowed" : "hover:bg-primary"}`} >{loading ? "Sending Message..." : "Send Message"}</Button>
               </form>
             </Form>
           </CardContent>

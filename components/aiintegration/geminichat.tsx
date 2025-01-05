@@ -133,7 +133,7 @@ export function Geminichat() {
             className={`flex justify-between text-primary-foreground items-center bg-primary text-white rounded-t-lg px-4 py-2 ${isMinimized ? "hidden" : ""
               }`}
           >
-            <span>Online Code Compiler</span>
+            <span className="font-bold text-lg">Online Code Compiler</span>
             <div className="flex space-x-5 text-primary-foreground">
               {/* <button
                 className="text-gray-800 hover:text-gray-600 text-xl"
