@@ -1,4 +1,4 @@
-import { Navbar } from '@/components/layout/Navbar'
+import { Navbar } from '@/components/layout/Navbar1'
 import { TeamSection } from '@/components/layout/sections/team'
 import React from 'react'
 

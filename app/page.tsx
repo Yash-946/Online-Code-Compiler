@@ -5,7 +5,7 @@ import { FeaturesSection } from "@/components/layout/sections/features";
 import { FooterSection } from "@/components/layout/sections/footer";
 import { HeroSection } from "@/components/layout/sections/hero";
 import { TeamSection } from "@/components/layout/sections/team";
-import { Navbar } from "@/components/layout/Navbar";
+import { Navbar } from "@/components/layout/Navbar1";
 
 // export const metadata = {
 //   title: "Online Code Compiler",
