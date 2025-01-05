@@ -7,11 +7,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignInData, signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Navbar } from "@/components/layout/Navbar";
+
 import toast from "react-hot-toast";
 
 import OauthTemplate from "./OauthTemplate";
 import IconCloud from "@/components/magicui/icon-cloud";
+import { Navbar } from "../Navbar";
 
 const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
