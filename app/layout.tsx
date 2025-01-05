@@ -7,7 +7,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Online Code Compiler",
-  description: "Landing template from Shadcn",
+  description: "Online Code Compiler",
+  icons: [{ rel: "icon", url: "/logo.png" }],
 };
 
 export default function RootLayout({

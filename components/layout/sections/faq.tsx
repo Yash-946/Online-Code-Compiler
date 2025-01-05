@@ -30,22 +30,18 @@ const FAQList: FAQProps[] = [
       "Your code can be saved automatically every 10-20 seconds, and you can also manually save or download your code as a file with a single click.",
     value: "item-3",
   },
-  {
-    question: "Can I collaborate with others in real time?",
-    answer: "Yes! Our platform supports real-time collaboration, allowing you share the code with friends or colleagues seamlessly.",
-    value: "item-4",
-  },
+ 
   {
     question:
       "What happens if I refresh the page?",
     answer: "Don't worry! Your code will be cached, and you can resume where you left off even after refreshing the page.",
-    value: "item-5",
+    value: "item-4",
   },
 ];
 
 export const FAQSection = () => {
   return (
-    <section id="faq" className="container md:w-[700px] py-24 sm:py-32">
+    <section id="faq" className="container md:w-[700px]  ">
       <div className="text-center mb-8">
         <h2 className="text-lg text-primary text-center mb-2 tracking-wider">
           FAQS

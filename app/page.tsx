@@ -1,58 +1,48 @@
-import { Navbar } from "@/components/layout/navbar";
-import { BenefitsSection } from "@/components/layout/sections/benefits";
-import { CommunitySection } from "@/components/layout/sections/community";
+import { LanguageIcons } from "@/components/layout/sections/languageicons";
 import { ContactSection } from "@/components/layout/sections/contact";
 import { FAQSection } from "@/components/layout/sections/faq";
 import { FeaturesSection } from "@/components/layout/sections/features";
 import { FooterSection } from "@/components/layout/sections/footer";
 import { HeroSection } from "@/components/layout/sections/hero";
-import { PricingSection } from "@/components/layout/sections/pricing";
-import { ServicesSection } from "@/components/layout/sections/services";
-import { SponsorsSection } from "@/components/layout/sections/sponsors";
 import { TeamSection } from "@/components/layout/sections/team";
-import { TestimonialSection } from "@/components/layout/sections/testimonial";
+import { Navbar } from "@/components/layout/Navbar1";
 
-export const metadata = {
-  title: "Online Code Compiler",
-  description: "Free Shadcn landing page for developers",
-  openGraph: {
-    type: "website",
-    url: "https://github.com/nobruf/shadcn-landing-page.git",
-    title: "Online Code Compiler",
-    description: "Free Shadcn landing page for developers",
-    images: [
-      {
-        url: "https://res.cloudinary.com/dbzv9xfjp/image/upload/v1723499276/og-images/shadcn-vue.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Online Code Compiler",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "https://github.com/nobruf/shadcn-landing-page.git",
-    title: "Online Code Compiler",
-    description: "Free Shadcn landing page for developers",
-    images: [
-      "https://res.cloudinary.com/dbzv9xfjp/image/upload/v1723499276/og-images/shadcn-vue.jpg",
-    ],
-  },
-};
+// export const metadata = {
+//   title: "Online Code Compiler",
+//   description: "Online Code Compiler",
+//   openGraph: {
+//     type: "website",
+//     url: "https://github.com/Pal-Yogesh/onlinecodecompiler",
+//     title: "Online Code Compiler",
+//     description: "Online Code Compiler",
+//     images: [
+//       {
+//         url: "/logo.png",
+//         width: 1200,
+//         height: 630,
+//         alt: "Online Code Compiler",
+//       },
+//     ],
+//   },
+//   twitter: {
+//     card: "summary_large_image",
+//     site: "https://github.com/Pal-Yogesh/onlinecodecompiler",
+//     title: "Online Code Compiler",
+//     description: "Online Code Compiler",
+//     images: [
+//       "/logo.png",
+//     ],
+//   },
+// };
 
 export default function Home() {
   return (
     <>
-      <Navbar />
+      <Navbar homepage={true} />
       <HeroSection />
-      <SponsorsSection />
-      <BenefitsSection />
+      <LanguageIcons />
       <FeaturesSection />
-      {/* <ServicesSection /> */}
-      {/* <TestimonialSection /> */}
       <TeamSection />
-      {/* <CommunitySection /> */}
-      {/* <PricingSection /> */}
       <ContactSection />
       <FAQSection />
       <FooterSection />

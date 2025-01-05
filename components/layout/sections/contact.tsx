@@ -19,14 +19,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { Textarea } from "@/components/ui/textarea";
+import { sendContactUsEmail } from "@/helpers/sendContactUsEmail";
+import axios from "axios";
 
 const formSchema = z.object({
   firstName: z.string().min(2).max(255),
@@ -48,13 +44,18 @@ export const ContactSection = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     const { firstName, lastName, email, subject, message } = values;
-    console.log(values);
+    // console.log(values);
 
-    const mailToLink = `mailto:yogeshpal5049@gmail.com?subject=${subject}&body=Hello I am ${firstName} ${lastName}, my Email is ${email}. %0D%0A${message}`;
-
-    window.location.href = mailToLink;
+    const r = await axios.post("/api/contactUs",{
+      firstName,
+      lastName,
+      email,
+      message
+    })
+    const d = r.data;
+    // console.log(d);
   }
 
   return (
@@ -171,44 +172,7 @@ export const ContactSection = () => {
                   />
                 </div>
 
-                <div className="flex flex-col gap-1.5">
-                  <FormField
-                    control={form.control}
-                    name="subject"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Subject</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select a subject" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="Web Development">
-                              Web Development
-                            </SelectItem>
-                            <SelectItem value="Mobile Development">
-                              Mobile Development
-                            </SelectItem>
-                            <SelectItem value="Figma Design">
-                              Figma Design
-                            </SelectItem>
-                            <SelectItem value="REST API">REST API</SelectItem>
-                            <SelectItem value="FullStack Project">
-                              FullStack Project
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
+                
                 <div className="flex flex-col gap-1.5">
                   <FormField
                     control={form.control}

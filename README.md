@@ -1,26 +1,20 @@
-# Shadcn Landing Page Template
+# Online Code Compiler
 
-## <a href="https://ui.shadcn.com/" target="_blank">Shadcn</a> + <a href="https://nextjs.org/" target="_blank">Next.js</a> + <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a> + <a href="https://tailwindcss.com/" target="_blank">Tailwind</a>.
+## <a href="https://github.com/Pal-Yogesh/onlinecodecompiler" target="_blank">Shadcn</a> + <a href="https://nextjs.org/" target="_blank">Next.js</a> + <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a> + <a href="https://tailwindcss.com/" target="_blank">Tailwind</a>.
 
-### This is a project conversion <a href="https://github.com/leoMirandaa/shadcn-vue-landing-page" target="_blank">Shadcn-Vue</a> to NextJS
+### Compiler built in Latest Techs <a href="https://github.com/Pal-Yogesh/onlinecodecompiler" target="_blank">Check Here</a> NextJS and Typescript
 
-![Alt text](./public/demo-img.jpg)
+![Alt text](./public/compiler.png)
 
 ## Sections
 
 - [x] Navbar
 - [x] Sidebar(mobile)
 - [x] Hero
-- [x] Sponsors
-- [x] Benefits
 - [x] Features
-- [x] Testimonials
 - [x] Team
-- [x] Community
 - [x] Contact
-- [x] Pricing
 - [x] Frequently Asked Questions(FAQ)
-- [x] Services
 - [x] Footer
 
 ## Features
@@ -34,13 +28,13 @@
 1. Clone this repositoy:
 
 ```bash
-git clone https://github.com/nobruf/shadcn-landing-page.git
+git clone https://github.com/Pal-Yogesh/onlinecodecompiler
 ```
 
 2. Go into project
 
 ```bash
-cd shadcn-landing-page
+cd onlinecodecompiler
 ```
 
 3. Install dependencies
