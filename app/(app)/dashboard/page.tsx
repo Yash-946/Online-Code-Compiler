@@ -17,7 +17,7 @@ import { DeleteModal } from "@/components/layout/dashboard/DeleteModal";
 import { downloadCode } from "@/components/layout/Navbar2";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { Navbar } from "@/components/layout/navbar";
+import { Navbar } from "@/components/layout/Navbar";
 import { Sharelink } from "@/components/layout/Sharelink";
 import { useSetRecoilState } from "recoil";
 import { codeatom, languageatom } from "@/store/atom";

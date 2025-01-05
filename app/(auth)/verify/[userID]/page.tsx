@@ -2,7 +2,6 @@
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   Form,
   FormControl,
@@ -24,7 +23,6 @@ import { VerifyData, verifySchema } from "@/schemas/verifySchema";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";import toast from "react-hot-toast";
-;
 
 const VerificationCodeComponent = () => {
   const router = useRouter();
@@ -39,7 +37,7 @@ const VerificationCodeComponent = () => {
 
   const verifyApi = async (data: VerifyData) => {
     const respone = await axios.post("/api/verify-code", {
-      userID:pramas.userID,
+      userID: pramas.userID,
       code: data.code
     });
     return respone.data;

@@ -4,11 +4,11 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Github, ArrowRight } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import toast from "react-hot-toast";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { SignInData, signInSchema } from "@/schemas/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Navbar } from "@/components/layout/navbar";
+import { Navbar } from "@/components/layout/Navbar";
+import toast from "react-hot-toast";
 
 import OauthTemplate from "./OauthTemplate";
 import IconCloud from "@/components/magicui/icon-cloud";
@@ -57,23 +57,24 @@ const slugs = [
 ];
 
 const Signin = () => {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const error = searchParams.get('error');
-
+  const error = searchParams.get("error");
 
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => {
         toast.error(`${error}`);
+        // Remove error from URL without full page reload
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.delete("error");
+        router.replace(newUrl.pathname + newUrl.search);
       }, 600);
-
-      // Cleanup to avoid memory leaks
+  
       return () => clearTimeout(timer);
     }
-  }, [error])
-
+  }, [error, router]);
 
   const {
     register,
@@ -92,26 +93,26 @@ const Signin = () => {
     const result = await signIn("credentials", {
       redirect: false,
       email: data.email,
-      password: data.password
+      password: data.password,
     });
     // console.log("Sign-in Result", result);
 
     if (result?.error) {
-      if (result.error === 'CredentialsSignin') {
-        toast.error(`Login Failed`)
+      if (result.error === "CredentialsSignin") {
+        toast.error(`Login Failed`);
       } else {
-        toast.error(`${result?.error}`)
+        toast.error(`${result?.error}`);
       }
     }
 
     if (result?.url) {
-      router.replace("/compiler/javascript");
+      router.replace("/compiler/javascript",);
     }
     setLoading(false);
   };
 
   return (
-    <div className="h-[100vh] overflow-hidden">
+    <div className="h-[100vh]">
       <div>
         <Navbar homepage={false} />
       </div>
@@ -148,9 +149,7 @@ const Signin = () => {
                     />
                   </div>
                   {errors.email && (
-                    <span className="text-red-600">
-                      {errors.email.message}
-                    </span>
+                    <span className="text-red-600">{errors.email.message}</span>
                   )}
                 </div>
                 <div>
@@ -198,50 +197,6 @@ const Signin = () => {
                 </motion.button>
               </div>
             </form>
-
-            {/* <div className="mt-6">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-muted"></div>
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-card text-muted-foreground">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <motion.button
-                  onClick={handleGoogleSignIn}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full inline-flex justify-center items-center py-2 px-4 border border-muted rounded-md shadow-sm bg-background text-sm font-medium text-muted-foreground hover:bg-muted/50"
-                >
-                  <span className="sr-only">Sign in with Google</span>
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
-                  </svg>
-                  Google
-                </motion.button>
-
-                <motion.button
-                  onClick={handleGithubSignIn}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full inline-flex justify-center items-center py-2 px-4 border border-muted rounded-md shadow-sm bg-background text-sm font-medium text-muted-foreground hover:bg-muted/50"
-                >
-                  <span className="sr-only">Sign in with GitHub</span>
-                  <Github className="w-5 h-5 mr-2" />
-                  GitHub
-                </motion.button>
-              </div>
-            </div> */}
 
             <OauthTemplate />
 

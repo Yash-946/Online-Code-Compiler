@@ -37,13 +37,15 @@ export const Navbar2 = ({
   const router = useRouter();
   const params = useParams<{ savecodeid: string }>();
   const codeid = params.savecodeid;
+  const setFlag = useSetRecoilState(flagatom);
+  const language = useRecoilValue(languageatom).language!!!;
+  const code = useRecoilValue(codeatom).code!!!;
+
   const [isSigninPopupOpen, setSigninPopupOpen] = useState(false);
   const [isSaveFilePopupOpen, setSaveFilePopupOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [isSharePopupOpen, setSharePopupOpen] = useState(false);
-  const setFlag = useSetRecoilState(flagatom);
-  const language = useRecoilValue(languageatom).language!!!;
-  const code = useRecoilValue(codeatom).code!!!;
+  
   const [updatefilename, setUpdateFilename] = useState<string>(filename || "");
   const debounced = useDebounceCallback(setUpdateFilename, 1000);
 
@@ -302,7 +304,6 @@ export const Navbar2 = ({
           className="lg:hidden flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
           onClick={toggleOutputVisibility}
         >
-
           <span className="">{isOutputVisible ? "Editor" : "Output"}</span>
         </button>
 

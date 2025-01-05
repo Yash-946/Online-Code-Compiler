@@ -3,7 +3,7 @@ import { CodeEditorWindow } from "@/components/layout/code-editor/CodeEditorWind
 import { CustomInput } from "@/components/layout/code-editor/CustomInput";
 import { OutputWindow } from "@/components/layout/code-editor/OutputWindow";
 import { LeftNavbar } from "@/components/layout/compiler/LeftNavbar";
-import { Navbar } from "@/components/layout/navbar";
+import { Navbar } from "@/components/layout/Navbar";
 import { Navbar2 } from "@/components/layout/Navbar2";
 import { flagatom } from "@/store/atom";
 
@@ -57,7 +57,6 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                       theme="Monokai"
                     />
                   ) : (
-
                     <div className=" ">
                       <OutputWindow outputDetails={outputDetails} />
                       <CustomInput
