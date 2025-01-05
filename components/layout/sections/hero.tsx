@@ -34,7 +34,7 @@ export const HeroSection = () => {
             {`Code Compiler platform for writing, running, and testing code effortlessly in real-time. Experience seamless coding with AI assistance, code saving, and sharing capabilities, all in one place!`}
           </p>
 
-          <div className="space-y-4 md:space-y-0 md:space-x-4 flex justify-center items-center">
+          <div className="space-y-4 md:space-y-0 md:space-x-4 grid grid-cols-1 place-items-center md:flex justify-center items-center">
 
 
 
