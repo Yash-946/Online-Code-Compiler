@@ -23,7 +23,7 @@ export const ToggleTheme = () => {
         <span className="block lg:hidden">Dark</span>
       </div>
 
-      <span className="sr-only">Toggle-Theme</span>
+      <span className="sr-only">Toggle Theme</span>
     </Button>
   );
 };
