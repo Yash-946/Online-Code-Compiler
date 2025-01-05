@@ -2,6 +2,8 @@ import { useTheme } from "next-themes";
 import { Button } from "../ui/button";
 import { Moon, Sun } from "lucide-react";
 
+
+
 export const ToggleTheme = () => {
   const { theme, setTheme } = useTheme();
   return (
@@ -21,7 +23,7 @@ export const ToggleTheme = () => {
         <span className="block lg:hidden">Dark</span>
       </div>
 
-      <span className="sr-only">Toggle Theme</span>
+      <span className="sr-only">Toggle-Theme</span>
     </Button>
   );
 };
