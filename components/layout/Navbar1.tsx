@@ -45,7 +45,7 @@ interface FeatureProps {
 }
 
 interface NavBarProps {
-  homepage: boolean
+  homepage: boolean;
 }
 
 const routeList: RouteProps[] = [
@@ -88,7 +88,11 @@ const languages = [
   { name: "Python", logo: "/svg/python.svg", route: "/compiler/python" },
   { name: "Cpp", logo: "/svg/c++.svg", route: "/compiler/cpp" },
   { name: "C", logo: "/svg/c.svg", route: "/compiler/c" },
-  { name: "JavaScript", logo: "/svg/javascript.svg", route: "/compiler/javascript" },
+  {
+    name: "JavaScript",
+    logo: "/svg/javascript.svg",
+    route: "/compiler/javascript",
+  },
   { name: "R", logo: "/svg/r.svg", route: "/compiler/r" },
   { name: "Rust", logo: "/svg/rust.svg", route: "/compiler/rust" },
   { name: "Go", logo: "/svg/go.svg", route: "/compiler/go" },
@@ -110,8 +114,8 @@ export const Navbar = ({ homepage }: NavBarProps) => {
   return (
     <header
       className={cn(
-        !homepage && 'm-[18px]',
-        'shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card'
+        !homepage && "m-[18px]",
+        "shadow-inner bg-opacity-15 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl top-5 mx-auto sticky border border-secondary z-40 rounded-2xl flex justify-between items-center p-2 bg-card"
       )}
     >
       <Link href="/" className="font-bold text-lg lg:flex items-center hidden">
@@ -137,8 +141,13 @@ export const Navbar = ({ homepage }: NavBarProps) => {
               <SheetHeader className="mb-2 ml-2">
                 <SheetTitle className="flex items-center">
                   <Link href="/" className="flex items-center gap-3">
-                    <Image src="/logo.png" width={1000} height={1000} alt="logo" className="w-10 h-10" />
-
+                    <Image
+                      src="/logo.png"
+                      width={1000}
+                      height={1000}
+                      alt="logo"
+                      className="w-10 h-10"
+                    />
                     {/* <ChevronsDown className="bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary rounded-lg w-9 h-9 mr-2 border text-white" /> */}
                     Code Compiler
                   </Link>
@@ -155,7 +164,7 @@ export const Navbar = ({ homepage }: NavBarProps) => {
                     variant="ghost"
                     className="justify-start text-base"
                   >
-                    <Link href={homepage ? href : route}>{label}</Link>
+                    <Link href={label == "FAQ" ? href : route}>{label}</Link>
                   </Button>
                 ))}
               </div>
@@ -163,8 +172,10 @@ export const Navbar = ({ homepage }: NavBarProps) => {
               <div className="">
                 {languages.map((language, index) => (
                   <Link href={language.route} key={index}>
-                    <Button variant="ghost" className="justify-start cursor-pointer py-1 h-12 w-40 gap-4">
-
+                    <Button
+                      variant="ghost"
+                      className="justify-start cursor-pointer py-1 h-12 w-40 gap-4"
+                    >
                       <Image
                         width={1000}
                         height={1000}
@@ -178,7 +189,6 @@ export const Navbar = ({ homepage }: NavBarProps) => {
                   </Link>
                 ))}
               </div>
-
             </div>
 
             <SheetFooter className="flex-col sm:flex-col justify-start items-start">
@@ -234,17 +244,18 @@ export const Navbar = ({ homepage }: NavBarProps) => {
             </NavigationMenuLink>
           </NavigationMenuItem>
 
-
           <NavigationMenuItem>
             {routeList.map(({ href, label, route }) => (
               <NavigationMenuLink key={href} asChild>
-                <Link href={homepage ? href : route} className="text-base px-2">
+                <Link
+                  href={label == "FAQ" ? href : route}
+                  className="text-base px-2"
+                >
                   {label}
                 </Link>
               </NavigationMenuLink>
             ))}
           </NavigationMenuItem>
-
         </NavigationMenuList>
       </NavigationMenu>
 
@@ -270,9 +281,7 @@ export const Navbar = ({ homepage }: NavBarProps) => {
                 <p className="text-sm">{session.user?.email}</p>
               </div>
               <DropdownMenuItem>
-                <p onClick={() => router.push(`/dashboard`)}>
-                  Dashboard
-                </p>
+                <p onClick={() => router.push(`/dashboard`)}>Dashboard</p>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => signOut({ callbackUrl: "/sign-in" })}

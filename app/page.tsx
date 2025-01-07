@@ -42,8 +42,8 @@ export default function Home() {
       <HeroSection />
       <LanguageIcons />
       <FeaturesSection />
-      <TeamSection />
-      <ContactSection />
+      {/* <TeamSection /> */}
+      {/* <ContactSection /> */}
       <FAQSection />
       <FooterSection />
     </>

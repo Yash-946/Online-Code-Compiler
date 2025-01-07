@@ -1,19 +1,18 @@
 "use client";
-import { DownloadIcon, Share2Icon, UploadIcon } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 import SignInPopup from "./auth/signin-popup";
+import React, { useCallback, useEffect, useState } from "react";
+import { DownloadIcon, Share2Icon, UploadIcon } from "lucide-react";
 import { SaveFile } from "./save-code/SaveFile";
 import { useSession } from "next-auth/react";
 import { languageData, languageExtension } from "@/lib/Languages";
-import axios from "axios";
-import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Sharelink } from "./Sharelink";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { codeatom, flagatom, languageatom } from "@/store/atom";
 import { useDebounceCallback } from "usehooks-ts";
-import MainBoilerPlate from "@/components/layout/MainBoilerPlate";
 
 interface Navbar2Props {
   customInput: string;
@@ -22,7 +21,6 @@ interface Navbar2Props {
   filename?: string;
   toggleOutputVisibility: () => void;
   isOutputVisible: boolean;
-
 }
 
 export const Navbar2 = ({
@@ -129,7 +127,7 @@ export const Navbar2 = ({
     const count = localStorage.getItem("dailyUpdateTimer");
     if (session) {
       const today = new Date();
-      console.log(formatDateIntl(today));
+      // console.log(formatDateIntl(today));
       const todayDate = formatDateIntl(today);
       if (!count) {
         DailyStatusMutaion.mutate();
@@ -279,7 +277,7 @@ export const Navbar2 = ({
         </button>
 
         <button
-          className={`flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95  ${flag ? "cursor-pointer" : "cursor-not-allowed"
+          className={`flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md    ${flag ? "cursor-pointer hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95" : "cursor-not-allowed"
             }`}
           onClick={filename ? handleUpdateCode : handleSave}
           disabled={!flag}
