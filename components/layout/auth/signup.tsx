@@ -103,7 +103,7 @@ const Signup = () => {
             <Navbar homepage={false} />
           </div>
       <div className="grid lg:grid-cols-2 p-6 lg:p-0 ">
-        <div className="flex items-center justify-center mt-10  bg-background">
+        <div className="flex items-center justify-center mt-10 md:mt-5  bg-background">
           <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}

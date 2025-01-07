@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export const HeroSection = () => {
   const { theme } = useTheme();
@@ -21,9 +22,9 @@ export const HeroSection = () => {
 
           <div className="max-w-screen-md mx-auto text-center text-4xl md:text-6xl font-bold">
             <h1>
-              Code Compiler with
+              Use
               <span className="text-transparent px-2 bg-gradient-to-r from-[#D247BF] to-primary bg-clip-text">
-              AI assistance  
+                Code Compiler
               </span>
               Guys!
             </h1>
@@ -33,26 +34,54 @@ export const HeroSection = () => {
             {`Code Compiler platform for writing, running, and testing code effortlessly in real-time. Experience seamless coding with AI assistance, code saving, and sharing capabilities, all in one place!`}
           </p>
 
-          <div className="space-y-4 md:space-y-0 md:space-x-4">
-             <Link href="/sign-in">
-            <Button className="w-5/6 md:w-1/4 font-bold group/arrow">
-             Login
-              <ArrowRight className="size-5 ml-2 group-hover/arrow:translate-x-1 transition-transform" />
-            </Button>
-             </Link>
+          <div className="space-y-4 md:space-y-0 md:space-x-4 grid grid-cols-1 place-items-center md:flex justify-center items-center">
+
+
+
+            <Link href="/sign-in">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                type="submit"
+                className="w-[260px] flex justify-center items-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none  group/arrow "
+
+              >
+                Login
+                <motion.div
+                  className="ml-2"
+                  initial={{ x: 0 }}
+                  whileHover={{ x: 5 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <ArrowRight className="size-5 ml-2 group-hover/arrow:translate-x-1 transition-transform" />
+                </motion.div>
+              </motion.button>
+            </Link>
 
             <Button
               asChild
               variant="secondary"
-              className="w-5/6 md:w-1/4 font-bold"
+              className="w-[260px] font-bold flex justify-center items-center py-2 px-4"
             >
-              <Link
-                href="/sign-up"
-                // target="_blank"
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center group/arrow"
               >
-                Registration
-              </Link>
+                <Link href="/sign-up" className="flex items-center">
+                  Registration
+                  <motion.div
+                    className="ml-2"
+                    initial={{ x: 0 }}
+                    whileHover={{ x: 5 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                  >
+                  <ArrowRight className="size-5 ml-2 group-hover/arrow:translate-x-1 transition-transform" />
+                  </motion.div>
+                </Link>
+              </motion.button>
             </Button>
+
           </div>
         </div>
 

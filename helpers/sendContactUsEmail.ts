@@ -8,7 +8,7 @@ export async function sendContactUsEmail(
   emailID: string,
   message: string
 ): Promise<ApiResponse> {
-  console.log(resend);
+  // console.log(resend);
   try {
     await resend.emails.send({
       from: 'Code-Compiler <no-reply@yashagrawal.top>',
@@ -20,6 +20,6 @@ export async function sendContactUsEmail(
 
   } catch (emailError) {
     console.error('Error sending Contact us email:', emailError);
-    return { success: false, message: 'Failed to send verification email.' };
+    return { success: false, message: 'Failed to send email.' };
   }
 }

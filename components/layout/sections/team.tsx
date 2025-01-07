@@ -101,7 +101,7 @@ export const TeamSection = () => {
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 w-full lg:w-[60%]  lg:mx-auto gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2  w-full lg:w-[60%]  lg:mx-auto gap-7">
         {teamList.map(
           ({ imageUrl, firstName, lastName, positions, socialNetworks }, index) => (
             <Card
@@ -118,7 +118,7 @@ export const TeamSection = () => {
                     className="w-full max-w-[300px] aspect-square object-cover saturate-0 transition-all duration-200 ease-linear group-hover/hoverimg:saturate-100 group-hover/hoverimg:scale-[1.01]"
                   />
                 </div>
-                <CardTitle className="py-6 pb-4 px-6">
+                <CardTitle className="py-4 pb-4 px-6">
                   {firstName}
                   <span className="text-primary ml-2">{lastName}</span>
                 </CardTitle>
@@ -126,7 +126,7 @@ export const TeamSection = () => {
               {positions.map((position, index) => (
                 <CardContent
                   key={index}
-                  className={`pb-0 text-muted-foreground ${index === positions.length - 1 && "pb-6"
+                  className={`pb-0 text-muted-foreground ${index === positions.length - 1 && "pb-4"
                     }`}
                 >
                   {position}
