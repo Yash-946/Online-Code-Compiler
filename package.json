@@ -8,8 +8,7 @@
     "start": "next start",
     "database": "podman machine start && podman compose -f docker-compose.yml up -d",
     "database2": "docker-compose up -d",
-    "lint": "next lint",
-    "postinstall": "prisma generate"
+    "lint": "next lint"
   },
   "dependencies": {
     "@devnomic/marquee": "^1.0.2",
