@@ -10,12 +10,14 @@ import { flagatom } from "@/store/atom";
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { Geminichat } from "../aiintegration/geminichat";
+import { useSession } from "next-auth/react";
 
 interface MainBoilerPlateProps {
   filename?: string;
 }
 
 function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
+  const { data: session } = useSession();
   const [customInput, setCustomInput] = useState<string>("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [isOutputVisible, setIsOutputVisible] = useState(false);
@@ -39,7 +41,6 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
             <div className="flex gap-6">
               <div className="">
                 <div className="flex gap-12">
-                  {/* {filename && <h2>{filename}</h2>} */}
                   <Navbar2
                     customInput={customInput}
                     setOutputDetails={setOutputDetails}
@@ -63,7 +64,7 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                         customInput={customInput}
                         setCustomInput={setCustomInput}
                       />
-                      <Geminichat />
+                      {session && <Geminichat />}
                     </div>
                   )}
                 </div>
@@ -74,7 +75,7 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                     customInput={customInput}
                     setCustomInput={setCustomInput}
                   />
-                  <Geminichat />
+                  {session && <Geminichat />}
                 </div>
               {isOutputVisible && (
                 <div className="">
@@ -83,7 +84,7 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                     customInput={customInput}
                     setCustomInput={setCustomInput}
                   />
-                  <Geminichat />
+                  {session && <Geminichat />}
                 </div>
               )}
 
