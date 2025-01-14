@@ -50,6 +50,11 @@ interface NavBarProps {
 
 const routeList: RouteProps[] = [
   {
+    href: "#ownapi",
+    label: "Set APIs",
+    route: "/ownapi",
+  },
+  {
     href: "#team",
     label: "Team",
     route: "/teams",
@@ -106,6 +111,7 @@ export const Navbar = ({ homepage }: NavBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleGoogleSignIn = async () => {
+    console.log("first");
     const result = await signIn("google", {
       callbackUrl: "/compiler/javascript",
     });
@@ -164,7 +170,9 @@ export const Navbar = ({ homepage }: NavBarProps) => {
                     variant="ghost"
                     className="justify-start text-base"
                   >
-                    <Link href={label == "FAQ" ? href : route}>{label}</Link>
+                    <Link href={label == "FAQ" && homepage ? href : route}>
+                      {label}
+                    </Link>
                   </Button>
                 ))}
               </div>
@@ -248,7 +256,7 @@ export const Navbar = ({ homepage }: NavBarProps) => {
             {routeList.map(({ href, label, route }) => (
               <NavigationMenuLink key={href} asChild>
                 <Link
-                  href={label == "FAQ" ? href : route}
+                  href={label == "FAQ" && homepage ? href : route}
                   className="text-base px-2"
                 >
                   {label}
@@ -261,7 +269,6 @@ export const Navbar = ({ homepage }: NavBarProps) => {
 
       <div className="hidden lg:flex items-center gap-2">
         <ToggleTheme />
-        {/* Conditionally render GitHub logo or User Dropdown */}
         {session && (
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 cursor-pointer">

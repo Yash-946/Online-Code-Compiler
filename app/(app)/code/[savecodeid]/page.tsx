@@ -1,13 +1,12 @@
 "use client";
 import Loading from "@/app/loading";
-import MainBoilerPlate from "@/components/layout/MainBoilerPlate";
-import { codeatom, flagatom, languageatom } from "@/store/atom";
-import { useMutation } from "@tanstack/react-query";
-
 import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
+import MainBoilerPlate from "@/components/layout/MainBoilerPlate";
 import React, { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { useParams, useRouter } from "next/navigation";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { codeatom, flagatom, languageatom } from "@/store/atom";
 
 interface CodeData {
   id: string;
@@ -33,7 +32,7 @@ function SaveCode() {
 
   const fetchsaveCodeMutaion = useMutation({
     mutationFn: fetchsaveCodeApi,
-    retry: 3,
+    retry: 1,
     onSuccess: (data: CodeData) => {
       setCode({ code: atob(data.code) });
       setLanguage({ language: data.language });
