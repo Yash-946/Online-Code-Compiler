@@ -11,8 +11,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 
 import OauthTemplate from "./OauthTemplate";
-import IconCloud from "@/components/magicui/icon-cloud";
 import { Navbar } from "../Navbar1";
+// import IconCloud from "@/components/magicui/icon-cloud";
+import dynamic from 'next/dynamic'; // Import dynamic from next/dynamic
+const IconCloud = dynamic(() => import("@/components/magicui/icon-cloud"), { ssr: false });
+
+
 
 const IconWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
@@ -62,6 +66,10 @@ const Signin = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const error = searchParams.get("error");
+
+  const images = slugs.map(
+    (slug) => `https://cdn.simpleicons.org/${slug}/${slug}`,
+  );
 
   useEffect(() => {
     if (error) {
