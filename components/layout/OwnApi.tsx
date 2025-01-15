@@ -62,8 +62,8 @@ export default function OwnApi() {
                                         onClick={() => setShowPassword(prev => ({ ...prev, rapid: !prev.rapid }))}
                                     >
                                         {showPassword.rapid ?
-                                            <EyeOff className="h-5 w-5 text-muted-foreground" /> :
-                                            <Eye className="h-5 w-5 text-muted-foreground" />
+                                            <Eye className="h-5 w-5 text-muted-foreground" />  : <EyeOff className="h-5 w-5 text-muted-foreground" /> 
+                                           
                                         }
                                     </Button>
                                     <Button
@@ -100,8 +100,8 @@ export default function OwnApi() {
                                         onClick={() => setShowPassword(prev => ({ ...prev, gemini: !prev.gemini }))}
                                     >
                                         {showPassword.gemini ?
-                                            <EyeOff className="h-5 w-5 text-muted-foreground" /> :
-                                            <Eye className="h-5 w-5 text-muted-foreground" />
+                                         <Eye className="h-5 w-5 text-muted-foreground" />   : <EyeOff className="h-5 w-5 text-muted-foreground" /> 
+                                            
                                         }
                                     </Button>
                                     <Button
