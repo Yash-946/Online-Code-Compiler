@@ -11,8 +11,8 @@ export async function sendContactUsEmail(
   // console.log(resend);
   try {
     await resend.emails.send({
-      from: 'Code-Compiler <no-reply@yashagrawal.top>',
-      to: "yashagrawal946@gmail.com",
+      from: 'Code-Compiler <no-reply@yogeshpal.site>',
+      to: "yogeshpal5049@gmail.com",
       subject: 'Contact Us',
       react: ContactUsEmail({ firstname, lastname, emailID, message }),
     });
