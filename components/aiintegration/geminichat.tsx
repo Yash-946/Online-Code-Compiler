@@ -73,7 +73,7 @@ export function Geminichat() {
     e.preventDefault();
 
     if(!genimiApiKey){
-      toast.error("Please set the Gemini API URL in the settings");
+      toast.error("Please set the Gemini API Key");
       return;
     }
 
