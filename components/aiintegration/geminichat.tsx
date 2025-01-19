@@ -13,6 +13,7 @@ import { useRecoilValue } from "recoil";
 import { codeatom } from "@/store/atom";
 import { useMutation } from "@tanstack/react-query";
 import { CodeXml } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface ChatMessage {
   type: "question" | "answer";
@@ -22,7 +23,6 @@ interface ChatMessage {
 export function Geminichat() {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [question, setQuestion] = useState<string>("");
-  const [answer, setAnswer] = useState<string>("");
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(false);
   const [showCodeBox, setShowCodeBox] = useState<boolean>(false);
@@ -31,9 +31,12 @@ export function Geminichat() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const code = useRecoilValue(codeatom).code!!!;
 
+  const genimiApiKey = localStorage.getItem("NEXT_PUBLIC_GEMINI_API_KEY");
+
   const aiapi = async () => {
     const data = {
-      question
+      question,
+      genimiApiKey
     }
     if(addCode){
       data.question = `${code} ${question}`
@@ -52,11 +55,10 @@ export function Geminichat() {
         ...prev,
         { type: "answer", content: data.message },
       ]);
-      setAnswer(data);
     },
     onError: (error: any) => {
       // console.error(error);
-      setAnswer("Sorry - Something went wrong. Please try again!");
+      toast.error("Sorry - Something went wrong. Please try again!");
     },
   });
 
@@ -70,46 +72,28 @@ export function Geminichat() {
   async function generateAnswer(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
+    if(!genimiApiKey){
+      toast.error("Please set the Gemini API Key");
+      return;
+    }
+
     if (!question.trim()) return;
     setChatHistory((prev) => [
       ...prev,
       { type: "question", content: question },
     ]);
     aiMutaion.mutate();
-    
-
-    // try {
-    //   const response2 = await axios.post("/api/ai",{
-    //     code,
-    //     question
-    //   })
-
-    //   const aiResponse2 = response2.data;
-    //   console.log("aiResponse", aiResponse2);
-
-    //   setChatHistory((prev) => [
-    //     ...prev,
-    //     { type: "answer", content: aiResponse2.message },
-    //   ]);
-    //   setAnswer(aiResponse2);
-    // } catch (error) {
-    //   console.error(error);
-    //   setAnswer("Sorry - Something went wrong. Please try again!");
-    // }
-    // setGeneratingAnswer(false);
-    
   }
 
-  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const inputValue = e.target.value;
-    setQuestion(inputValue);
-    // Show the code box when `/` is typed
-    // if (inputValue.endsWith("/")) {
-    //   setShowCodeBox(true);
-    // } else {
-    //   setShowCodeBox(false);
-    // }
-  };
+  // const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  //   const inputValue = e.target.value;
+  //   setQuestion(inputValue);
+  //   if (inputValue.endsWith("/")) {
+  //     setShowCodeBox(true);
+  //   } else {
+  //     setShowCodeBox(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen  flex items-center justify-center">

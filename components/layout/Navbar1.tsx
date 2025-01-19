@@ -50,6 +50,11 @@ interface NavBarProps {
 
 const routeList: RouteProps[] = [
   {
+    href: "#ownapi",
+    label: "Set APIs",
+    route: "/ownapi",
+  },
+  {
     href: "#team",
     label: "Team",
     route: "/teams",
@@ -106,6 +111,7 @@ export const Navbar = ({ homepage }: NavBarProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleGoogleSignIn = async () => {
+    console.log("first");
     const result = await signIn("google", {
       callbackUrl: "/compiler/javascript",
     });
@@ -164,7 +170,9 @@ export const Navbar = ({ homepage }: NavBarProps) => {
                     variant="ghost"
                     className="justify-start text-base"
                   >
-                    <Link href={label == "FAQ" ? href : route}>{label}</Link>
+                    <Link href={label == "FAQ" && homepage ? href : route}>
+                      {label}
+                    </Link>
                   </Button>
                 ))}
               </div>
@@ -248,7 +256,7 @@ export const Navbar = ({ homepage }: NavBarProps) => {
             {routeList.map(({ href, label, route }) => (
               <NavigationMenuLink key={href} asChild>
                 <Link
-                  href={label == "FAQ" ? href : route}
+                  href={label == "FAQ" && homepage ? href : route}
                   className="text-base px-2"
                 >
                   {label}
@@ -259,9 +267,11 @@ export const Navbar = ({ homepage }: NavBarProps) => {
         </NavigationMenuList>
       </NavigationMenu>
 
-      <div className="hidden lg:flex items-center gap-2">
+      <div className="hidden lg:block">
         <ToggleTheme />
-        {/* Conditionally render GitHub logo or User Dropdown */}
+      </div>
+
+      <div className="flex items-center gap-2">
         {session && (
           <DropdownMenu>
             <DropdownMenuTrigger className="flex items-center gap-2 cursor-pointer">
@@ -297,8 +307,9 @@ export const Navbar = ({ homepage }: NavBarProps) => {
           onClick={handleGoogleSignIn}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="inline-flex text-sm justify-center items-center py-2 px-3 rounded-md shadow-sm bg-inherit font-medium text-muted-foreground hover:bg-muted/50"
+          className="inline-flex text-sm justify-center items-center py-2 px-3 rounded-md shadow-sm bg-inherit font-medium text-muted-foreground hover:bg-muted/50 gap-2"
         >
+          Sign in
           <svg
             className="w-5 h-5 mr-2"
             fill="currentColor"
@@ -307,7 +318,6 @@ export const Navbar = ({ homepage }: NavBarProps) => {
           >
             <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
           </svg>
-          Sign in with Google
         </motion.button>
       )}
     </header>

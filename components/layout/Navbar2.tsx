@@ -39,13 +39,15 @@ export const Navbar2 = ({
   const language = useRecoilValue(languageatom).language!!!;
   const code = useRecoilValue(codeatom).code!!!;
 
-  const [isSigninPopupOpen, setSigninPopupOpen] = useState(false);
-  const [isSaveFilePopupOpen, setSaveFilePopupOpen] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [isSharePopupOpen, setSharePopupOpen] = useState(false);
-  
+  const [isSigninPopupOpen, setSigninPopupOpen] = useState(false);
+  const [isSaveFilePopupOpen, setSaveFilePopupOpen] = useState(false);
+
   const [updatefilename, setUpdateFilename] = useState<string>(filename || "");
   const debounced = useDebounceCallback(setUpdateFilename, 1000);
+
+  const Judge0RapidApiKey = localStorage.getItem("NEXT_PUBLIC_RAPID_API_KEY") || process.env.NEXT_PUBLIC_RAPID_API_KEY;
 
   const handleSave = () => {
     if (!session) {
@@ -68,20 +70,24 @@ export const Navbar2 = ({
 
   const DailyStatusMutaion = useMutation({
     mutationFn: DailyStatusApi,
-    retry: 3,
+    retry: 1,
     onSuccess: (data: any) => {
       // console.log("daily status", data);
     },
     onError: (error: any) => {
       // console.error("Error dailystatus:", error);
-      toast.error("Error while updating daily status")
+      toast.error("Error while updating daily status");
     },
   });
 
   const handleCompile = () => {
     const currentLanguage = languageData(language);
-    // console.log("currentlanguageData", currentLanguage);
-    // console.log("source Code", code);
+    if (!Judge0RapidApiKey) {
+      toast.error(
+        "API key is missing. Please add the API key"
+      );
+      return;
+    }
     setProcessing(true);
     const formData = {
       language_id: currentLanguage!!.id,
@@ -96,7 +102,7 @@ export const Navbar2 = ({
       headers: {
         "Content-Type": "application/json",
         "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
-        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
+        "X-RapidAPI-Key": Judge0RapidApiKey,
       },
       data: formData,
     };
@@ -104,9 +110,10 @@ export const Navbar2 = ({
     axios
       .request(options)
       .then(function (response) {
-        // console.log("res.data", response.data);
         const token = response.data.token;
+        // console.log("res.data", token);
         checkStatus(token);
+        DailyUpdateStatus();
       })
       .catch((err) => {
         let error = err.response ? err.response.data : err;
@@ -123,37 +130,16 @@ export const Navbar2 = ({
         setProcessing(false);
         console.log("Error in catch block:", error);
       });
-
-    const count = localStorage.getItem("dailyUpdateTimer");
-    if (session) {
-      const today = new Date();
-      // console.log(formatDateIntl(today));
-      const todayDate = formatDateIntl(today);
-      if (!count) {
-        DailyStatusMutaion.mutate();
-        localStorage.setItem("dailyUpdateTimer", todayDate);
-      } else {
-        if (new Date(todayDate) > new Date(count)) {
-          DailyStatusMutaion.mutate();
-          localStorage.setItem("dailyUpdateTimer", todayDate);
-        }
-        // else {
-        //   console.log(
-        //     "No update needed. The stored date is today or in the future."
-        //   );
-        // }
-      }
-    }
   };
 
-  const checkStatus = useCallback(async (token: any) => {
+  const checkStatus = useCallback(async (token: string) => {
     const options = {
       method: "GET",
       url: `${process.env.NEXT_PUBLIC_RAPID_API_URL}/${token}`,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
         "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
-        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
+        "X-RapidAPI-Key": Judge0RapidApiKey,
       },
     };
     try {
@@ -171,6 +157,23 @@ export const Navbar2 = ({
     }
   }, []);
 
+  function DailyUpdateStatus() {
+    const today = new Date();
+    const todayDate = formatDateIntl(today);
+    const count = localStorage.getItem("dailyUpdateTimer");
+    if (session) {
+      if (!count) {
+        DailyStatusMutaion.mutate();
+        localStorage.setItem("dailyUpdateTimer", todayDate);
+      } else {
+        if (new Date(todayDate) > new Date(count)) {
+          DailyStatusMutaion.mutate();
+          localStorage.setItem("dailyUpdateTimer", todayDate);
+        }
+      }
+    }
+  }
+
   const SaveCodeApi = async (data: any) => {
     const response = await axios.post("/api/save-code", data);
     return response.data;
@@ -178,7 +181,7 @@ export const Navbar2 = ({
 
   const SaveCodeMutaion = useMutation({
     mutationFn: SaveCodeApi,
-    retry: 3,
+    retry: 1,
     onSuccess: (data: any) => {
       const codeid = data.codeID;
       router.replace(`/code/${codeid}`);
@@ -212,7 +215,7 @@ export const Navbar2 = ({
 
   const UpdateCodeMutaion = useMutation({
     mutationFn: UpdateCodeApi,
-    retry: 3,
+    retry: 1,
     onSuccess: (data: any) => {
       toast.success(`${data.message}`);
       if (flag) {
@@ -277,16 +280,21 @@ export const Navbar2 = ({
         </button>
 
         <button
-          className={`flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md    ${flag ? "cursor-pointer hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95" : "cursor-not-allowed"
-            }`}
+          className={`flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md    ${
+            flag
+              ? "cursor-pointer hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+              : "cursor-not-allowed"
+          }`}
           onClick={filename ? handleUpdateCode : handleSave}
           disabled={!flag}
         >
           <UploadIcon className="w-5 h-5" />
           {flag ? (
-            <span className="hidden lg:block">{SaveCodeMutaion.isPending ? `saving` : `save`}</span>
+            <span className="hidden lg:block">
+              {SaveCodeMutaion.isPending ? `saving` : `save`}
+            </span>
           ) : (
-            <span >saved</span>
+            <span>saved</span>
           )}
         </button>
 
@@ -306,10 +314,11 @@ export const Navbar2 = ({
         </button>
 
         <button
-          className={`flex items-center space-x-1 px-4 py-1 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${processing
-            ? "bg-muted text-muted-foreground cursor-not-allowed"
-            : "bg-accent text-accent-foreground hover:bg-accent/90"
-            }`}
+          className={`flex items-center space-x-1 px-4 py-1 rounded-md transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 ${
+            processing
+              ? "bg-muted text-muted-foreground cursor-not-allowed"
+              : "bg-accent text-accent-foreground hover:bg-accent/90"
+          }`}
           onClick={handleCompile}
           disabled={processing}
         >
@@ -329,8 +338,6 @@ export const Navbar2 = ({
           </svg>
           <span>{processing ? "Running" : "Run"}</span>
         </button>
-
-
       </div>
 
       <SaveFile
