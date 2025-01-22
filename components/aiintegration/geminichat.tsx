@@ -31,7 +31,7 @@ export function Geminichat() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const code = useRecoilValue(codeatom).code!!!;
 
-  const genimiApiKey = localStorage.getItem("NEXT_PUBLIC_GEMINI_API_KEY");
+  const genimiApiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY || localStorage.getItem("NEXT_PUBLIC_GEMINI_API_KEY");
 
   const aiapi = async () => {
     const data = {
