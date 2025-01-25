@@ -1,5 +1,5 @@
 import VerificationEmail from "@/emails/VerificationEmail";
-import { resend } from "@/lib/resend";
+import { resend, resendDomain } from "@/lib/resend";
 import { ApiResponse } from "@/types/ApiResponse";
 
 export async function sendVerificationEmail(
@@ -9,7 +9,7 @@ export async function sendVerificationEmail(
 ): Promise<ApiResponse> {
   try {
     await resend.emails.send({
-      from: 'Code-Compiler <no-reply@yogeshpal.site>',
+      from: `Code-Compiler <no-reply@${resendDomain}>`,
       to: email,
       subject: 'Online Code compiler Verification Code',
       react: VerificationEmail({ username, otp: verifyCode }),

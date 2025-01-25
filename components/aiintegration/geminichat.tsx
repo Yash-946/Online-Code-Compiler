@@ -31,19 +31,21 @@ export function Geminichat() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const code = useRecoilValue(codeatom).code!!!;
 
-  const genimiApiKey = localStorage.getItem("NEXT_PUBLIC_GEMINI_API_KEY");
+  const genimiApiKey =
+    localStorage.getItem("NEXT_PUBLIC_GEMINI_API_KEY") ||
+    process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 
   const aiapi = async () => {
     const data = {
       question,
-      genimiApiKey
-    }
-    if(addCode){
-      data.question = `${code} ${question}`
+      genimiApiKey,
+    };
+    if (addCode) {
+      data.question = `${code} ${question}`;
     }
 
     setQuestion("");
-    const response = await axios.post("/api/ai", data)
+    const response = await axios.post("/api/ai", data);
     return response.data;
   };
 
@@ -72,7 +74,7 @@ export function Geminichat() {
   async function generateAnswer(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if(!genimiApiKey){
+    if (!genimiApiKey) {
       toast.error("Please set the Gemini API Key");
       return;
     }
@@ -110,12 +112,16 @@ export function Geminichat() {
 
       {isChatOpen && (
         <div
-          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${isMinimized ? "bottom-7 right-10 h-16" : "bottom-4 right-[1px] lg:right-6 h-[85%]"
-            } transition-all duration-500`}
+          className={`fixed flex flex-col rounded-2xl border border-secondary  bg-muted/50 dark:bg-card shadow-lg  w-full max-w-lg ${
+            isMinimized
+              ? "bottom-7 right-10 h-16"
+              : "bottom-4 right-[1px] lg:right-6 h-[85%]"
+          } transition-all duration-500`}
         >
           <header
-            className={`flex justify-between text-primary-foreground items-center bg-primary text-white rounded-t-lg px-4 py-2 ${isMinimized ? "hidden" : ""
-              }`}
+            className={`flex justify-between text-primary-foreground items-center bg-primary text-white rounded-t-lg px-4 py-2 ${
+              isMinimized ? "hidden" : ""
+            }`}
           >
             <span className="font-bold text-lg">Online Code Compiler</span>
             <div className="flex space-x-5 text-primary-foreground">
@@ -151,14 +157,16 @@ export function Geminichat() {
                 chatHistory.map((chat, index) => (
                   <div
                     key={index}
-                    className={`mb-4 ${chat.type === "question" ? "text-right" : "text-left"
-                      }`}
+                    className={`mb-4 ${
+                      chat.type === "question" ? "text-right" : "text-left"
+                    }`}
                   >
                     <div
-                      className={`inline-block w-fit max-w-[80%] p-3 rounded-lg break-words overflow-auto ${chat.type === "question"
-                        ? "bg-neutral-800 text-white rounded-br-none"
-                        : "bg-neutral-800 text-white rounded-bl-none"
-                        }`}
+                      className={`inline-block w-fit max-w-[80%] p-3 rounded-lg break-words overflow-auto ${
+                        chat.type === "question"
+                          ? "bg-neutral-800 text-white rounded-br-none"
+                          : "bg-neutral-800 text-white rounded-bl-none"
+                      }`}
                     >
                       <ReactMarkdown>{chat.content}</ReactMarkdown>
                     </div>
@@ -169,7 +177,7 @@ export function Geminichat() {
           )}
 
           {showCodeBox && (
-            <div 
+            <div
               className=" w-[130px] p-3 m-4 border border-secondary rounded-lg text-muted-foreground  cursor-pointer  shadow-inner bg-opacity-15"
               onClick={() => {
                 setQuestion("code ");
@@ -177,9 +185,16 @@ export function Geminichat() {
               }}
             >
               <div className="flex gap-4">
-
-                <Image src="/code-svgrepo-com.svg" width={1000} height={1000} alt="icon" className="w-8 h-8" />
-                <p className="text-white font-medium transition-colors hover:text-primary">Code</p>
+                <Image
+                  src="/code-svgrepo-com.svg"
+                  width={1000}
+                  height={1000}
+                  alt="icon"
+                  className="w-8 h-8"
+                />
+                <p className="text-white font-medium transition-colors hover:text-primary">
+                  Code
+                </p>
               </div>
             </div>
           )}
@@ -190,8 +205,10 @@ export function Geminichat() {
               className="w-full bg-[#1a1a1a] bg-transparent border-t  p-4"
             >
               <div className="flex gap-2 items-center">
-                <div 
-                  className={`w-8 h-8 flex items-center justify-center ${addCode? "bg-primary": ""} rounded-lg cursor-pointer`}
+                <div
+                  className={`w-8 h-8 flex items-center justify-center ${
+                    addCode ? "bg-primary" : ""
+                  } rounded-lg cursor-pointer`}
                   onClick={() => setAddCode(!addCode)}
                 >
                   <CodeXml />
@@ -217,25 +234,25 @@ export function Geminichat() {
                 ></textarea>
                 <button
                   type="submit"
-                  className={`px-3 py-[10px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${aiMutaion.isPending ? "cursor-not-allowed" : ""
-                    }`}
+                  className={`px-3 py-[10px] bg-gradient-to-tr border-secondary from-primary via-primary/70 to-primary hover:bg-primary rounded-lg text-white font-medium transition-colors ${
+                    aiMutaion.isPending ? "cursor-not-allowed" : ""
+                  }`}
                   disabled={aiMutaion.isPending}
                 >
                   {aiMutaion.isPending ? "Generating..." : "Send"}
                 </button>
-
               </div>
             </form>
           )}
-
-
 
           {isMinimized && (
             <div
               className="text-center p-4 text-2xl font-bold cursor-pointer"
               onClick={() => setIsMinimized(false)}
             >
-              <span className="text-white text-muted-foreground font-semibold">Chat AI</span>
+              <span className="text-white text-muted-foreground font-semibold">
+                Chat AI
+              </span>
             </div>
           )}
         </div>

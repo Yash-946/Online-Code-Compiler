@@ -18,6 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br" suppressHydrationWarning>
+      <script
+        async
+        src="https://cdn.seline.so/seline.js"
+        data-token="c5c679c7591e8b5"
+      ></script>
       <body className={cn("min-h-screen bg-background", inter.className)}>
         <Providers>{children}</Providers>
       </body>

@@ -1,5 +1,5 @@
 import ContactUsEmail from "@/emails/ContactUsEmail";
-import { resend } from "@/lib/resend";
+import { contactUsTo, resend, resendDomain } from "@/lib/resend";
 import { ApiResponse } from "@/types/ApiResponse";
 
 export async function sendContactUsEmail(
@@ -11,8 +11,8 @@ export async function sendContactUsEmail(
   // console.log(resend);
   try {
     await resend.emails.send({
-      from: 'Code-Compiler <no-reply@yogeshpal.site>',
-      to: "yogeshpal5049@gmail.com",
+      from: `Code-Compiler <no-reply@${resendDomain}>`,
+      to: `${contactUsTo}`,
       subject: 'Contact Us',
       react: ContactUsEmail({ firstname, lastname, emailID, message }),
     });
