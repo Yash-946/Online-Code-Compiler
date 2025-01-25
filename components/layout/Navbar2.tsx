@@ -47,7 +47,7 @@ export const Navbar2 = ({
   const [updatefilename, setUpdateFilename] = useState<string>(filename || "");
   const debounced = useDebounceCallback(setUpdateFilename, 1000);
 
-  const Judge0RapidApiKey = localStorage.getItem("NEXT_PUBLIC_RAPID_API_KEY") || process.env.NEXT_PUBLIC_RAPID_API_KEY;
+  // const Judge0RapidApiKey = localStorage.getItem("NEXT_PUBLIC_RAPID_API_KEY") || process.env.NEXT_PUBLIC_RAPID_API_KEY;
 
   const handleSave = () => {
     if (!session) {
@@ -82,12 +82,12 @@ export const Navbar2 = ({
 
   const handleCompile = () => {
     const currentLanguage = languageData(language);
-    if (!Judge0RapidApiKey) {
-      toast.error(
-        "API key is missing. Please add the API key"
-      );
-      return;
-    }
+    // if (!Judge0RapidApiKey) {
+    //   toast.error(
+    //     "API key is missing. Please add the API key"
+    //   );
+    //   return;
+    // }
     setProcessing(true);
     const formData = {
       language_id: currentLanguage!!.id,
@@ -97,12 +97,12 @@ export const Navbar2 = ({
     // console.log(formData);
     const options = {
       method: "POST",
-      url: process.env.NEXT_PUBLIC_RAPID_API_URL,
+      url: process.env.NEXT_PUBLIC_DEPLOY_JUDGE0_URL,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
         "Content-Type": "application/json",
-        "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
-        "X-RapidAPI-Key": Judge0RapidApiKey,
+        // "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
+        // "X-RapidAPI-Key": Judge0RapidApiKey,
       },
       data: formData,
     };
@@ -126,22 +126,22 @@ export const Navbar2 = ({
             "Quota of 100 requests exceeded for the day. Please try again later."
           );
         } else {
+          console.log("Error in catch block:", error);
           toast.error("An error occurred. Please try again.");
         }
         setProcessing(false);
-        console.log("Error in catch block:", error);
       });
   };
 
   const checkStatus = useCallback(async (token: string) => {
     const options = {
       method: "GET",
-      url: `${process.env.NEXT_PUBLIC_RAPID_API_URL}/${token}`,
+      url: `${process.env.NEXT_PUBLIC_DEPLOY_JUDGE0_URL}/${token}`,
       params: { base64_encoded: "true", fields: "*" },
-      headers: {
-        "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
-        "X-RapidAPI-Key": Judge0RapidApiKey,
-      },
+      // headers: {
+      //   "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
+      //   "X-RapidAPI-Key": Judge0RapidApiKey,
+      // },
     };
     try {
       let response = await axios.request(options);
