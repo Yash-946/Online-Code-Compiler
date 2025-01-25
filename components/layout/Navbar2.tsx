@@ -119,6 +119,7 @@ export const Navbar2 = ({
         let error = err.response ? err.response.data : err;
         // get error status
         let status = err.response?.status;
+        console.log("Error in catch block:", error);
 
         if (status === 429) {
           toast.error(
