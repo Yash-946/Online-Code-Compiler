@@ -48,7 +48,7 @@ export const Navbar2 = ({
   const debounced = useDebounceCallback(setUpdateFilename, 1000);
 
   // change to own deploy api
-  // const Judge0RapidApiKey = localStorage.getItem("NEXT_PUBLIC_RAPID_API_KEY") || process.env.NEXT_PUBLIC_RAPID_API_KEY;
+  const Judge0RapidApiKey = localStorage.getItem("NEXT_PUBLIC_RAPID_API_KEY") || process.env.NEXT_PUBLIC_RAPID_API_KEY;
 
   const handleSave = () => {
     if (!session) {
@@ -98,12 +98,12 @@ export const Navbar2 = ({
     // console.log(formData);
     const options = {
       method: "POST",
-      url: process.env.NEXT_PUBLIC_DEPLOY_JUDGE0_URL,
+      url: process.env.NEXT_PUBLIC_RAPID_API_URL,
       params: { base64_encoded: "true", fields: "*" },
       headers: {
         "Content-Type": "application/json",
-        // "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
-        // "X-RapidAPI-Key": Judge0RapidApiKey,
+        "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
+        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
       },
       data: formData,
     };
@@ -137,12 +137,12 @@ export const Navbar2 = ({
   const checkStatus = useCallback(async (token: string) => {
     const options = {
       method: "GET",
-      url: `${process.env.NEXT_PUBLIC_DEPLOY_JUDGE0_URL}/${token}`,
+      url: `${process.env.NEXT_PUBLIC_RAPID_API_URL}/${token}`,
       params: { base64_encoded: "true", fields: "*" },
-      // headers: {
-      //   "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
-      //   "X-RapidAPI-Key": Judge0RapidApiKey,
-      // },
+      headers: {
+        "X-RapidAPI-Host": process.env.NEXT_PUBLIC_RAPID_API_HOST,
+        "X-RapidAPI-Key": process.env.NEXT_PUBLIC_RAPID_API_KEY,
+      },
     };
     try {
       let response = await axios.request(options);
