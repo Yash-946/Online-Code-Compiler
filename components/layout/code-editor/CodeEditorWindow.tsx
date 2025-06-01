@@ -17,7 +17,7 @@ export const CodeEditorWindow = ({
   const [value, setvalue] = useRecoilState(codeatom);
   const setFlag = useSetRecoilState(flagatom);
   const language = useRecoilValue(languageatom).language!!!;
-  
+
   useEffect(() => {
     loader
       .init()
@@ -40,6 +40,9 @@ export const CodeEditorWindow = ({
     setvalue({ code: value });
     if (savecodepage) {
       setFlag({ flag: true });
+    } else {
+      // console.log("non save code", value);
+      SaveCodeLocal({ lang: language, code: value });
     }
   };
 
@@ -57,3 +60,33 @@ export const CodeEditorWindow = ({
     </div>
   );
 };
+
+function SaveCodeLocal({ lang, code }: { lang: string; code: string }) {
+  const key = "codecompilercodes"
+  let data: { [key: string]: string } = {
+    javascript: "",
+    python: "",
+    java: "",
+    cpp: "",
+    c: "",
+    r: "",
+    rust: "",
+    go: "",
+    golang: "",
+    php: "",
+    swift: "",
+  };
+  const localSaveCodes = localStorage.getItem(key);
+
+  if (localSaveCodes) {
+    console.log("second")
+    data = JSON.parse(localSaveCodes);
+    data[lang] = code;
+  } else {
+    console.log("first")
+    data[lang] = code;
+  }
+
+  localStorage.setItem(key, JSON.stringify(data));
+  // console.log(data);
+}
