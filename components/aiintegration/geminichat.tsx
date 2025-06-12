@@ -31,14 +31,9 @@ export function Geminichat() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const code = useRecoilValue(codeatom).code!!!;
 
-  const genimiApiKey =
-    localStorage.getItem("NEXT_PUBLIC_GEMINI_API_KEY") ||
-    process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-
   const aiapi = async () => {
     const data = {
       question,
-      genimiApiKey,
     };
     if (addCode) {
       data.question = `${code} ${question}`;
@@ -74,10 +69,10 @@ export function Geminichat() {
   async function generateAnswer(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!genimiApiKey) {
-      toast.error("Please set the Gemini API Key");
-      return;
-    }
+    // if (!genimiApiKey) {
+    //   toast.error("Please set the Gemini API Key");
+    //   return;
+    // }
 
     if (!question.trim()) return;
     setChatHistory((prev) => [

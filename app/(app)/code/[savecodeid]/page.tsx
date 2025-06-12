@@ -44,12 +44,8 @@ function SaveCode() {
   });
 
   useEffect(() => {
-    function getSaveCode() {
-      fetchsaveCodeMutaion.mutate();
-    }
-
     if (codeid) {
-      getSaveCode();
+      fetchsaveCodeMutaion.mutate();
     }
   }, [codeid]);
 
@@ -59,14 +55,16 @@ function SaveCode() {
         event.preventDefault();
       }
     }
-  
+
     window.addEventListener("beforeunload", confirmExit);
-  
+
     return () => {
       window.removeEventListener("beforeunload", confirmExit);
     };
   }, [flag]);
-  
+
+  // console.log("save code render", filename);
+
   if (fetchsaveCodeMutaion.isPending) {
     return <Loading />;
   }

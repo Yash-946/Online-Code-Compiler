@@ -1,5 +1,7 @@
 import prisma from "@/lib/dbConnect";
 import { NextResponse } from "next/server";
+import { localRedis } from '@/lib/redis';
+
 
 export async function POST(request: Request) {
   try {
@@ -19,7 +21,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       message: "Code saved successfully",
       codeID: savecode.id,
-    },{ status: 200 });
+    }, { status: 200 });
 
   } catch (error: any) {
     // console.error("Error saving code:", error);
@@ -34,19 +36,32 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const codeID = searchParams.get("codeID");
-    
+
     if (!codeID) {
       return NextResponse.json(
         { message: "codeID is required" },
         { status: 400 }
       );
     }
-    
+
+    // const cacheData = await localRedis.get(codeID)
+    // console.log(cacheData);
+
+    // if (cacheData) {
+    //   return NextResponse.json(
+    //     { codeData: JSON.parse(cacheData) },
+    //     { status: 200 }
+    //   );
+    // }
+
     const codeData = await prisma.code.findUnique({
       where: {
         id: codeID as string,
       },
     });
+
+    // await localRedis.set(codeID, JSON.stringify(codeData))
+
     // console.log(codeData)
     if (!codeData) {
       return NextResponse.json(
@@ -77,7 +92,7 @@ export async function DELETE(request: Request) {
     // Extract userID from query parameters
     const { searchParams } = new URL(request.url);
     const codeID = searchParams.get("codeID");
-    
+
     if (!codeID) {
       return NextResponse.json(
         { message: "codeID is required" },
@@ -132,14 +147,14 @@ export async function PUT(request: Request) {
       );
     }
 
-    if(filename){
-      
+    if (filename) {
+
       const codeData = await prisma.code.update({
         where: {
           id: codeID as string,
         },
-        data:{
-          fileName:filename
+        data: {
+          fileName: filename
         }
       });
 
@@ -158,14 +173,14 @@ export async function PUT(request: Request) {
       );
     }
 
-    
+
 
     const codeData = await prisma.code.update({
       where: {
         id: codeID as string,
       },
-      data:{
-        code:code
+      data: {
+        code: code
       }
     });
 
@@ -176,7 +191,7 @@ export async function PUT(request: Request) {
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(
       {
         message: "Code is updated",

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Editor, { loader } from "@monaco-editor/react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { codeatom, flagatom, languageatom } from "@/store/atom";
+import { useDebounceCallback } from "usehooks-ts";
 
 interface CodeEditorWindowProps {
   theme: any;
@@ -17,6 +18,7 @@ export const CodeEditorWindow = ({
   const [value, setvalue] = useRecoilState(codeatom);
   const setFlag = useSetRecoilState(flagatom);
   const language = useRecoilValue(languageatom).language!!!;
+   const debounced = useDebounceCallback(setFlag, 1000);
 
   useEffect(() => {
     loader
@@ -39,9 +41,9 @@ export const CodeEditorWindow = ({
   const handleEditorChange = (value: any) => {
     setvalue({ code: value });
     if (savecodepage) {
-      setFlag({ flag: true });
+      // setFlag({ flag: true });
+       debounced({ flag: true });
     } else {
-      // console.log("non save code", value);
       SaveCodeLocal({ lang: language, code: value });
     }
   };
@@ -57,12 +59,13 @@ export const CodeEditorWindow = ({
         defaultValue="// some comment"
         onChange={handleEditorChange}
       />
+      
     </div>
   );
 };
 
 function SaveCodeLocal({ lang, code }: { lang: string; code: string }) {
-  const key = "codecompilercodes"
+  const key = "codecompilercodes";
   let data: { [key: string]: string } = {
     javascript: "",
     python: "",
@@ -79,11 +82,9 @@ function SaveCodeLocal({ lang, code }: { lang: string; code: string }) {
   const localSaveCodes = localStorage.getItem(key);
 
   if (localSaveCodes) {
-    console.log("second")
     data = JSON.parse(localSaveCodes);
     data[lang] = code;
   } else {
-    console.log("first")
     data[lang] = code;
   }
 

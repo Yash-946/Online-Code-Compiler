@@ -21,11 +21,12 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
   const [customInput, setCustomInput] = useState<string>("");
   const [outputDetails, setOutputDetails] = useState(null);
   const [isOutputVisible, setIsOutputVisible] = useState(false);
-  const flag = useRecoilValue(flagatom).flag!!!;
 
   const toggleOutputVisibility = () => {
     setIsOutputVisible(!isOutputVisible);
   };
+
+  // console.log("mainbolierplate render")
 
   return (
     <>
@@ -44,11 +45,9 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                   <Navbar2
                     customInput={customInput}
                     setOutputDetails={setOutputDetails}
-                    flag={filename ? flag : true}
                     filename={filename}
                     toggleOutputVisibility={toggleOutputVisibility}
                     isOutputVisible={isOutputVisible}
-
                   />
                 </div>
                 <div className="w-[99.5vw] p-2  lg:p-0  lg:w-[53vw]">
@@ -70,13 +69,13 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                 </div>
               </div>
               <div className="lg:block">
-                  <OutputWindow outputDetails={outputDetails} />
-                  <CustomInput
-                    customInput={customInput}
-                    setCustomInput={setCustomInput}
-                  />
-                  {session && <Geminichat />}
-                </div>
+                <OutputWindow outputDetails={outputDetails} />
+                <CustomInput
+                  customInput={customInput}
+                  setCustomInput={setCustomInput}
+                />
+                {session && <Geminichat />}
+              </div>
               {isOutputVisible && (
                 <div className="">
                   <OutputWindow outputDetails={outputDetails} />
@@ -87,7 +86,6 @@ function MainBoilerPlate({ filename }: MainBoilerPlateProps) {
                   {session && <Geminichat />}
                 </div>
               )}
-
             </div>
           </div>
         </div>
