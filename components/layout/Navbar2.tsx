@@ -10,21 +10,20 @@ import { languageData, languageExtension } from "@/lib/Languages";
 import { useParams, useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Sharelink } from "./Sharelink";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { codeatom, flagatom, languageatom } from "@/store/atom";
 import { useDebounceCallback } from "usehooks-ts";
+import { Clipboard } from "lucide-react";
 
 interface Navbar2Props {
   customInput: string;
   setOutputDetails: (value: React.SetStateAction<null>) => void;
-  flag: boolean;
   filename?: string;
   toggleOutputVisibility: () => void;
   isOutputVisible: boolean;
 }
 
 export const Navbar2 = ({
-  flag,
   filename,
   customInput,
   setOutputDetails,
@@ -35,9 +34,10 @@ export const Navbar2 = ({
   const router = useRouter();
   const params = useParams<{ savecodeid: string }>();
   const codeid = params.savecodeid;
-  const setFlag = useSetRecoilState(flagatom);
   const language = useRecoilValue(languageatom).language!!!;
   const code = useRecoilValue(codeatom).code!!!;
+  const setFlag = useSetRecoilState(flagatom);
+  const flag = useRecoilValue(flagatom).flag!!!;
 
   const [processing, setProcessing] = useState(false);
   const [isSharePopupOpen, setSharePopupOpen] = useState(false);
@@ -46,9 +46,6 @@ export const Navbar2 = ({
 
   const [updatefilename, setUpdateFilename] = useState<string>(filename || "");
   const debounced = useDebounceCallback(setUpdateFilename, 1000);
-
-  // change to own deploy api
-  const Judge0RapidApiKey = localStorage.getItem("NEXT_PUBLIC_RAPID_API_KEY") || process.env.NEXT_PUBLIC_RAPID_API_KEY;
 
   const handleSave = () => {
     if (!session) {
@@ -239,19 +236,18 @@ export const Navbar2 = ({
   };
 
   useEffect(() => {
-    async function updatefilenamefn() {
-      if (updatefilename != filename) {
-        const data = {
-          codeID: codeid,
-          filename: updatefilename,
-        };
-        UpdateCodeMutaion.mutate(data);
-      }
+    if (filename && updatefilename != filename) {
+      // updatefilenamefn();
+      const data = {
+        codeID: codeid,
+        filename: updatefilename,
+      };
+      UpdateCodeMutaion.mutate(data);
     }
-    if (filename) {
-      updatefilenamefn();
+    if (flag) {
+      handleUpdateCode();
     }
-  }, [updatefilename]);
+  }, [updatefilename, flag]);
 
   const handleShareClick = () => {
     setSharePopupOpen(true);
@@ -260,6 +256,11 @@ export const Navbar2 = ({
   const handleCloseSharePopup = () => {
     setSharePopupOpen(false);
   };
+
+ const handleClipboardClick = () => {
+  navigator.clipboard.writeText(code);
+  toast.success("Code copied to clipboard!");
+};
 
   return (
     <div className="flex items-center justify-between shadow-md pb-[5px] lg:pb-3">
@@ -274,12 +275,30 @@ export const Navbar2 = ({
         )}
 
         <button
+          className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+          onClick={handledownloadCode}
+        >
+          <DownloadIcon className="w-5 h-5" />
+          {/* <span className="hidden lg:block">Download</span> */}
+        </button>
+
+        <button
           onClick={handleShareClick}
           className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
         >
           <Share2Icon className="w-5 h-5" />
-          <span className="hidden lg:block">Share</span>
+          {/* <span className="hidden lg:block">Share</span> */}
         </button>
+
+         <button
+          onClick={handleClipboardClick}
+          className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
+        >
+          <Clipboard className="w-5 h-5" />
+          {/* <span className="hidden lg:block">Share</span> */}
+        </button>
+
+
 
         <button
           className={`flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md    ${
@@ -288,7 +307,7 @@ export const Navbar2 = ({
               : "cursor-not-allowed"
           }`}
           onClick={filename ? handleUpdateCode : handleSave}
-          disabled={!flag}
+          disabled={!(filename ? flag : true)}
         >
           <UploadIcon className="w-5 h-5" />
           {flag ? (
@@ -300,13 +319,7 @@ export const Navbar2 = ({
           )}
         </button>
 
-        <button
-          className="flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
-          onClick={handledownloadCode}
-        >
-          <DownloadIcon className="w-5 h-5" />
-          <span className="hidden lg:block">Download</span>
-        </button>
+        
 
         <button
           className="lg:hidden flex items-center space-x-1 bg-primary text-primary-foreground px-3 py-1 rounded-md hover:bg-secondary hover:text-secondary-foreground transition-colors duration-200 ease-in-out transform hover:scale-105 active:scale-95"
@@ -340,6 +353,7 @@ export const Navbar2 = ({
           </svg>
           <span>{processing ? "Running" : "Run"}</span>
         </button>
+
       </div>
 
       <SaveFile

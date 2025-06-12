@@ -194,7 +194,8 @@ const Dashboard = () => {
     fetchallCodeMutaion.mutate();
   }
 
-  if (!session) {
+  console.log(session, fetchallCodeMutaion.isPending)
+  if (!session && !fetchallCodeMutaion.isPending) {
     return (
       <div className="flex justify-center items-center h-screen">
         <motion.div
@@ -220,7 +221,7 @@ const Dashboard = () => {
             transition={{ duration: 0.5 }}
             className="text-4xl font-bold text-color-1"
           >
-            Hello, {session.user?.name}
+            Hello, {session!!!.user?.name}
           </motion.h1>
 
           <div className="relative w-1/3">

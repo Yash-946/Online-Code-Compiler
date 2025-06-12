@@ -298,7 +298,7 @@ export function DefaultCode(language: string) {
     public static void main(String[] args) {
         System.out.println("hello, world");
     }
-  }`;
+}`;
   const cpp = `#include <iostream>
 int main() {
     std::cout << "Hello, World!" << std::endl;

@@ -2,7 +2,7 @@
 
 ## <a href="https://github.com/Pal-Yogesh/onlinecodecompiler" target="_blank">Shadcn</a> + <a href="https://nextjs.org/" target="_blank">Next.js</a> + <a href="https://www.typescriptlang.org/" target="_blank">TypeScript</a> + <a href="https://tailwindcss.com/" target="_blank">Tailwind</a>.
 
-### Compiler built in Latest Techs <a href="https://github.com/Pal-Yogesh/onlinecodecompiler" target="_blank">Check Here</a> NextJS and Typescript
+### Compiler built in Latest Techs
 
 ![Alt text](./public/compiler.png)
 
